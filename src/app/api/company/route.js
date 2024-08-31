@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "../../util/prisma";
-// POST: Create a new company
+
 export async function POST(request) {
   try {
     const data = await request.json();
