@@ -1,4 +1,4 @@
-import { cards } from "../lib/data";
+
 import Card from "../dashboard/card/card";
 import Chart from "../dashboard/chart/chart";
 import styles from "../dashboard/dashboard.module.css";
