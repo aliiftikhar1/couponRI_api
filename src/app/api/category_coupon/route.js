@@ -15,7 +15,7 @@ export async function POST(request) {
     const offersString = offers.join(',');
 
     // Create a new Category_Coupon record in the database
-    const newCategoryCoupon = await prisma.category_Coupon.create({
+    const newCategoryCoupon = await prisma.categoryCoupon.create({
       data: {
         name,
         offer: offersString,  // Save the comma-separated string
@@ -34,7 +34,7 @@ export async function POST(request) {
 // GET handler for fetching all Category_Coupons
 export async function GET() {
   try {
-    const categoryCoupons = await prisma.category_Coupon.findMany();
+    const categoryCoupons = await prisma.categoryCoupon.findMany();
 
     // Convert the offers string back into an array for each categoryCoupon
     const categoryCouponsWithOffersArray = categoryCoupons.map((coupon) => ({

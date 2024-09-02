@@ -1,4 +1,3 @@
-// app/pages/inspire_me/page.js
 'use client';
 import { useState } from 'react';
 import CustomerRootLayout from '@/app/user/layout';
@@ -43,14 +42,9 @@ export default function InspireMePage() {
 
   return (
     <CustomerRootLayout>
-      {/* Full-Width Large Text */}
-      {/* <div className="relative w-full h-[200px] flex items-center justify-center bg-blue-500 text-white">
-        <h1 className="text-4xl font-bold">Submit Offer</h1>
-      </div> */}
-
       {/* Form Section */}
-      <div className="py-12 mt-4 max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-center text-2xl font-semibold mb-6">
+      <div className="py-8 mt-4 max-w-md sm:max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-md">
+        <h2 className="text-center text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
           Submit a coupon and help millions save!
         </h2>
         <form onSubmit={handleSubmit}>
@@ -64,7 +58,7 @@ export default function InspireMePage() {
               placeholder="e.g., storewebsite.com"
               value={formData.storeWebsite}
               onChange={handleInputChange}
-              className="w-full p-3 border rounded-md"
+              className="w-full p-2 sm:p-3 border rounded-md"
               required
             />
           </div>
@@ -72,10 +66,10 @@ export default function InspireMePage() {
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="offerType">
               Select an Offer Type
             </label>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-2">
               <button
                 type="button"
-                className={`p-3 border rounded-md flex-1 mr-2 ${
+                className={`p-2 sm:p-3 border rounded-md flex-1 ${
                   formData.offerType === 'Online Code' ? 'bg-blue-500 text-white' : ''
                 }`}
                 onClick={() => handleOfferTypeChange('Online Code')}
@@ -84,7 +78,7 @@ export default function InspireMePage() {
               </button>
               <button
                 type="button"
-                className={`p-3 border rounded-md flex-1 mr-2 ${
+                className={`p-2 sm:p-3 border rounded-md flex-1 ${
                   formData.offerType === 'In-Store Coupon' ? 'bg-blue-500 text-white' : ''
                 }`}
                 onClick={() => handleOfferTypeChange('In-Store Coupon')}
@@ -93,7 +87,7 @@ export default function InspireMePage() {
               </button>
               <button
                 type="button"
-                className={`p-3 border rounded-md flex-1 ${
+                className={`p-2 sm:p-3 border rounded-md flex-1 ${
                   formData.offerType === 'Online Sale' ? 'bg-blue-500 text-white' : ''
                 }`}
                 onClick={() => handleOfferTypeChange('Online Sale')}
@@ -112,7 +106,7 @@ export default function InspireMePage() {
               placeholder="Code"
               value={formData.code}
               onChange={handleInputChange}
-              className="w-full p-3 border rounded-md"
+              className="w-full p-2 sm:p-3 border rounded-md"
               required
             />
           </div>
@@ -125,7 +119,7 @@ export default function InspireMePage() {
               placeholder="Tell us more about the offer"
               value={formData.description}
               onChange={handleInputChange}
-              className="w-full p-3 border rounded-md"
+              className="w-full p-2 sm:p-3 border rounded-md"
               required
             />
           </div>
@@ -138,7 +132,7 @@ export default function InspireMePage() {
               type="date"
               value={formData.startDate}
               onChange={handleInputChange}
-              className="w-full p-3 border rounded-md"
+              className="w-full p-2 sm:p-3 border rounded-md"
             />
           </div>
           <div className="mb-6">
@@ -150,10 +144,10 @@ export default function InspireMePage() {
               type="date"
               value={formData.expirationDate}
               onChange={handleInputChange}
-              className="w-full p-3 border rounded-md"
+              className="w-full p-2 sm:p-3 border rounded-md"
             />
           </div>
-          <button className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
+          <button className="w-full bg-blue-500 text-white p-2 sm:p-3 rounded-md hover:bg-blue-600">
             Submit Offer
           </button>
         </form>
@@ -161,14 +155,14 @@ export default function InspireMePage() {
 
       {/* Popup */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg flex items-center">
-            <XMarkIcon className="w-6 h-6 text-green-500 mr-4" />
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 px-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
+            <XMarkIcon className="w-6 h-6 text-green-500 mb-4" />
             <div className="text-gray-700">
-              <h3 className="text-lg font-semibold">Offer Submitted Successfully!</h3>
+              <h3 className="text-lg font-semibold mb-4">Offer Submitted Successfully!</h3>
               <button
                 onClick={handleClosePopup}
-                className="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 OK
               </button>

@@ -29,7 +29,6 @@ const CompanyDetail = () => {
           }
           const companyData = await companyResponse.json();
           setCompany(companyData);
-          console.log("company: ",company);
 
           // Fetch offers related to this company
           const offersResponse = await fetch(`/api/gettingoffers/${params.id}`);
@@ -54,7 +53,6 @@ const CompanyDetail = () => {
           setLoading(false);
         }
       } else {
-        console.log('No ID available in params to fetch data');
         setError('No ID available in params to fetch data');
         setLoading(false);
       }
@@ -77,22 +75,22 @@ const CompanyDetail = () => {
 
   return (
     <CustomerRootLayout>
-    <div className="min-h-screen bg-gray-100 p-6">
-      <CouponHeader company={company} />
-      <div className="container mx-auto flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
-          <LeftSide company={company} offers={offers} />
+      <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
+        <CouponHeader company={company} />
+        <div className="container mx-auto flex flex-col md:flex-row gap-4 sm:gap-6">
+          <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
+            <LeftSide company={company} offers={offers} />
+          </div>
+          <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
+            <RightSide offers={offers} company={company} />
+          </div>
         </div>
-        <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
-          <RightSide offers={offers} company={company} />
+        <OffersTable offers={offers} company={company} />
+        <SimilarStores company={company} />
+        <div className="mt-8 bg-white p-4 sm:p-6 shadow-md rounded-lg">
+          <FaqComponent faqs={faqs} companyName={company.com_title} />
         </div>
       </div>
-      <OffersTable offers={offers} company={company} />
-      <SimilarStores company={company}/>
-      <div className="mt-8 bg-white p-6 shadow-md rounded-lg">
-        <FaqComponent faqs={faqs} />
-      </div>
-    </div>
     </CustomerRootLayout>
   );
 };

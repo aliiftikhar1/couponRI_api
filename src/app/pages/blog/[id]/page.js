@@ -48,20 +48,21 @@ const BlogDetailPage = () => {
 
   return (
     <CustomerRootLayout>
-      <div className="container bg-white h-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 className=' text-5xl mb-10'> <span className='text-5xl font-semibold'>Blog </span>| {blog.title}</h1>
+      <div className="container bg-white h-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold mb-4 lg:mb-10">Blog | {blog.title}</h1>
         <div className="lg:flex lg:space-x-8">
           {/* Main blog content */}
           <div className="lg:w-3/4">
             <img
               src={`https://couponri.com/uploads/${blog.image}`}
               alt={blog.title}
-              className="w-full h-[400px] object-cover "
+              className="w-full h-[200px] sm:h-[300px] lg:h-[400px] object-cover mb-4"
             />
-            {/* <h1 className="text-4xl font-bold text-gray-900 mt-6">{blog.title}</h1> */}
-            <p className="text-sm text-gray-700 mt-4">{blog.description}</p>
-            <div className="mt-8 text-gray-700">
-              <p>{blog.content}</p> {/* Assuming the blog has a content field */}
+            <p className="text-sm sm:text-base text-gray-700 mt-4">{blog.description}</p>
+            <div className="mt-4 lg:mt-8 text-sm sm:text-base text-gray-700">
+              <div>
+              {blog.content}
+              </div>
             </div>
           </div>
 

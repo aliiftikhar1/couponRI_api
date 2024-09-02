@@ -8,9 +8,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           {/* Logo and Description */}
           <div className="md:w-1/4">
-            <img src="/logo/logo.jpg" alt="ClothingRic" className="mb-4 h-20" />
+            <img src="/logo/logo.jpg" alt="CouponRI" className="mb-4 h-20" />
             <p className="text-gray-600">
-              ClothingRic.com brings joys of continuous discounts from one of the most desirable brands on the web. Our discount listings are truly an opportunity for fashionable clients who believe in controlling their budgets and looking fabulous.
+              CouponRI.com brings joys of continuous discounts from one of the most desirable brands on the web. Our discount listings are truly an opportunity for fashionable clients who believe in controlling their budgets and looking fabulous.
             </p>
             <div className="flex space-x-4 mt-4">
               {/* Social Media Icons using React Icons */}
@@ -28,9 +28,9 @@ export default function Footer() {
 
           {/* Footer Links */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full md:w-3/4">
-            {/* About ClothingRic */}
+            {/* About CouponRI */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">About ClothingRic</h3>
+              <h3 className="text-xl font-bold">About CouponRI</h3>
               <ul className="space-y-2">
                 <li>
                   <a href="#" className="text-gray-600 hover:text-black">

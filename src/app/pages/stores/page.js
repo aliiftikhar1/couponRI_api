@@ -84,28 +84,30 @@ const AllStores = () => {
 
   return (
     <CustomerRootLayout>
-      <div className="min-h-screen bg-white p-6">
-        <h1 className="text-4xl font-bold text-center text-blue-800 mb-8">Top Stores</h1>
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-lg font-semibold text-gray-700">Showing {companies.length} stores</div>
-          <div className="relative inline-block text-left">
-            <select
-              onChange={handleSortChange}
-              value={sortOption}
-              className="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="default">Sort by Default</option>
-              <option value="alphabetical">Sort Alphabetically (A-Z)</option>
-              <option value="best-seller">Sort by Best Discount</option>
-            </select>
-          </div>
-        </div>
-        <div className="container mx-auto grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-20">
-          {sortedCompanies.map((company) => (
-            <div key={company.id} className="p-4">
-              <CompanyCard company={company} topDiscount={topDiscounts[company.id]} />
+      <div className="bg-white py-6 sm:py-12">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6 sm:mb-12">Top Stores</h1>
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8">
+            <div className="text-lg font-semibold text-gray-700 mb-4 sm:mb-0">Showing {companies.length} stores</div>
+            <div className="relative inline-block text-left">
+              <select
+                onChange={handleSortChange}
+                value={sortOption}
+                className="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="default">Sort by Default</option>
+                <option value="alphabetical">Sort Alphabetically (A-Z)</option>
+                <option value="best-seller">Sort by Best Discount</option>
+              </select>
             </div>
-          ))}
+          </div>
+          <div className="grid gap-4 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {sortedCompanies.map((company) => (
+              <div key={company.id} className="p-4">
+                <CompanyCard company={company} topDiscount={topDiscounts[company.id]} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </CustomerRootLayout>

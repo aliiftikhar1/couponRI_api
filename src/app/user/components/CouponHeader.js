@@ -9,20 +9,20 @@ const CouponHeader = ({ company }) => {
   }
 
   return (
-    <div className="bg-[#07069F] mb-20 p-6 text-white justify-center flex items-center h-36 w-full">
-      <div className="absolute left-64 h-36 w-36 flex justify-center items-center top-44 bg-white rounded-full ">
+    <div className="bg-[#07069F] mb-20 p-2 text-white flex items-center justify-center h-36 w-full relative">
+      <div className="absolute md:left-64 left-1/2 transform -translate-x-1/2 md:translate-x-0 top-28 md:top-16 h-24 w-24 md:h-36 md:w-36 flex justify-center items-center bg-white rounded-full ">
         <img
-          src={`https://couponri.com/uploads/${company.comp_logo}`} // Use the company's logo
+          src={`https://couponri.com/uploads/${company.comp_logo}`}
           alt={company.com_title}
-          className="h-36 w-36 object-cover absolute rounded-full border-4 border-white"
+          className="h-24 w-24 md:h-36 md:w-36 object-cover rounded-full border-4 border-white"
         />
       </div>
 
-      <div className="ml-6">
-        <h1 className="text-3xl font-bold">{company.com_title} Coupon Codes</h1>
-        <p className="text-lg flex items-center">
+      <div className=" md:mt-0 ml-6 text-center md:text-left">
+        <h1 className="text-2xl md:text-3xl font-bold">{company.com_title} Coupon Codes</h1>
+        <p className="text-sm md:text-lg flex items-center justify-center md:justify-start">
           {company.com_title} Coupon Codes for {new Date().getFullYear()} Verified & Tested
-          <CheckCircleIcon className='h-6 pt-1'/>
+          <CheckCircleIcon className="h-5 md:h-6 w-5 md:w-6 pt-1 ml-1 md:ml-2"/>
         </p>
       </div>
     </div>

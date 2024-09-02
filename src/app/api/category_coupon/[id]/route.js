@@ -8,7 +8,7 @@ export async function GET(request, { params }) {
   }
 
   try {
-    const categoryCoupon = await prisma.SubmitOffer.findUnique({
+    const categoryCoupon = await prisma.categoryCoupon.findUnique({
       where: { id },
     });
 
@@ -36,7 +36,7 @@ export async function PUT(request, { params }) {
     // Join the offers array into a comma-separated string
     const offersString = offers.join(',');
 
-    const updatedCategoryCoupon = await prisma.SubmitOffer.update({
+    const updatedCategoryCoupon = await prisma.categoryCoupon.update({
       where: { id },
       data: {
         name,
@@ -63,7 +63,7 @@ export async function DELETE(request, { params }) {
   }
 
   try {
-    const deletedCategoryCoupon = await prisma.SubmitOffer.delete({
+    const deletedCategoryCoupon = await prisma.categoryCoupon.delete({
       where: { id },
     });
 

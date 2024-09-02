@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import CompanyCard from '@/app/pages/stores/components/companycard'; 
 
@@ -24,7 +22,6 @@ const SimilarStores = ({ company }) => {
         const companiesData = await companiesResponse.json();
         const offersData = await offersResponse.json();
 
-        // Calculate top discounts
         const discounts = {};
         offersData.forEach(offer => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
@@ -37,7 +34,6 @@ const SimilarStores = ({ company }) => {
           }
         });
 
-        // Filter similar stores
         const matchedStores = companiesData.filter((comp) =>
           comp.id !== company.id && comp.comp_category === company.comp_category
         );
@@ -74,8 +70,8 @@ const SimilarStores = ({ company }) => {
 
   return (
     <div className="mt-10">
-      <h2 className="text-4xl font-bold mb-6 text-center">Stores Similar to {company.com_title}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-center">Stores Similar to {company.com_title}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {similarStores.map((store) => (
           <div key={store.id} className="p-4">
             <CompanyCard company={store} topDiscount={topDiscounts[store.id]} />
