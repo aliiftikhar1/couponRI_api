@@ -22,21 +22,21 @@ export default function BlogCategorySlider({ category, blogs }) {
 
   return (
     <div className="w-full bg-white p-6 shadow-md">
-      <h2 className="text-2xl font-bold text-[#06089B] mb-4">{category}</h2>
+      <h2 className="text-2xl font-bold text-blue-500 mb-4">{category}</h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left column: Slider */}
         <div className="relative items-center flex col-span-1 lg:col-span-2">
           <button
             onClick={handlePrevious}
             className="text-white p-2 absolute z-50 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10094;</span> {/* Left arrow */}
+          >
+            <span className="text-white font-bold hover:scale-110">&#10094;</span>
           </button>
           <button
             onClick={handleNext}
             className="text-white p-2 absolute z-50 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10095;</span> {/* Right arrow */}
+          >
+            <span className="text-white font-bold hover:scale-110">&#10095;</span>
           </button>
           <div className="relative w-full overflow-hidden rounded-lg shadow-xl">
             <div
@@ -52,7 +52,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                   <a href={`/pages/blog/${blog.id}`}>
                     <div className="relative w-full h-64 sm:h-80 lg:h-[700px]">
                       <img
-                        src={`https://couponri.com/uploads/${blog.image} `}
+                        src={`https://couponri.com/uploads/${blog.image}`}
                         alt={blog.title}
                         className="absolute inset-0 w-full h-full object-cover rounded-lg"
                       />
@@ -76,15 +76,17 @@ export default function BlogCategorySlider({ category, blogs }) {
               <div key={index} className="flex items-center space-x-4">
                 <div className="w-1/3">
                   <img
-                    src={`https://couponri.com/uploads/${blog.image} `}
+                    src={`https://couponri.com/uploads/${blog.image}`}
                     alt={blog.title}
                     className="w-full h-20 sm:h-24 object-cover rounded-lg"
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {blog.title}
-                  </h3>
+                  <a href={`/pages/blog/${blog.id}`}>
+                    <h3 className="text-lg font-semibold text-gray-900 hover:underline">
+                      {blog.title}
+                    </h3>
+                  </a>
                   <p className="text-sm text-gray-600">{blog.description}</p>
                 </div>
               </div>
