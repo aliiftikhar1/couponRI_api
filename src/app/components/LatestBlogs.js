@@ -71,8 +71,7 @@ const LatestBlogPage = () => {
             <div className="p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-gray-900">{blog.title}</h3>
               
-              <div
-    className="text-gray-700 text-sm mt-2 overflow-hidden text-ellipsis"
+              <div className="text-gray-700 text-sm mt-2 overflow-hidden text-ellipsis"
     style={{
       display: '-webkit-box',
       WebkitLineClamp: 3, // Limit to 3 lines
