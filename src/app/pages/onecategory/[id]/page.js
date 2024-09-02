@@ -13,14 +13,14 @@ const CompanyCard = ({ company, topDiscount }) => {
           {topDiscount !== 'Not Available' ? `${topDiscount}% OFF` : topDiscount}
         </span>
       </div>
-      <div className='h-[150px]'>
+      <div className="h-[150px]">
         <img
           src={`https://couponri.com/uploads/${company.comp_logo}`}
           alt={company.com_title}
-          className="w-full h-full object-stretch mb-4"
+          className="w-full h-full object-contain mb-4"  // Use object-contain to maintain aspect ratio
         />
       </div>
-      <div className='h-full'>
+      <div className="h-full">
         <h3 className="text-sm font-semibold text-gray-700">{company.com_title}</h3>
         <p className="text-sm text-gray-600 mb-2">
           {company.comp_description || 'No description available.'}
@@ -41,7 +41,7 @@ const CategoryDetail = () => {
   const router = useRouter();
   const [companies, setCompanies] = useState([]);
   const [topDiscounts, setTopDiscounts] = useState({});
-  const [category, setCategory] = useState(null); // For storing the category details
+  const [category, setCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,7 +52,7 @@ const CategoryDetail = () => {
         const [categoriesResponse, companiesResponse, categoryResponse, offersResponse] = await Promise.all([
           fetch('/api/category'),
           fetch('/api/onecategorycompanies/' + params.id),
-          fetch(`/api/category/${params.id}`), // Fetch the specific category details
+          fetch(`/api/category/${params.id}`),
           fetch('/api/offers')
         ]);
 
@@ -62,16 +62,15 @@ const CategoryDetail = () => {
 
         const categoriesData = await categoriesResponse.json();
         const companiesData = await companiesResponse.json();
-        const categoryData = await categoryResponse.json(); // Parse the specific category details
+        const categoryData = await categoryResponse.json();
         const offersData = await offersResponse.json();
 
         setCategories(categoriesData);
         setCompanies(companiesData);
-        setCategory(categoryData); // Set the specific category details
+        setCategory(categoryData);
 
-        // Calculate top discounts
         const discounts = {};
-        offersData.forEach(offer => {
+        offersData.forEach((offer) => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
           if (discountMatch) {
             const discount = parseInt(discountMatch[1], 10);
@@ -83,7 +82,7 @@ const CategoryDetail = () => {
         });
 
         const discountWithFallback = {};
-        companiesData.forEach(company => {
+        companiesData.forEach((company) => {
           discountWithFallback[company.id] = discounts[company.id] || 'Not Available';
         });
 
@@ -121,41 +120,41 @@ const CategoryDetail = () => {
 
   return (
     <CustomerRootLayout>
-      <div className="flex h-screen bg-gray-50">
-        {/* Sidebar for categories */}
-        <div className="w-1/5 bg-white pl-6 shadow-lg rounded-r-lg">
+      <div className="flex flex-col md:flex-row  bg-gray-50">
+        {/* Sidebar for categories (hidden on mobile) */}
+        <div className="hidden md:block w-1/5 bg-white p-4 shadow-lg">
           <h2 className="text-2xl font-bold text-black mb-6">Categories</h2>
           <ul className="space-y-4">
             {categories.map((category) => (
               <li
                 key={category.id}
-                className="flex items-center justify-between cursor-pointer group p-3 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-md"
+                className="flex items-center justify-between cursor-pointer group p-2 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-md"
                 onClick={() => handleCategoryClick(category.id)}
               >
                 <span className="text-black group-hover:scale-105 group-hover:text-white transform transition-transform duration-300">
                   {category.category_name}
                 </span>
-                <FaArrowRight className="text-black opacity-0 group-hover:opacity-100 transform transition-opacity duration-300 group-hover:text-white" />
+                <FaArrowRight className=" pl-1 text-black opacity-0 group-hover:opacity-100 transform transition-opacity duration-300 group-hover:text-white" />
               </li>
             ))}
           </ul>
         </div>
 
         {/* Main content for companies */}
-        <div className="flex-1 p-6">
-          <div className="my-8">
-            <h1 className="text-center text-4xl font-bold text-[#06089B]">
+        <div className="flex-1 p-4 md:p-6">
+          <div className="my-4 md:my-8">
+            <h1 className="text-center text-2xl md:text-4xl font-bold text-[#06089B]">
               {category ? `${category.category_name} Stores` : 'Category Store'}
             </h1>
             {category && (
-              <p className="text-center text-lg text-gray-600 mt-4">
+              <p className="text-center text-sm md:text-lg text-gray-600 mt-2 md:mt-4">
                 {category.category_description || 'No description available.'}
               </p>
             )}
           </div>
-          <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="container mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-6">
             {companies.map((company) => (
-              <div key={company.id} className="p-4">
+              <div key={company.id} className="p-2 md:p-4">
                 <CompanyCard company={company} topDiscount={topDiscounts[company.id]} />
               </div>
             ))}
