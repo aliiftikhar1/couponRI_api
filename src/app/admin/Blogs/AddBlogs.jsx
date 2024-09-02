@@ -7,7 +7,11 @@ import { MdDeleteForever } from "react-icons/md";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
-import JoditEditor from "jodit-react"; // Import JoditEditor
+// import JoditEditor from "jodit-react"; // Import JoditEditor
+
+import dynamic from 'next/dynamic';
+
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const AddBlogs = () => {
   const editor = useRef(null);
