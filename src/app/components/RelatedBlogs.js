@@ -184,7 +184,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
-                <Link href={`/pages/oneoffer/${offer.id}`} className="block text-blue-500 hover:underline font-semibold">
+                <Link href={`/pages/onecompany/${offer.comp_id}`} className="block text-blue-500 hover:underline font-semibold">
                   {offer.offer_title}
                 </Link>
                 <p className="text-sm text-gray-700 mt-1">{offer.offer_description}</p>

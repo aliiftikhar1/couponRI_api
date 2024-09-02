@@ -42,7 +42,7 @@ const Sidebar = ({ setActiveComponent }) => {
   };
 
   return (
-    <div className="bg-gray-700 text-white w-64 min-h-screen flex flex-col">
+    <div className="bg-gray-700 text-white w-full min-h-screen flex flex-col">
       <div className="p-4 text-center">
         <img src="/logo/logo.jpg"
           alt="Profile"
