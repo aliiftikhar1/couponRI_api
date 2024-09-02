@@ -80,7 +80,16 @@ function BlogPosts({ blogs }) {
                 <span className="text-sm bg-green-500 rounded-full px-2 py-1 text-white">{post.category}</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-              <p className="text-gray-600 mb-4">{post.description}</p>
+              <div
+    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: post.description }}
+  >
+</div>
               <Link href={`/pages/blog/${post.id}`} className="text-blue-600 hover:underline">
                 Read more
               </Link>

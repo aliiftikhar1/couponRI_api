@@ -61,7 +61,17 @@ const BlogSlider2 = ({ blogs }) => {
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <h3 className="text-lg font-semibold text-white mb-2">{blog.title}</h3>
-                    <p className="text-sm text-white">{blog.description}</p>
+                    <div
+    className="text-white text-center text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  >
+</div>
+
                   </div>
                 </div>
               </div>

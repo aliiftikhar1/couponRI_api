@@ -73,11 +73,20 @@ export default function BlogSlider({ blogs }) {
                   />
                 </div>
                 <div className="p-4 flex-grow">
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900">
-                    {blog.title}
-                  </h3>
-                  <p className="text-sm text-gray-700">{blog.description}</p>
-                </div>
+  <h3 className="text-lg font-semibold mb-2 text-gray-900">
+    {blog.title}
+  </h3>
+  <div
+    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  />
+</div>
+
               </div>
             </div>
           ))}

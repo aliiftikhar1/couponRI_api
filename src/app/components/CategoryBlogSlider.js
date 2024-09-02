@@ -87,7 +87,16 @@ export default function BlogCategorySlider({ category, blogs }) {
                       {blog.title}
                     </h3>
                   </a>
-                  <p className="text-sm text-gray-600">{blog.description}</p>
+                  <div
+    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  >
+</div>
                 </div>
               </div>
             ))}

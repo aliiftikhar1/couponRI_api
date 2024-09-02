@@ -58,7 +58,13 @@ const BlogDetailPage = () => {
               alt={blog.title}
               className="w-full h-[200px] sm:h-[300px] lg:h-[400px] object-cover mb-4"
             />
-            <p className="text-sm sm:text-base text-gray-700 mt-4">{blog.description}</p>
+            {/* <p className="text-sm sm:text-base text-gray-700 mt-4">{blog.description}</p> */}
+            <div
+    className="text-sm sm:text-base text-gray-700 mt-4 "
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  >
+</div>
+
             <div className="mt-4 lg:mt-8 text-sm sm:text-base text-gray-700">
               <div>
               {blog.content}

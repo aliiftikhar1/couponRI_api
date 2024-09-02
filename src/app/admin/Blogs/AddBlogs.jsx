@@ -1,38 +1,16 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Toolbar,
-  Button,
-  TablePagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Snackbar,
-  Alert,
-  Box,
-  Typography,
-  TextField,
-  IconButton,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
+import React, { useState, useEffect, useRef } from "react";
+import { Backdrop, CircularProgress, Grid, Box, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Toolbar, TablePagination, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert, IconButton } from "@mui/material";
 import { useTable, useGlobalFilter, useSortBy, usePagination } from "react-table";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
+import JoditEditor from "jodit-react"; // Import JoditEditor
 
 const AddBlogs = () => {
+  const editor = useRef(null);
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
@@ -151,22 +129,14 @@ const AddBlogs = () => {
     }
 
     try {
-      console.log("Converting image to Base64...");
       const imageBase64 = await convertToBase64(formData.image);
-      console.log("Image converted to Base64:", imageBase64);
-
-      console.log("Uploading image...");
       const uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
-      console.log("Image uploaded. URL:", uploadedImageUrl);
 
       const blogToSubmit = {
-        title: formData.title,
-        description: formData.description,
+        ...formData,
         image: uploadedImageUrl,
-        category: formData.category,
       };
 
-      console.log("Submitting blog:", blogToSubmit);
       await axios.post(`/api/blog`, blogToSubmit);
       toast.success("Blog has been added successfully!");
       setLoad(false);
@@ -188,17 +158,14 @@ const AddBlogs = () => {
     try {
       let uploadedImageUrl = editingBlog.image;
 
-      // Check if the image is a File object (newly uploaded), otherwise, use the existing URL.
       if (editingBlog.image instanceof File) {
         const imageBase64 = await convertToBase64(editingBlog.image);
         uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
       }
 
       const blogToUpdate = {
-        title: editingBlog.title,
-        description: editingBlog.description,
+        ...editingBlog,
         image: uploadedImageUrl,
-        category: editingBlog.category,
       };
 
       await axios.put(`/api/blog/${editingBlog.id}`, blogToUpdate);
@@ -235,7 +202,7 @@ const AddBlogs = () => {
     if (file) {
       setEditingBlog({
         ...editingBlog,
-        image: file, // Ensure this is a File object
+        image: file,
       });
     }
   };
@@ -485,14 +452,22 @@ const AddBlogs = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  label="Description"
-                  type="text"
-                  name="description"
+                <JoditEditor
+                  ref={editor}
                   value={formData.description}
-                  onChange={handleInputChange}
-                  fullWidth
-                  variant="outlined"
+                  tabIndex={1}
+                  onBlur={(newContent) =>
+                    setFormData({
+                      ...formData,
+                      description: newContent,
+                    })
+                  }
+                  onChange={(newContent) =>
+                    setFormData({
+                      ...formData,
+                      description: newContent,
+                    })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -599,18 +574,22 @@ const AddBlogs = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    label="Description"
-                    name="description"
+                  <JoditEditor
+                    ref={editor}
                     value={editingBlog.description}
-                    fullWidth
-                    onChange={(e) =>
+                    tabIndex={1}
+                    onBlur={(newContent) =>
                       setEditingBlog({
                         ...editingBlog,
-                        description: e.target.value,
+                        description: newContent,
                       })
                     }
-                    variant="outlined"
+                    onChange={(newContent) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        description: newContent,
+                      })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
