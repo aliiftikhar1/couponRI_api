@@ -1,42 +1,35 @@
-'use client'
+'use client';
 import { useState } from 'react';
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'; // Updated import path for v2 icons
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 export default function Header() {
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleServicesDropdown = () => {
-    setIsServicesOpen(!isServicesOpen);
-  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <header className="bg-white border-b-2 text-white px-4">
+    <header className="bg-white border-b-2 text-black px-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <a href="/">
-            <img src="/logo/logo.jpg" alt="Logo" className="w-40" />
+            <img src="/logo/logo.jpg" alt="Logo" className="md:w-40 w-24" />
           </a>
         </div>
         
-        {/* Navigation */}
-        <nav className="hidden lg:flex text-lg space-x-8 text-black text-sm font-semibold">
-        <a href="/pages/blog" className="hover:text-blue-700">
+        {/* Navigation for Desktop */}
+        <nav className="hidden lg:flex text-lg space-x-8 text-sm font-semibold">
+          <a href="/pages/blog" className="hover:text-blue-700">
             Blog
           </a>
-          
           <a href="/pages/categories" className="hover:text-blue-700">
             Categories
           </a>
           <a href="/pages/stores" className="hover:text-blue-700">
             Stores
           </a>
-          
           <a href="/pages/alloffers" className="hover:text-blue-700">
             Coupons
           </a>
@@ -45,10 +38,10 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* Search Icon */}
-        <div className="flex items-center">
-          <MagnifyingGlassIcon className="h-5 w-5 text-black cursor-pointer hover:text-blue-700" /> {/* Updated to use the v2 icon */}
-          <span className="ml-2 cursor-pointer text-black hover:text-blue-700">Search</span>
+        {/* Search Icon for Desktop */}
+        <div className="hidden lg:flex items-center">
+          <MagnifyingGlassIcon className="h-5 w-5 text-black cursor-pointer hover:text-blue-700" />
+          <span className="ml-2 cursor-pointer hover:text-blue-700">Search</span>
         </div>
 
         {/* Mobile Menu Button */}
@@ -60,22 +53,49 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <nav className="lg:hidden bg-teal-600 text-white p-4">
-          <a href="/pages/blog" className="block py-2 hover:bg-teal-700">
-            BLOG
+      {/* Sidebar for Mobile */}
+      <div
+        className={`fixed top-0 z-50 right-0 h-full w-64 bg-white shadow-lg transform ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        } transition-transform duration-300 ease-in-out z-50`}
+      >
+        <div className="flex justify-between items-center px-4 py-2 border-b">
+          <h2 className="text-xl font-semibold">Menu</h2>
+          <button onClick={toggleMenu} className="text-black focus:outline-none">
+            &times; {/* Close icon */}
+          </button>
+        </div>
+        <nav className="p-4 space-y-4">
+          <a href="/pages/blog" className="block hover:text-blue-700">
+            Blog
           </a>
-          <a href="/pages/categories" className="block py-2 hover:bg-teal-700">
-            CATEGORIES
+          <a href="/pages/categories" className="block hover:text-blue-700">
+            Categories
           </a>
-          <a href="/pages/alloffers" className="block py-2 hover:bg-teal-700">
-            COUPONS
+          <a href="/pages/stores" className="block hover:text-blue-700">
+            Stores
           </a>
-          <a href="/pages/contactus" className="block py-2 hover:bg-teal-700">
-            CONTACT US
+          <a href="/pages/alloffers" className="block hover:text-blue-700">
+            Coupons
           </a>
+          <a href="/pages/submitoffer" className="block hover:text-blue-700">
+            Submit Offer
+          </a>
+
+          {/* Search Option for Mobile */}
+          <div className="flex items-center pt-4 border-t mt-4">
+            <MagnifyingGlassIcon className="h-5 w-5 text-black cursor-pointer hover:text-blue-700" />
+            <span className="ml-2 cursor-pointer hover:text-blue-700">Search</span>
+          </div>
         </nav>
+      </div>
+
+      {/* Overlay */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={toggleMenu}
+        ></div>
       )}
     </header>
   );

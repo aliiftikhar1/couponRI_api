@@ -41,13 +41,13 @@ export default function BlogSlider({ blogs }) {
       {/* <div className="flex absolute z-50 w-full h-full justify-between mb-4 pr-8"> */}
         <button
           onClick={handlePrevious}
-          className="text-white p-2 absolute z-50 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
+          className="text-white p-2 absolute z-40 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
         >
           <span className='text-white font-bold hover:scale-110'>&#10094;</span>
         </button>
         <button
           onClick={handleNext}
-          className="text-white p-2 absolute z-50 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
+          className="text-white p-2 absolute z-40 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
         >
           <span className='text-white font-bold hover:scale-110'>&#10095;</span>
         </button>
