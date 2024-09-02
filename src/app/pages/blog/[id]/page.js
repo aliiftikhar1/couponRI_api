@@ -60,7 +60,7 @@ const BlogDetailPage = () => {
             />
             {/* <p className="text-sm sm:text-base text-gray-700 mt-4">{blog.description}</p> */}
             <div
-    className="text-sm sm:text-base text-gray-700 mt-4 "
+    className="text-lg sm:text-base text-gray-700 mt-4 "
     dangerouslySetInnerHTML={{ __html: blog.description }}
   >
 </div>
