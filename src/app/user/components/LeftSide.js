@@ -23,7 +23,7 @@ const LeftSide = ({ company, offers }) => {
         const companiesData = await response.json();
 
         const discounts = {};
-        {offers>0 &&(
+        
         offers.forEach((offer) => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
           if (discountMatch) {
@@ -33,8 +33,7 @@ const LeftSide = ({ company, offers }) => {
               discounts[companyId] = discount;
             }
           }
-        })
-      )}
+        });
 
         const matchedStores = companiesData.filter(
           (comp) =>
@@ -121,7 +120,7 @@ const LeftSide = ({ company, offers }) => {
             <FireIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
             <span>Total Offers: {offers.length || 30}</span>
           </li>
-          {offers>0 &&(
+          {offers.length>0 &&(
           <li className="flex items-center">
             <CheckCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
             <span>
@@ -129,7 +128,7 @@ const LeftSide = ({ company, offers }) => {
             </span>
           </li>
           )}
-          {offers>0 &&(
+          {offers.length>0 &&(
           <li className="flex items-center">
             <CheckCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
             <span>

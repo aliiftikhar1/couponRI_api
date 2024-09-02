@@ -14,7 +14,7 @@ const OffersTable = ({ offers, company }) => {
 
   return (
     <>
-    {offers>0 &&(
+    {offers.length>0 &&(
     <div className="bg-white w-full sm:w-[1000px] mx-auto shadow-lg rounded-lg p-4 sm:p-6 overflow-x-auto mt-10">
       <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-center">Today's Top {company.com_title} Coupons</h2>
       <table className="min-w-full table-auto">
