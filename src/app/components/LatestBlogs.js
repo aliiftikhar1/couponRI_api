@@ -70,7 +70,17 @@ const LatestBlogPage = () => {
             />
             <div className="p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-gray-900">{blog.title}</h3>
-              <p className="text-sm text-gray-700 mt-2">{blog.description}</p>
+              
+              <div
+    className="text-gray-700 text-sm mt-2 overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  >
+</div>
               <button
                 onClick={() => handleReadMore(blog.id)}
                 className="text-blue-500 hover:underline mt-4 block"
