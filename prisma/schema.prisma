@@ -41,7 +41,7 @@ model Category {
 model Blog{
   id          Int      @id @default(autoincrement())
   title       String
-  description String?    @db.Text
+  description String    @db.Text
   image       String
   category    String
   createdAt   DateTime @default(now())
