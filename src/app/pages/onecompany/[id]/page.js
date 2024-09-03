@@ -86,6 +86,18 @@ const CompanyDetail = () => {
           </div>
         </div>
         <OffersTable offers={offers} company={company} />
+        <div className='bg-white p-10 rounded text-xl m-4'>
+        <div
+          className="text-sm sm:text-base"
+          dangerouslySetInnerHTML={{
+            __html:
+              company.comp_details ||
+              'No additional details available for this company.',
+          }}
+        >
+      </div>
+        </div>
+        
         <SimilarStores company={company} />
         <div className="mt-8 bg-white p-4 sm:p-6 shadow-md rounded-lg">
           <FaqComponent faqs={faqs} companyName={company.com_title} />
