@@ -163,7 +163,11 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                 <Link href={`/pages/onecompany/${store.id}`} className="block text-blue-500 hover:underline font-semibold">
                   {store.com_title}
                 </Link>
-                <p className="text-sm text-gray-700 mt-1">{store.comp_description}</p>
+                <div
+    className="text-lg sm:text-base text-gray-700 mt-4 "
+    dangerouslySetInnerHTML={{ __html: blog.description }}
+  >
+</div>
               </div>
             </li>
           ))}

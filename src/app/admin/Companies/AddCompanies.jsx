@@ -273,7 +273,11 @@ const AddCompanies = () => {
   };
 
   const handleOpen = (company) => {
-    setEditingCompany(company);
+    setEditingCompany({
+      ...company,
+      company_details: company.comp_details,  // Ensure this is properly mapped
+      other_details: company.comp_other_details, // Ensure this is properly mapped
+    });
     setOpen(true);
   };
 
@@ -836,29 +840,19 @@ const AddCompanies = () => {
                   </h3>
                   <JoditEditor
                     ref={editor}
-                    value={editingCompany ? editingCompany.company_details : formData.company_details}
+                    value={editingCompany.company_details}
                     tabIndex={1}
                     onBlur={(newContent) =>
-                      editingCompany
-                        ? setEditingCompany({
-                            ...editingCompany,
-                            company_details: newContent,
-                          })
-                        : setFormData({
-                            ...formData,
-                            company_details: newContent,
-                          })
+                      setEditingCompany({
+                        ...editingCompany,
+                        company_details: newContent,
+                      })
                     }
                     onChange={(newContent) =>
-                      editingCompany
-                        ? setEditingCompany({
-                            ...editingCompany,
-                            company_details: newContent,
-                          })
-                        : setFormData({
-                            ...formData,
-                            company_details: newContent,
-                          })
+                      setEditingCompany({
+                        ...editingCompany,
+                        company_details: newContent,
+                      })
                     }
                   />
                 </Grid>
@@ -868,29 +862,19 @@ const AddCompanies = () => {
                   </h3>
                   <JoditEditor
                     ref={editor}
-                    value={editingCompany ? editingCompany.other_details : formData.other_details}
+                    value={editingCompany.other_details}
                     tabIndex={1}
                     onBlur={(newContent) =>
-                      editingCompany
-                        ? setEditingCompany({
-                            ...editingCompany,
-                            other_details: newContent,
-                          })
-                        : setFormData({
-                            ...formData,
-                            other_details: newContent,
-                          })
+                      setEditingCompany({
+                        ...editingCompany,
+                        other_details: newContent,
+                      })
                     }
                     onChange={(newContent) =>
-                      editingCompany
-                        ? setEditingCompany({
-                            ...editingCompany,
-                            other_details: newContent,
-                          })
-                        : setFormData({
-                            ...formData,
-                            other_details: newContent,
-                          })
+                      setEditingCompany({
+                        ...editingCompany,
+                        other_details: newContent,
+                      })
                     }
                   />
                 </Grid>

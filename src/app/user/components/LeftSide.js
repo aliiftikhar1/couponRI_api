@@ -188,7 +188,7 @@ const LeftSide = ({ company, offers }) => {
           className="text-sm sm:text-base"
           dangerouslySetInnerHTML={{
             __html:
-              company?.comp_other_details ||
+              company.comp_other_details ||
               'No additional details available for this company.',
           }}
         />
