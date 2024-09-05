@@ -9,7 +9,7 @@ import SocialMediaMarketingProcess from '@/app/components/socialmedia/SocialMedi
 import SocialMediaSteps from '@/app/components/socialmedia/SocialMediaSteps';
 import WhyPartnerWithUs from '@/app/components/socialmedia/WhyPartnerWithUs';
 import Image from 'next/image';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';
 // import Layout
 

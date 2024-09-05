@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 import axios from 'axios';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 

@@ -10,7 +10,7 @@ import VideoEditingServices from '@/app/components/viedo_editing/VideoEditingSer
 import WhyChooseVideoEditing from '@/app/components/viedo_editing/WhyChooseVideoEditing';
 import WhyPartnerWithUs from '@/app/components/viedo_editing/WhyPartnerWithUs';
 import Image from 'next/image';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';
 // import Layout
 

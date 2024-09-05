@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 
 const OffersPage = () => {
   const [offers, setOffers] = useState([]);

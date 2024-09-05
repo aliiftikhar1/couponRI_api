@@ -13,7 +13,7 @@ import WebDevelopmentSection from '@/app/components/WebDevelopmentSection';
 import WhyPartnerWithUs from '@/app/components/WhyPartnerWithUs';
 
 import Image from 'next/image';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';
 // import Layout
 

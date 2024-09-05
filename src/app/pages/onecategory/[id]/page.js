@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { FaArrowRight } from 'react-icons/fa';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../../app/user/layout';
 
 const CompanyCard = ({ company, topDiscount }) => {
   return (
