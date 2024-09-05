@@ -1,14 +1,14 @@
 // app/pages/inspire_me/page.js
 
-import FAQ from '@/app/components/FAQs';
-import HappyClients from '@/app/components/HappyClients';
-import Portfolio from '@/app/components/Portfolio';
-import RecentProjects from '@/app/components/RecentProjects';
-import OurApproachToWebDevelopment from '@/app/components/viedo_editing/OurApproachToWebDevelopment';
-import OverVideoEditingServiceWorkProcess from '@/app/components/viedo_editing/OverVideoEditingServiceWorkProcess';
-import VideoEditingServices from '@/app/components/viedo_editing/VideoEditingServices';
-import WhyChooseVideoEditing from '@/app/components/viedo_editing/WhyChooseVideoEditing';
-import WhyPartnerWithUs from '@/app/components/viedo_editing/WhyPartnerWithUs';
+import FAQ from '../../../app/components/FAQs';
+import HappyClients from '../../../app/components/HappyClients';
+import Portfolio from '../../../app/components/Portfolio';
+import RecentProjects from '../../../app/components/RecentProjects';
+import OurApproachToWebDevelopment from '../../../app/components/viedo_editing/OurApproachToWebDevelopment';
+import OverVideoEditingServiceWorkProcess from '../../../app/components/viedo_editing/OverVideoEditingServiceWorkProcess';
+import VideoEditingServices from '../../../app/components/viedo_editing/VideoEditingServices';
+import WhyChooseVideoEditing from '../../../app/components/viedo_editing/WhyChooseVideoEditing';
+import WhyPartnerWithUs from '../../../app/components/viedo_editing/WhyPartnerWithUs';
 import Image from 'next/image';
 import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';

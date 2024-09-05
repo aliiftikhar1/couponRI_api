@@ -4,9 +4,9 @@ import ContentStrategy from '../../../app/components/content_writing/ContentStra
 import ContentWritingProcess from '../../../app/components/content_writing/ContentWritingProcess';
 import ContentWritingService from '../../../app/components/content_writing/ContentWritingService';
 import WhyPartnerWithUs from '../../../app/components/content_writing/WhyPartnerWithUs';
-import FAQ from '@/app/components/FAQs';
-import HappyClients from '@/app/components/HappyClients';
-import RecentProjects from '@/app/components/RecentProjects';
+import FAQ from '../../../app/components/FAQs';
+import HappyClients from '../../../app/components/HappyClients';
+import RecentProjects from '../../../app/components/RecentProjects';
 
 import Image from 'next/image';
 import CustomerRootLayout from '../../../app/user/layout';

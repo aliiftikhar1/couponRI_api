@@ -1,6 +1,6 @@
 // app/pages/inspire_me/page.js
 
-import Portfolio from '@/app/components/Portfolio';
+import Portfolio from '../../../app/components/Portfolio';
 import Image from 'next/image';
 import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';

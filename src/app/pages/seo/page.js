@@ -1,14 +1,14 @@
 // app/pages/inspire_me/page.js
 
 
-import FAQ from '@/app/components/FAQs';
-import HappyClients from '@/app/components/HappyClients';
-import OurExpertise from '@/app/components/OurSeoExpertise';
-import RecentProjects from '@/app/components/RecentProjects';
-import SeoCards from '@/app/components/SeoCards';
-import SeoServicesProcess from '@/app/components/SeoServicesProcess';
-import SeoServiceWorkProcess from '@/app/components/SeoServiceWorkProcess';
-import WhyPartnerWithUs from '@/app/components/WhySeoPartnerWithUs';
+import FAQ from '../../../app/components/FAQs';
+import HappyClients from '../../../app/components/HappyClients';
+import OurExpertise from '../../../app/components/OurSeoExpertise';
+import RecentProjects from '../../../app/components/RecentProjects';
+import SeoCards from '../../../app/components/SeoCards';
+import SeoServicesProcess from '../../../app/components/SeoServicesProcess';
+import SeoServiceWorkProcess from '../../../app/components/SeoServiceWorkProcess';
+import WhyPartnerWithUs from '../../../app/components/WhySeoPartnerWithUs';
 import Image from 'next/image';
 import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';

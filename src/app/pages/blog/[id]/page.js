@@ -74,7 +74,7 @@ const BlogDetailPage = () => {
 
           {/* Related blogs sidebar */}
           <div className="lg:w-1/4 mt-8 lg:mt-0">
-            <RelatedBlogs category={blog.category} currentBlogId={blog.id} /> {/* Pass the blog's category and id */}
+            <RelatedBlogs category={blog.category} currentBlogId={blog.id} /> 
           </div>
         </div>
       </div>

@@ -1,14 +1,14 @@
 // app/pages/inspire_me/page.js
 
 
-import FAQ from '@/app/components/FAQs';
-import CustomVisuals from '@/app/components/graphic_design/CustomVisuals';
-import GraphicDesignWorkProcess from '@/app/components/graphic_design/GraphicDesignWorkProcess';
-import OurExpertise from '@/app/components/graphic_design/OurExpertise';
-import OurPartnershipJourney from '@/app/components/graphic_design/OurPartnershipJourney';
-import WhyPartnerWithUs from '@/app/components/graphic_design/WhyPartnerWithUs';
-import HappyClients from '@/app/components/HappyClients';
-import RecentProjects from '@/app/components/RecentProjects';
+import FAQ from '../../../app/components/FAQs';
+import CustomVisuals from '../../../app/components/graphic_design/CustomVisuals';
+import GraphicDesignWorkProcess from '../../../app/components/graphic_design/GraphicDesignWorkProcess';
+import OurExpertise from '../../../app/components/graphic_design/OurExpertise';
+import OurPartnershipJourney from '../../../app/components/graphic_design/OurPartnershipJourney';
+import WhyPartnerWithUs from '../../../app/components/graphic_design/WhyPartnerWithUs';
+import HappyClients from '../../../app/components/HappyClients';
+import RecentProjects from '../../../app/components/RecentProjects';
 import Image from 'next/image';
 import CustomerRootLayout from '../../../app/user/layout';
 // import Portfolio from '../../components/Portfolio';
