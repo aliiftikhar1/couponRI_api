@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import CustomerRootLayout from '../../../app/user/layout';
+import CustomerRootLayout from '../../../../app/user/layout';
 
 const CategoryCouponDetail = () => {
   const params = useParams();

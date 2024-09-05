@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import { useRouter } from "next/navigation";
-import CustomerRootLayout from "@/app/user/layout";
+import CustomerRootLayout from "../../../app/user/layout";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
