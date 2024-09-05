@@ -1,9 +1,9 @@
 // app/pages/inspire_me/page.js
 
-import ContentStrategy from '@/app/components/content_writing/ContentStrategy';
-import ContentWritingProcess from '@/app/components/content_writing/ContentWritingProcess';
-import ContentWritingService from '@/app/components/content_writing/ContentWritingService';
-import WhyPartnerWithUs from '@/app/components/content_writing/WhyPartnerWithUs';
+import ContentStrategy from '../../../app/components/content_writing/ContentStrategy';
+import ContentWritingProcess from '../../../app/components/content_writing/ContentWritingProcess';
+import ContentWritingService from '../../../app/components/content_writing/ContentWritingService';
+import WhyPartnerWithUs from '../../../app/components/content_writing/WhyPartnerWithUs';
 import FAQ from '@/app/components/FAQs';
 import HappyClients from '@/app/components/HappyClients';
 import RecentProjects from '@/app/components/RecentProjects';
