@@ -16,6 +16,8 @@ export async function PUT(request, { params }) {
       comp_website,
       comp_rating,
       com_details,
+      meta_title,
+      meta_description,
       company_details,
       other_details,
     } = data;
@@ -62,6 +64,8 @@ export async function PUT(request, { params }) {
         comp_phone,
         comp_email,
         comp_website,
+        meta_title,
+        meta_description,
         comp_rating,
         com_details,
         comp_details:company_details,

@@ -1,7 +1,7 @@
 // pages/blog.js
 'use client'
 import { useState, useEffect } from 'react';
-import CustomerRootLayout from '@/app/user/layout';
+import CustomerRootLayout from '../../../app/user/layout';
 import Head from 'next/head';
 import Link from 'next/link';
 import BlogCategorySlider from './components/BlogSlider';

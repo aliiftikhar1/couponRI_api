@@ -29,7 +29,8 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const data = await request.json();
-    const { title, description, image, category } = data;
+    const { title, description, image,meta_title,
+      meta_description, category } = data;
     const id = parseInt(params.id);
 
     if (isNaN(id)) {
@@ -43,6 +44,8 @@ export async function PUT(request, { params }) {
         description,
         image,
         category,
+        meta_title,
+      meta_description,
         updatedAt: new Date(),
       },
     });

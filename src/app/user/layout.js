@@ -1,3 +1,4 @@
+'use client'
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { ToastContainer } from "react-toastify";
@@ -13,8 +14,6 @@ export default function CustomerRootLayout({ children }) {
   return (
     <html lang="en">
     <body className=" bg-white">
-      {/* {children} */}
-      {/* <UserProvider> */}
 
       <ToastContainer />
 
@@ -23,22 +22,8 @@ export default function CustomerRootLayout({ children }) {
       <div>{children}</div>
 
 
-
-      {/* </UserProvider> */}
-
-      {/* <MenuContextProvider>
-        <MainLayout>{children}</MainLayout>
-      </MenuContextProvider>
-       */}
-      {/* {
-        isAuthenticated ?  <RouterProvider router={router} /> : <RouterProvider router={LoginRoutes} />
-      }
-          */}
-
-      {/* <Home/> */}
       <Footer/>
 
-      {/* <Addproducts/> */}
     </body>
   </html>
   );

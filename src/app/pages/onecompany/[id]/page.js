@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import RightSide from '@/app/user/components/RightSide';
-import LeftSide from '@/app/user/components/LeftSide';
-import CouponHeader from '@/app/user/components/CouponHeader';
-import FaqComponent from '@/app/user/components/FaqComponent';
-import CustomerRootLayout from '@/app/user/layout';
-import OffersTable from '@/app/user/components/CouponTable';
-import SimilarStores from '@/app/user/components/SImilarStores';
+import RightSide from '../../../user/components/RightSide'
+import LeftSide from '../../../user/components/LeftSide';
+import CouponHeader from '../../../user/components/CouponHeader';
+import FaqComponent from '../../../user/components/FaqComponent';
+import CustomerRootLayout from '../../../user/layout';
+import OffersTable from '../../../user/components/CouponTable';
+import SimilarStores from '../../../user/components/SImilarStores';
+import Head from 'next/head';
 
 const CompanyDetail = () => {
   const params = useParams();
@@ -74,6 +75,12 @@ const CompanyDetail = () => {
   }
 
   return (
+    <>
+     <Head>
+        <title>{company.com_title}</title>
+        <meta name="description" content={company.comp_description} />
+      </Head>
+    
     <CustomerRootLayout>
       <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
         <CouponHeader company={company} />
@@ -87,15 +94,15 @@ const CompanyDetail = () => {
         </div>
         <OffersTable offers={offers} company={company} />
         <div className='bg-white p-10 rounded text-xl m-4'>
-        <div
-          className="text-sm sm:text-base"
-          dangerouslySetInnerHTML={{
-            __html:
-              company.comp_details ||
-              'No additional details available for this company.',
-          }}
-        >
-      </div>
+          <div
+            className="text-sm sm:text-base"
+            dangerouslySetInnerHTML={{
+              __html:
+                company.comp_details ||
+                'No additional details available for this company.',
+            }}
+          >
+          </div>
         </div>
         
         <SimilarStores company={company} />
@@ -104,6 +111,7 @@ const CompanyDetail = () => {
         </div>
       </div>
     </CustomerRootLayout>
+    </>
   );
 };
 

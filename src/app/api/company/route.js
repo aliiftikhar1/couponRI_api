@@ -12,6 +12,8 @@ export async function POST(request) {
       comp_phone, 
       comp_email, 
       comp_website, 
+      meta_title,
+      meta_description,
       comp_rating, 
       com_details, 
       company_details,  // New field
@@ -29,12 +31,15 @@ export async function POST(request) {
         comp_website,
         comp_rating,
         com_details,
+        meta_title,
+      meta_description,
         comp_details:company_details,
         comp_other_details:other_details,
         created_at: new Date(),
         updated_at: new Date(),
       },
     });
+    console.log(newCompany);
 
     return NextResponse.json(newCompany);
   } catch (error) {

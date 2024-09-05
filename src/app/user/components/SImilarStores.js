@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CompanyCard from '@/app/pages/stores/components/companycard'; 
+import CompanyCard from '../../../app/pages/stores/components/companycard'; 
 
 const SimilarStores = ({ company }) => {
   const [similarStores, setSimilarStores] = useState([]);

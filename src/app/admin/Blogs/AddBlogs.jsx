@@ -1,15 +1,37 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Backdrop, CircularProgress, Grid, Box, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Toolbar, TablePagination, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert, IconButton } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Grid,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Toolbar,
+  TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
+  Alert,
+  IconButton,
+} from "@mui/material";
 import { useTable, useGlobalFilter, useSortBy, usePagination } from "react-table";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
-// import JoditEditor from "jodit-react"; // Import JoditEditor
-
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -67,6 +89,8 @@ const AddBlogs = () => {
       description: "",
       image: "",
       category: "",
+      meta_title: "",
+      meta_description: "",
     });
   };
 
@@ -76,6 +100,8 @@ const AddBlogs = () => {
     description: "",
     image: "",
     category: "",
+    meta_title: "",
+    meta_description: "",
   });
 
   const handleInputChange = (e) => {
@@ -96,10 +122,10 @@ const AddBlogs = () => {
 
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
-      const response = await fetch('https://couponri.com/uploadImage.php', {
-        method: 'POST',
+      const response = await fetch("https://couponri.com/uploadImage.php", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ image: imageBase64 }),
       });
@@ -107,7 +133,7 @@ const AddBlogs = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to upload image');
+        throw new Error(result.error || "Failed to upload image");
       }
 
       return result.image_url;
@@ -122,7 +148,7 @@ const AddBlogs = () => {
     setLoad(true);
     setLoading(true); // Show loading overlay
 
-    if (!formData.title || !formData.description || !formData.image || !formData.category) {
+    if (!formData.title || !formData.description || !formData.image || !formData.category || !formData.meta_title || !formData.meta_description) {
       setSnackbarSubmit(true);
       setTimeout(() => {
         setSnackbarSubmit(false);
@@ -368,9 +394,7 @@ const AddBlogs = () => {
                 {headerGroup.headers.map((column) => (
                   <TableCell
                     key={column.id}
-                    {...column.getHeaderProps(
-                      column.getSortByToggleProps()
-                    )}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                     sx={{
                       fontWeight: "bold",
                       color: "#333",
@@ -480,6 +504,28 @@ const AddBlogs = () => {
                   type="text"
                   name="category"
                   value={formData.category}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Meta Title"
+                  type="text"
+                  name="meta_title"
+                  value={formData.meta_title}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Meta Description"
+                  type="text"
+                  name="meta_description"
+                  value={formData.meta_description}
                   onChange={handleInputChange}
                   fullWidth
                   variant="outlined"
@@ -608,6 +654,38 @@ const AddBlogs = () => {
                         category: e.target.value,
                       })
                     }
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Title"
+                    type="text"
+                    name="meta_title"
+                    value={editingBlog.meta_title}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        meta_title: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Description"
+                    type="text"
+                    name="meta_description"
+                    value={editingBlog.meta_description}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        meta_description: e.target.value,
+                      })
+                    }
+                    fullWidth
                     variant="outlined"
                   />
                 </Grid>

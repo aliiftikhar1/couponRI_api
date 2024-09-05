@@ -115,6 +115,8 @@ const AddCompanies = () => {
       com_details: "",
       company_details: "", // Resetting the new fields
       other_details: "",   // Resetting the new fields
+      meta_title: "",      // Resetting meta title
+      meta_description: "",// Resetting meta description
     });
   };
 
@@ -131,6 +133,8 @@ const AddCompanies = () => {
     com_details: "",
     company_details: "", // New field for company details
     other_details: "",   // New field for other details
+    meta_title: "",      // New field for meta title
+    meta_description: "",// New field for meta description
   });
 
   const handleInputChange = (e) => {
@@ -277,6 +281,8 @@ const AddCompanies = () => {
       ...company,
       company_details: company.comp_details,  // Ensure this is properly mapped
       other_details: company.comp_other_details, // Ensure this is properly mapped
+      meta_title: company.meta_title || "",      // Mapping meta title
+      meta_description: company.meta_description || "", // Mapping meta description
     });
     setOpen(true);
   };
@@ -603,6 +609,28 @@ const AddCompanies = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  label="Meta Title"
+                  name="meta_title"
+                  value={formData.meta_title}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Meta Description"
+                  name="meta_description"
+                  value={formData.meta_description}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <h3 style={{ marginBottom: "10px", color: "#333" }}>
                   Company Details
                 </h3>
@@ -832,6 +860,38 @@ const AddCompanies = () => {
                       })
                     }
                     variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Title"
+                    name="meta_title"
+                    value={editingCompany.meta_title}
+                    onChange={(e) =>
+                      setEditingCompany({
+                        ...editingCompany,
+                        meta_title: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Description"
+                    name="meta_description"
+                    value={editingCompany.meta_description}
+                    onChange={(e) =>
+                      setEditingCompany({
+                        ...editingCompany,
+                        meta_description: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                    multiline
+                    rows={3}
                   />
                 </Grid>
                 <Grid item xs={12}>

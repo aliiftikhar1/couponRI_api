@@ -1,53 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-
-
 model Company {
-  id               Int      @id @default(autoincrement())
-  com_title        String
-  comp_logo        String
-  comp_category    Int      
-  comp_description String   @db.Text
-  comp_phone       String
-  comp_email       String
-  comp_website     String
-  comp_rating      String
-  com_details      String   @db.Text
-  comp_details  String?   @db.Text   
-  comp_other_details    String?   @db.Text  
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  id                 Int      @id @default(autoincrement())
+  com_title          String
+  comp_logo          String
+  comp_category      Int
+  comp_description   String   @db.Text
+  comp_phone         String
+  comp_email         String
+  comp_website       String
+  comp_rating        String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  comp_details       String?  @db.Text
+  comp_other_details String?  @db.Text
+  meta_description   String?
+  meta_title         String?
 }
-
-
 
 model Category {
-  id             Int      @id @default(autoincrement())
-  category_name  String
+  id                   Int      @id @default(autoincrement())
+  category_name        String
   category_description String?
-  category_status String?
-  category_image String
-  created_at     DateTime
-  updated_at     DateTime
+  category_status      String?
+  category_image       String
+  created_at           DateTime
+  updated_at           DateTime
+  meta_description     String?
+  meta_title           String?
 }
 
-model Blog{
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String    @db.Text
-  image       String
-  category    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Blog {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String   @db.Text
+  image            String
+  category         String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  meta_description String?
+  meta_title       String?
 }
-
 
 model Offer {
   id                Int      @id @default(autoincrement())
@@ -65,16 +65,14 @@ model Offer {
   offer_details     String
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
-  
 }
 
-model CategoryCoupon{
-  id                Int      @id @default(autoincrement())
-  name            String
-  offer           String?
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
-
+model CategoryCoupon {
+  id         Int      @id @default(autoincrement())
+  name       String
+  offer      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Faqs {
@@ -87,12 +85,12 @@ model Faqs {
 }
 
 model Submittion {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   storeWebsite   String
   offerType      String
   code           String
   description    String
-  startDate      DateTime? // Optional
-  expirationDate DateTime? // Optional
+  startDate      DateTime?
+  expirationDate DateTime?
   createdAt      DateTime  @default(now())
 }

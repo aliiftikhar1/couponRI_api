@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
-import RelatedBlogs from '@/app/components/RelatedBlogs';
-import CustomerRootLayout from '@/app/user/layout';
+import RelatedBlogs from '../../../../app/components/RelatedBlogs';
+import CustomerRootLayout from '../../../../app/user/layout';
 
 const BlogDetailPage = () => {
   const router = useRouter();
