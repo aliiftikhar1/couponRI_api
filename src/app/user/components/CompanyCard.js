@@ -11,7 +11,7 @@ const CompanyCard = ({ company }) => {
   return (
     <div className="border border-gray-300 rounded-lg p-4 sm:p-6 bg-white">
       <img 
-        src={`http://coupnri.m3xtraders.com/uploads/${company.comp_logo}`} 
+        src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`} 
         alt={company.com_title} 
         className="w-full h-24 sm:h-32 object-cover rounded-lg mb-4" 
       />

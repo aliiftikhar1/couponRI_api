@@ -91,7 +91,7 @@ const TopTrendingOffers = () => {
           <div key={offer.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-300 transition-transform duration-300 hover:scale-105">
             <div className="relative pb-56">
               <img
-                src={`http://coupnri.m3xtraders.com/uploads/${offer.company.comp_logo}`}
+                src={`https://coupnri.m3xtrader.com/uploads/${offer.company.comp_logo}`}
                 alt={offer.company.com_title}
                 className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
               />
@@ -131,7 +131,7 @@ const TopTrendingOffers = () => {
             </button>
             <div className="flex items-center justify-center mb-4">
               <img
-                src={`http://coupnri.m3xtraders.com/uploads/${selectedOffer.company.comp_logo}`}
+                src={`https://coupnri.m3xtrader.com/uploads/${selectedOffer.company.comp_logo}`}
                 alt={selectedOffer.company.com_title}
                 className="h-16"
               />

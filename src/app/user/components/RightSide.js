@@ -73,7 +73,7 @@ const OfferCard = ({ offer, company }) => {
               &times;
             </button>
             <img
-              src={`http://coupnri.m3xtraders.com/uploads/${company.comp_logo}`}
+              src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`}
               alt={company.com_title}
               className="h-16 mx-auto mb-4"
             />

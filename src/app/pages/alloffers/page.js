@@ -88,7 +88,7 @@ const OffersPage = () => {
               {offer.company && (
                 <div className="w-full sm:w-1/3 mb-4 sm:mb-0">
                   <img
-                    src={`http://coupnri.m3xtraders.com/uploads/${offer.company.comp_logo}`}
+                    src={`https://coupnri.m3xtrader.com/uploads/${offer.company.comp_logo}`}
                     alt={offer.company.com_title}
                     className="w-full h-32 sm:h-full object-contain rounded-t-lg sm:rounded-l-lg sm:rounded-t-none"
                   />
@@ -146,7 +146,7 @@ const OffersPage = () => {
               </button>
               <div className="flex items-center justify-center mb-4">
                 <img
-                  src={`http://coupnri.m3xtraders.com/uploads/${selectedOffer.company.comp_logo}`}
+                  src={`https://coupnri.m3xtrader.com/uploads/${selectedOffer.company.comp_logo}`}
                   alt={selectedOffer.company.com_title}
                   className="h-12 sm:h-16"
                 />

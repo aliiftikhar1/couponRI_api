@@ -81,7 +81,7 @@ const CompanyDetail = ({ id }) => {
         <OffersTable offers={offers} company={company} />
         <div className='bg-white p-10 rounded text-xl m-4'>
           <div
-            className="text-sm sm:text-base"
+            className="md:text-lg text-sm"
             dangerouslySetInnerHTML={{
               __html:
                 company.comp_details ||

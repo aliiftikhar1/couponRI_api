@@ -55,7 +55,7 @@ const BlogSlider2 = ({ blogs }) => {
               >
                 <div className="relative group">
                   <img
-                    src={`http://coupnri.m3xtraders.com/uploads/${blog.image}`}
+                    src={`https://coupnri.m3xtrader.com/uploads/${blog.image}`}
                     alt={blog.title}
                     className="w-full h-64 object-cover rounded-lg"
                   />

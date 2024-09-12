@@ -64,7 +64,7 @@ const LatestBlogPage = () => {
             onClick={() => handleReadMore(blog.id)}
           >
             <img
-              src={`http://coupnri.m3xtraders.com/uploads/${blog.image}`}
+              src={`https://coupnri.m3xtrader.com/uploads/${blog.image}`}
               alt={blog.title}
               className="w-full h-40 sm:h-48 lg:h-56 object-cover"
             />

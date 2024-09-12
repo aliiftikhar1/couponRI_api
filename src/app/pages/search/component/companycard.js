@@ -11,7 +11,7 @@ const CompanyCard = ({ company, topDiscount }) => {
         </div>
         <div className="flex-grow">
           <img
-            src={`http://coupnri.m3xtraders.com/uploads/${company.comp_logo}`}
+            src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`}
             alt={company.com_title}
             className="w-full h-40 object-cover rounded-lg mb-4"
           />

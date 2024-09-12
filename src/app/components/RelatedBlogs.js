@@ -123,7 +123,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
           {relatedBlogs.map(blog => (
             <li key={blog.id} className="mb-4 flex items-start">
               <img
-                src={`http://coupnri.m3xtraders.com/uploads/${blog.image}`} // Replace with your actual image path
+                src={`https://coupnri.m3xtrader.com/uploads/${blog.image}`} // Replace with your actual image path
                 alt={blog.title}
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
@@ -160,7 +160,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
           {similarStores.map(store => (
             <li key={store.id} className="mb-4 flex items-start">
               <img
-                src={`http://coupnri.m3xtraders.com/uploads/${store.comp_logo}`} // Replace with your actual image path
+                src={`https://coupnri.m3xtrader.com/uploads/${store.comp_logo}`} // Replace with your actual image path
                 alt={store.com_title}
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
@@ -197,7 +197,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
           {similarOffers.map(offer => (
             <li key={offer.id} className="mb-4 flex items-start">
               <img
-                src={`http://coupnri.m3xtraders.com/uploads/${getCompanyLogo(offer.comp_id)}`} // Use the company logo based on comp_id
+                src={`https://coupnri.m3xtrader.com/uploads/${getCompanyLogo(offer.comp_id)}`} // Use the company logo based on comp_id
                 alt={offer.offer_title}
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
