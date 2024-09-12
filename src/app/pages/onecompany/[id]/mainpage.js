@@ -1,4 +1,4 @@
-'use client';  // This tells Next.js that this is a client component
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import RightSide from '../../../user/components/RightSide';
@@ -67,37 +67,35 @@ const CompanyDetail = ({ id }) => {
   }
 
   return (
-    <>
-      <CustomerRootLayout>
-        <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
-          <CouponHeader company={company} />
-          <div className="container mx-auto flex flex-col md:flex-row gap-4 sm:gap-6">
-            <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
-              <LeftSide company={company} offers={offers} />
-            </div>
-            <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
-              <RightSide offers={offers} company={company} />
-            </div>
+    <CustomerRootLayout>
+      <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
+        <CouponHeader company={company} />
+        <div className="container mx-auto flex flex-col md:flex-row gap-4 sm:gap-6">
+          <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
+            <LeftSide company={company} offers={offers} />
           </div>
-          <OffersTable offers={offers} company={company} />
-          <div className='bg-white p-10 rounded text-xl m-4'>
-            <div
-              className="text-sm sm:text-base"
-              dangerouslySetInnerHTML={{
-                __html:
-                  company.comp_details ||
-                  'No additional details available for this company.',
-              }}
-            ></div>
-          </div>
-          
-          <SimilarStores company={company} />
-          <div className="mt-8 bg-white p-4 sm:p-6 shadow-md rounded-lg">
-            <FaqComponent faqs={faqs} companyName={company.com_title} />
+          <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
+            <RightSide offers={offers} company={company} />
           </div>
         </div>
-      </CustomerRootLayout>
-    </>
+        <OffersTable offers={offers} company={company} />
+        <div className='bg-white p-10 rounded text-xl m-4'>
+          <div
+            className="text-sm sm:text-base"
+            dangerouslySetInnerHTML={{
+              __html:
+                company.comp_details ||
+                'No additional details available for this company.',
+            }}
+          ></div>
+        </div>
+
+        <SimilarStores company={company} />
+        <div className="mt-8 bg-white p-4 sm:p-6 shadow-md rounded-lg">
+          <FaqComponent faqs={faqs} companyName={company.com_title} />
+        </div>
+      </div>
+    </CustomerRootLayout>
   );
 };
 
