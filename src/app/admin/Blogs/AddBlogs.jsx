@@ -276,7 +276,24 @@ const AddBlogs = () => {
       {
         Header: "Description",
         accessor: "description",
-      },
+        Cell: ({ value }) => {
+          return (
+            <div
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 4,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "normal",
+              }}
+            >
+              {value}
+            </div>
+          );
+        },
+      }
+,      
       {
         Header: "Image",
         accessor: "image",
