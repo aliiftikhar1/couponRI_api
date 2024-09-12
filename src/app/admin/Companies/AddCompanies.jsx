@@ -155,7 +155,7 @@ const AddCompanies = () => {
 
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
-      const response = await fetch('https://couponri.com/uploadImage.php', {
+      const response = await fetch('http://coupnri.m3xtraders.com/uploadimage.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -339,7 +339,7 @@ const AddCompanies = () => {
         accessor: "comp_logo",
         Cell: ({ value }) => (
           <img
-            src={`https://couponri.com/uploads/${value.trim()}`}
+            src={`http://coupnri.m3xtraders.com/uploads/${value.trim()}`}
             alt="Company Logo"
             style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
@@ -955,7 +955,7 @@ const AddCompanies = () => {
                       src={
                         editingCompany.comp_logo instanceof File
                           ? URL.createObjectURL(editingCompany.comp_logo)
-                          : `https://couponri.com/uploads/${editingCompany.comp_logo}`
+                          : `http://coupnri.m3xtraders.com/uploads/${editingCompany.comp_logo}`
                       }
                       alt="Uploaded"
                       style={{

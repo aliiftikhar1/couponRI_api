@@ -4,7 +4,7 @@ import BlogDetailPage from "./mainpage";
 
 export async function generateMetadata({ params }) {
   // Get the base URL from environment variables
-  const baseUrl = 'http://localhost:3000'; // Fallback to localhost during development
+  const baseUrl = 'http://couponri.com'; // Fallback to localhost during development
 
   // Fetch company data using the full URL
   const res = await fetch(`${baseUrl}/api/blog/${params.id}`);

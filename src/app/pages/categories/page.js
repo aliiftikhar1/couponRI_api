@@ -62,7 +62,7 @@ const CategoryPage = () => {
                     <CardMedia
                       component="img"
                       alt={category.category_name}
-                      image={`https://couponri.com/uploads/${category.category_image}`}
+                      image={`http://coupnri.m3xtraders.com/uploads/${category.category_image}`}
                       title={category.category_name}
                       sx={{
                         position: 'absolute',

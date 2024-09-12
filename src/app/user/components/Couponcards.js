@@ -16,7 +16,7 @@ const CouponCard = ({ company, topDiscount }) => {
     <div className="border rounded-lg shadow-lg p-4 sm:p-6 flex flex-col text-left bg-white">
       <div className="mb-4 flex justify-center items-center">
         <img
-          src={`https://couponri.com/uploads/${company.comp_logo}`}
+          src={`http://coupnri.m3xtraders.com/uploads/${company.comp_logo}`}
           alt={company.com_title}
           className="w-full h-32 sm:h-48 object-contain rounded"
         />

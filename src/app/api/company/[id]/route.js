@@ -29,7 +29,7 @@ export async function PUT(request, { params }) {
     // if (comp_logo) {
     //   const uploadImageToExternalAPI = async (imageBase64) => {
     //     try {
-    //       const response = await fetch('https://couponri.com/uploadImage.php', {
+    //       const response = await fetch('http://coupnri.m3xtraders.com/uploadImage.php', {
     //         method: 'POST',
     //         headers: {
     //           'Content-Type': 'application/json',

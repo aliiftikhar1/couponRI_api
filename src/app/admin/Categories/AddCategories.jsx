@@ -134,7 +134,7 @@ const AddCategories = () => {
 
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
-      const response = await fetch('https://couponri.com/uploadImage.php', {
+      const response = await fetch('http://coupnri.m3xtraders.com/uploadimage.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -318,7 +318,7 @@ const AddCategories = () => {
         Cell: ({ value }) => {
           return (
             <img
-              src={`https://couponri.com/uploads/${value.trim()}`}
+              src={`http://coupnri.m3xtraders.com/uploads/${value.trim()}`}
               alt="Category Image"
               style={{ maxWidth: "50px", maxHeight: "50px" }}
             />

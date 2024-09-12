@@ -122,7 +122,7 @@ const AddBlogs = () => {
 
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
-      const response = await fetch("https://couponri.com/uploadImage.php", {
+      const response = await fetch("http://coupnri.m3xtraders.com/uploadimage.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +283,7 @@ const AddBlogs = () => {
         Cell: ({ value }) => {
           return (
             <img
-              src={`https://couponri.com/uploads/${value.trim()}`}
+              src={`http://coupnri.m3xtraders.com/uploads/${value.trim()}`}
               alt="Blog Image"
               style={{ maxWidth: "50px", maxHeight: "50px" }}
             />
@@ -705,7 +705,7 @@ const AddBlogs = () => {
                       src={
                         editingBlog.image instanceof File
                           ? URL.createObjectURL(editingBlog.image)
-                          : `https://couponri.com/uploads/${editingBlog.image}`
+                          : `http://coupnri.m3xtraders.com/uploads/${editingBlog.image}`
                       }
                       alt="Uploaded"
                       style={{

@@ -43,7 +43,7 @@ const FeaturedStores = () => {
           <a href={`/pages/onecompany/${company.id}`}>
           <div key={company.id} className="bg-white border border-gray-200 shadow-sm p-4 overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
             <img
-              src={`https://couponri.com/uploads/${company.comp_logo}`} // Replace with the correct path to the images
+              src={`http://coupnri.m3xtraders.com/uploads/${company.comp_logo}`} // Replace with the correct path to the images
               alt={company.com_title}
               className="w-full h-40 sm:h-48 object-cover"
             />

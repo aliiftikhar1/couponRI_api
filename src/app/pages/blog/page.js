@@ -68,7 +68,7 @@ function BlogPosts({ blogs }) {
         {blogs.map((post, index) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
             <img 
-              src={`https://couponri.com/uploads/${post.image} `} 
+              src={`http://coupnri.m3xtraders.com/uploads/${post.image} `} 
               alt={post.title} 
               width={400} 
               height={300} 
