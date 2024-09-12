@@ -101,7 +101,7 @@ const LeftSide = ({ company, offers }) => {
       />
     ))}
     <span className="ml-2 text-gray-600 text-sm sm:text-base">
-      {company?.comp_rating || 0} Rating ({company?.comp_reviews || 0})
+      {company?.comp_rating || 0} Rating 
     </span>
   </div>
 </div>
