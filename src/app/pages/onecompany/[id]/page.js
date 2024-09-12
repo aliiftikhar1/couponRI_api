@@ -1,118 +1,30 @@
-'use client';
+import React from "react";
+import CompanyDetail from "./mainpage";
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import RightSide from '../../../user/components/RightSide'
-import LeftSide from '../../../user/components/LeftSide';
-import CouponHeader from '../../../user/components/CouponHeader';
-import FaqComponent from '../../../user/components/FaqComponent';
-import CustomerRootLayout from '../../../user/layout';
-import OffersTable from '../../../user/components/CouponTable';
-import SimilarStores from '../../../user/components/SImilarStores';
-import Head from 'next/head';
+export async function generateMetadata({ params }) {
+  // Get the base URL from environment variables
+  const baseUrl = 'http://localhost:3000'; // Fallback to localhost during development
 
-const CompanyDetail = () => {
-  const params = useParams();
-  const [company, setCompany] = useState(null);
-  const [offers, setOffers] = useState([]);
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (params && params.id) {
-        try {
-          // Fetch company details
-          const companyResponse = await fetch(`/api/company/${params.id}`);
-          if (!companyResponse.ok) {
-            throw new Error('Failed to fetch company data');
-          }
-          const companyData = await companyResponse.json();
-          setCompany(companyData);
-
-          // Fetch offers related to this company
-          const offersResponse = await fetch(`/api/gettingoffers/${params.id}`);
-          if (!offersResponse.ok) {
-            throw new Error('Failed to fetch offers data');
-          }
-          const offersData = await offersResponse.json();
-          setOffers(offersData);
-
-          // Fetch FAQs related to this company
-          const faqsResponse = await fetch(`/api/gettingfaqs/${params.id}`);
-          if (!faqsResponse.ok) {
-            throw new Error('Failed to fetch FAQs data');
-          }
-          const faqsData = await faqsResponse.json();
-          setFaqs(faqsData);
-
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setError(error.message);
-          setLoading(false);
-        }
-      } else {
-        setError('No ID available in params to fetch data');
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [params]);
-
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading...</div>;
+  // Fetch company data using the full URL
+  const res = await fetch(`${baseUrl}/api/company/${params.id}`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch company data');
   }
 
-  if (error) {
-    return <div className="flex items-center justify-center min-h-screen bg-red-100 text-red-700">{`Error: ${error}`}</div>;
-  }
+  const company = await res.json();
 
-  if (!company) {
-    return <div className="flex items-center justify-center min-h-screen bg-yellow-100 text-yellow-700">Company data not found or failed to load.</div>;
-  }
+  // Return metadata with the fetched company title and description
+  return {
+    title: company.com_title || 'CouponRI',
+    description: company.comp_description || 'Best coupon website',
+  };
+}
 
+
+export default function Home({ params }) {
   return (
     <>
-     <Head>
-        <title>{company.com_title}</title>
-        <meta name="description" content={company.comp_description} />
-      </Head>
-    
-    <CustomerRootLayout>
-      <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
-        <CouponHeader company={company} />
-        <div className="container mx-auto flex flex-col md:flex-row gap-4 sm:gap-6">
-          <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
-            <LeftSide company={company} offers={offers} />
-          </div>
-          <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
-            <RightSide offers={offers} company={company} />
-          </div>
-        </div>
-        <OffersTable offers={offers} company={company} />
-        <div className='bg-white p-10 rounded text-xl m-4'>
-          <div
-            className="text-sm sm:text-base"
-            dangerouslySetInnerHTML={{
-              __html:
-                company.comp_details ||
-                'No additional details available for this company.',
-            }}
-          >
-          </div>
-        </div>
-        
-        <SimilarStores company={company} />
-        <div className="mt-8 bg-white p-4 sm:p-6 shadow-md rounded-lg">
-          <FaqComponent faqs={faqs} companyName={company.com_title} />
-        </div>
-      </div>
-    </CustomerRootLayout>
+      <CompanyDetail id={params.id} />
     </>
   );
-};
-
-export default CompanyDetail;
+}

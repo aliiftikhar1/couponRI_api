@@ -132,7 +132,12 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                   {blog.title}
                 </Link>
                 <div
-    className="text-lg sm:text-base text-gray-700 mt-4 "
+    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
     dangerouslySetInnerHTML={{ __html: blog.description }}
   >
 </div>
@@ -164,8 +169,13 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                   {store.com_title}
                 </Link>
                 <div
-    className="text-lg sm:text-base text-gray-700 mt-4 "
-    dangerouslySetInnerHTML={{ __html: blog.description }}
+    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+    style={{
+      display: '-webkit-box',
+      WebkitLineClamp: 3, // Limit to 3 lines
+      WebkitBoxOrient: 'vertical',
+    }}
+    dangerouslySetInnerHTML={{ __html: store.comp_description }}
   >
 </div>
               </div>
