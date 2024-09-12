@@ -1,19 +1,26 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router"; // Importing useRouter
+
 import CompanyCard from "./component/companycard"
 import CustomerRootLayout from "../../user/layout"
 
 export default function Home() {
-  const router = useRouter();
-  const { query } = router; // Accessing query parameters from the router
-  const searchQuery = query.query; // Getting the 'query' parameter from the URL
+ 
+  const [searchQuery, setSearchQuery] = useState('')
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     // Fetch the stores based on the query parameter
+    const handleRouteChange = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query') || '';
+        setSearchQuery(query);
+      };
+  
+      // Initial load
+      handleRouteChange();
     const fetchStores = async () => {
       setLoading(true);
       try {
