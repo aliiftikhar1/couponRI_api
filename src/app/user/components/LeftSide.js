@@ -89,22 +89,23 @@ const LeftSide = ({ company, offers }) => {
           {company?.com_title || 'SuperMade'}
         </h2>
         <div className="flex justify-center items-center my-2">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <StarIcon
-                key={i}
-                className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                  i < (company?.comp_rating || 4)
-                    ? 'text-yellow-500'
-                    : 'text-gray-300'
-                }`}
-              />
-            ))}
-            <span className="ml-2 text-gray-600 text-sm sm:text-base">
-              {company?.comp_rating || 4.3} Rating ({company?.comp_reviews || 10})
-            </span>
-          </div>
-        </div>
+  <div className="flex items-center">
+    {[...Array(5)].map((_, i) => (
+      <StarIcon
+        key={i}
+        className={`h-5 w-5 sm:h-6 sm:w-6 ${
+          i < Math.round(company?.comp_rating || 0)
+            ? 'text-yellow-500' // Filled star (colored)
+            : 'text-gray-300'  // Empty star (uncolored)
+        }`}
+      />
+    ))}
+    <span className="ml-2 text-gray-600 text-sm sm:text-base">
+      {company?.comp_rating || 0} Rating ({company?.comp_reviews || 0})
+    </span>
+  </div>
+</div>
+
         <p className="text-sm sm:text-base text-gray-500">
           {company?.comp_description ||
             'SuperMade discount codes for 40% OFF are issued by this store for Limited Time. You can use these Coupon codes to get up to 70% discount in August 2024.'}
