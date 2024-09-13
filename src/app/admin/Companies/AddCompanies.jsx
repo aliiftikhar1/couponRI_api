@@ -155,7 +155,7 @@ const AddCompanies = () => {
 
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
-      const response = await fetch('https://m3xtrader.com/coupon/uploadimage.php', {
+      const response = await fetch('https://m3xtrader.com/coupon/uploadImage.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
