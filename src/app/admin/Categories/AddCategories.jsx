@@ -188,7 +188,7 @@ const AddCategories = () => {
       };
   
       console.log("Submitting category:", categoryToSubmit);
-      await axios.post(`http://localhost:3000/api/category`, categoryToSubmit);
+      await axios.post(`/api/category`, categoryToSubmit);
       toast.success("Category has been added successfully!");
       setLoad(false);
       setLoading(false); // Hide loading overlay
