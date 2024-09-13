@@ -15,7 +15,6 @@ export async function POST(request) {
       meta_title,
       meta_description,
       comp_rating, 
-      com_details, 
       company_details,  // New field
       other_details     // New field
     } = data;
@@ -30,7 +29,6 @@ export async function POST(request) {
         comp_email,
         comp_website,
         comp_rating,
-        com_details,
         meta_title,
       meta_description,
         comp_details:company_details,

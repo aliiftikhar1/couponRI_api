@@ -18,32 +18,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
     <body className=" bg-white">
-      {/* {children} */}
-      {/* <UserProvider> */}
-
-      {/* <ToastContainer /> */}
-
-      {/* <Header /> */}
+  
 
       <div>{children}</div>
 
 
-
-      {/* </UserProvider> */}
-
-      {/* <MenuContextProvider>
-        <MainLayout>{children}</MainLayout>
-      </MenuContextProvider>
-       */}
-      {/* {
-        isAuthenticated ?  <RouterProvider router={router} /> : <RouterProvider router={LoginRoutes} />
-      }
-          */}
-
-      {/* <Home/> */}
-      {/* <Footer/> */}
-
-      {/* <Addproducts/> */}
     </body>
   </html>
   );

@@ -168,8 +168,10 @@ const AddCompanies = () => {
       if (!response.ok) {
         throw new Error(result.error || 'Failed to upload image');
       }
+      console.log("Image Url is: ",result.image_url);
 
       return result.image_url; // Assuming the API returns the image URL in this field
+    
     } catch (error) {
       console.error("Error uploading image:", error);
       throw new Error("Image upload failed");
