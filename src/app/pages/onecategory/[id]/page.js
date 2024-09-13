@@ -15,7 +15,7 @@ const CompanyCard = ({ company, topDiscount }) => {
       </div>
       <div className="h-[150px]">
         <img
-          src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`}
+          src={`https://m3xtrader.com/coupon/uploads/${company.comp_logo}`}
           alt={company.com_title}
           className="w-full h-full object-contain mb-4"  // Use object-contain to maintain aspect ratio
         />

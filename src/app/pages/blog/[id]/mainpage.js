@@ -52,7 +52,7 @@ const BlogDetailPage = ({id}) => {
           {/* Main blog content */}
           <div className="lg:w-3/4">
             <img
-              src={`https://coupnri.m3xtrader.com/uploads/${blog.image}`}
+              src={`https://m3xtrader.com/coupon/uploads/${blog.image}`}
               alt={blog.title}
               className="w-full h-[200px] sm:h-[300px] lg:h-[400px] object-cover mb-4"
             />

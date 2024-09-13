@@ -12,7 +12,7 @@ const CouponHeader = ({ company }) => {
     <div className="bg-[#07069F] mb-20 p-2 text-white flex items-center justify-center h-36 w-full relative">
       <div className="absolute md:left-64 left-1/2 transform -translate-x-1/2 md:translate-x-0 top-28 md:top-16 h-24 w-24 md:h-36 md:w-36 flex justify-center items-center bg-white rounded-full ">
         <img
-          src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`}
+          src={`https://m3xtrader.com/coupon/uploads/${company.comp_logo}`}
           alt={company.com_title}
           className="h-24 w-24 md:h-36 md:w-36 object-cover rounded-full border-4 border-white"
         />

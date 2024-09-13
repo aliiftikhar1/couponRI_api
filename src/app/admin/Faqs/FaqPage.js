@@ -201,7 +201,7 @@ export default function FaqPage() {
                 }`}>
                   <div className="relative pb-56 flex-shrink-0">
                     <img
-                      src={`https://coupnri.m3xtrader.com/uploads/${company.comp_logo}`}
+                      src={`https://m3xtrader.com/coupon/uploads/${company.comp_logo}`}
                       alt={company.com_title}
                       className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
                     />

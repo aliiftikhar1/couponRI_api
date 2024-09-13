@@ -47,7 +47,7 @@ const FeaturedCategories = () => {
           <a href={`/pages/onecategory/${category.id}`}>
           <div key={category.id} className="bg-white border border-gray-200 shadow-sm p-4 overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
             <img
-              src={`https://coupnri.m3xtrader.com/uploads/${category.category_image}`} // Replace with the correct path to the images
+              src={`https://m3xtrader.com/coupon/uploads/${category.category_image}`} // Replace with the correct path to the images
               alt={category.cat_title}
               className="w-full h-40 sm:h-48 object-cover rounded-lg"
             />
