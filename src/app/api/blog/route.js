@@ -5,7 +5,8 @@ export async function POST(request) {
   try {
     const data = await request.json();
     const { title, description, image,meta_title,
-      meta_description, category } = data;
+      meta_description, category,meta_focusKeyword,
+      web_slug, } = data;
 
     // Validate required fields
     if (!title || !description || !image || !category) {
@@ -21,6 +22,8 @@ export async function POST(request) {
         category,
         meta_title,
       meta_description,
+      meta_focusKeyword,
+      web_slug,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -37,6 +40,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const blogs = await prisma.blog.findMany();
+    console.log("blogs are :", blogs);
     return NextResponse.json(blogs);
   } catch (error) {
     console.error('Error fetching blogs:', error);

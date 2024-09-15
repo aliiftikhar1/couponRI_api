@@ -18,6 +18,7 @@ export async function generateMetadata({ params }) {
   return {
     title: blog.title || 'CouponRI',
     description: blog.description || 'Best coupon website',
+    keywords: blog.meta_focusKeyword || "Couponri blogs keyword"
   };
 }
 

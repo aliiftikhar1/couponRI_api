@@ -91,6 +91,8 @@ const AddBlogs = () => {
       category: "",
       meta_title: "",
       meta_description: "",
+      meta_focusKeyword: "", // New field for meta keyword
+      web_slug: "",          // New field for web slug
     });
   };
 
@@ -102,6 +104,8 @@ const AddBlogs = () => {
     category: "",
     meta_title: "",
     meta_description: "",
+    meta_focusKeyword: "", // New field for meta keyword
+    web_slug: "",          // New field for web slug
   });
 
   const handleInputChange = (e) => {
@@ -148,7 +152,16 @@ const AddBlogs = () => {
     setLoad(true);
     setLoading(true); // Show loading overlay
 
-    if (!formData.title || !formData.description || !formData.image || !formData.category || !formData.meta_title || !formData.meta_description) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.image ||
+      !formData.category ||
+      !formData.meta_title ||
+      !formData.meta_description ||
+      !formData.meta_focusKeyword ||  // Ensure this is filled
+      !formData.web_slug  // Ensure this is filled
+    ) {
       setSnackbarSubmit(true);
       setTimeout(() => {
         setSnackbarSubmit(false);
@@ -292,8 +305,7 @@ const AddBlogs = () => {
             </div>
           );
         },
-      }
-,      
+      },
       {
         Header: "Image",
         accessor: "image",
@@ -549,6 +561,28 @@ const AddBlogs = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  label="Meta Keyword"
+                  type="text"
+                  name="meta_focusKeyword"
+                  value={formData.meta_focusKeyword}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Slug"
+                  type="text"
+                  name="web_slug"
+                  value={formData.web_slug}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Typography variant="body2" color="textSecondary">
                   Upload Image:
                 </Typography>
@@ -700,6 +734,38 @@ const AddBlogs = () => {
                       setEditingBlog({
                         ...editingBlog,
                         meta_description: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Keyword"
+                    type="text"
+                    name="meta_focusKeyword"
+                    value={editingBlog.meta_focusKeyword}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        meta_focusKeyword: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Slug"
+                    type="text"
+                    name="web_slug"
+                    value={editingBlog.web_slug}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        web_slug: e.target.value,
                       })
                     }
                     fullWidth
