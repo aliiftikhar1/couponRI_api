@@ -32,6 +32,8 @@ model Company {
   comp_other_details String?  @db.Text
   meta_description   String?
   meta_title         String?
+  meta_focusKeyword String?
+  web_slug              String?
 }
 
 model Category {
@@ -44,6 +46,8 @@ model Category {
   updated_at           DateTime
   meta_description     String?
   meta_title           String?
+  meta_focusKeyword String?
+  web_slug              String?
 }
 
 model Blog {
@@ -56,6 +60,8 @@ model Blog {
   updatedAt        DateTime @updatedAt
   meta_description String?
   meta_title       String?
+  meta_focusKeyword String?
+  web_slug              String?
 }
 
 model Offer {
@@ -66,8 +72,7 @@ model Offer {
   offer_title       String
   offer_code        String
   offer_description String
-  offer_link1       String
-  offer_link2       String
+  offer_affiliateLink String?
   offer_users       String
   offer_expiry      String
   offer_isverify    String

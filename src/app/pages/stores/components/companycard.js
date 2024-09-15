@@ -1,6 +1,7 @@
 import React from 'react';
 
 const CompanyCard = ({ company, topDiscount }) => {
+  const slug = company.web_slug;
   return (
     <div className="bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 relative flex flex-col justify-between h-full">
       <div className="p-4 flex flex-col h-full">
@@ -23,7 +24,7 @@ const CompanyCard = ({ company, topDiscount }) => {
           </p>
         </div>
         <div className="mt-4">
-          <a
+        <a
             href={`/pages/onecompany/${company.id}`}
             className="bg-[#06089B] text-white w-full h-10 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200"
           >

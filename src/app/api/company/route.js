@@ -14,6 +14,8 @@ export async function POST(request) {
       comp_website, 
       meta_title,
       meta_description,
+      meta_focusKeyword,
+      web_slug,
       comp_rating, 
       company_details,  // New field
       other_details     // New field
@@ -31,6 +33,8 @@ export async function POST(request) {
         comp_rating,
         meta_title,
       meta_description,
+      meta_focusKeyword,
+      web_slug,
         comp_details:company_details,
         comp_other_details:other_details,
         created_at: new Date(),
@@ -50,6 +54,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const companies = await prisma.company.findMany();
+    console.log("COMPANIES: ",companies);
     return NextResponse.json(companies);
   } catch (error) {
     console.error("Error Fetching Companies:", error);

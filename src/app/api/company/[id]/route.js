@@ -17,6 +17,8 @@ export async function PUT(request, { params }) {
       comp_rating,
       meta_title,
       meta_description,
+      meta_focusKeyword,
+      web_slug,
       company_details,
       other_details,
     } = data;
@@ -65,6 +67,8 @@ export async function PUT(request, { params }) {
         comp_website,
         meta_title,
         meta_description,
+        meta_focusKeyword,
+        web_slug,
         comp_rating,
         comp_details:company_details,
         comp_other_details:other_details,
@@ -98,17 +102,14 @@ export async function DELETE(request, { params }) {
 export async function GET(request, { params }) {
   const { id } = params;
   try {
-    const company = await prisma.company.findUnique({
-      where: { id: parseInt(id, 10) },
+    const companies = await prisma.company.findUnique({
+      where: { id: parseInt(id)},
     });
 
-    if (!company) {
-      return NextResponse.json({ message: "Company not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(company);
+    console.log("companies are: ",companies);
+    return NextResponse.json(companies);
   } catch (error) {
-    console.error("Error Fetching Company:", error);
+    console.error("Error Fetching Companies:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

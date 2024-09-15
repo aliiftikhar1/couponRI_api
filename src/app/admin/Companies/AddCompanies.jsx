@@ -37,10 +37,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useTable, useGlobalFilter, useSortBy, usePagination } from "react-table";
 
-export const getApiBaseUrl = () => {
-  return process.env.BASE_URL;
-};
-
 const AddCompanies = () => {
   const editor = useRef(null);
   const [companies, setCompanies] = useState([]);
@@ -113,10 +109,12 @@ const AddCompanies = () => {
       comp_website: "",
       comp_rating: "",
       com_details: "",
-      company_details: "", // Resetting the new fields
-      other_details: "",   // Resetting the new fields
-      meta_title: "",      // Resetting meta title
-      meta_description: "",// Resetting meta description
+      company_details: "",
+      other_details: "",
+      meta_title: "",
+      meta_description: "",
+      meta_focusKeyword: "", // Reset meta keyword
+      web_slug: "", // Reset slug
     });
   };
 
@@ -131,10 +129,12 @@ const AddCompanies = () => {
     comp_website: "",
     comp_rating: "",
     com_details: "",
-    company_details: "", // New field for company details
-    other_details: "",   // New field for other details
-    meta_title: "",      // New field for meta title
-    meta_description: "",// New field for meta description
+    company_details: "", 
+    other_details: "",   
+    meta_title: "",      
+    meta_description: "", 
+    meta_focusKeyword: "", // New field for meta keyword
+    web_slug: "",          // New field for slug
   });
 
   const handleInputChange = (e) => {
@@ -168,9 +168,9 @@ const AddCompanies = () => {
       if (!response.ok) {
         throw new Error(result.error || 'Failed to upload image');
       }
-      console.log("Image Url is: ",result.image_url);
+      console.log("Image Url is: ", result.image_url);
 
-      return result.image_url; // Assuming the API returns the image URL in this field
+      return result.image_url;
     
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -195,7 +195,7 @@ const AddCompanies = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    setLoading(true); // Show loading overlay
+    setLoading(true); 
 
     if (!formData.com_title || !formData.comp_logo || !formData.comp_category) {
       setSnackbarSubmit(true);
@@ -203,7 +203,7 @@ const AddCompanies = () => {
         setSnackbarSubmit(false);
       }, 5000);
       setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false); 
       return;
     }
 
@@ -214,25 +214,27 @@ const AddCompanies = () => {
       const companyToSubmit = {
         ...formData,
         comp_logo: uploadedImageUrl,
+        meta_focusKeyword: formData.meta_focusKeyword, // Including new field
+        web_slug: formData.web_slug, // Including new field
       };
 
       await axios.post(`/api/company`, companyToSubmit);
       toast.success("Company has been added successfully!");
       setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false); 
       modelClose();
       window.location.reload();
     } catch (error) {
       console.error("Error occurred during submission", error);
       setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false); 
     }
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    setLoading(true); // Show loading overlay
+    setLoading(true);
 
     try {
       let uploadedImageUrl = editingCompany.comp_logo;
@@ -245,19 +247,21 @@ const AddCompanies = () => {
       const companyToUpdate = {
         ...editingCompany,
         comp_logo: uploadedImageUrl,
+        meta_focusKeyword: editingCompany.meta_focusKeyword,  // Including new field
+        web_slug: editingCompany.web_slug,                    // Including new field
       };
 
       await axios.put(`/api/company/${editingCompany.id}`, companyToUpdate);
       toast.success("Company has been updated successfully!");
       setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false); 
       handleClose();
       window.location.reload();
     } catch (error) {
       console.error("Error occurred while updating the data:", error);
       toast.error("Failed to update the company");
       setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false); 
     }
   };
 
@@ -267,12 +271,12 @@ const AddCompanies = () => {
       if (editingCompany) {
         setEditingCompany({
           ...editingCompany,
-          comp_logo: file, // Ensure this is a File object
+          comp_logo: file, 
         });
       } else {
         setFormData({
           ...formData,
-          comp_logo: file, // Ensure this is a File object
+          comp_logo: file, 
         });
       }
     }
@@ -281,10 +285,12 @@ const AddCompanies = () => {
   const handleOpen = (company) => {
     setEditingCompany({
       ...company,
-      company_details: company.comp_details,  // Ensure this is properly mapped
-      other_details: company.comp_other_details, // Ensure this is properly mapped
-      meta_title: company.meta_title || "",      // Mapping meta title
-      meta_description: company.meta_description || "", // Mapping meta description
+      company_details: company.comp_details,  
+      other_details: company.comp_other_details, 
+      meta_title: company.meta_title || "",     
+      meta_description: company.meta_description || "", 
+      meta_focusKeyword: company.meta_focusKeyword || "",  // Mapping new meta keyword
+      web_slug: company.web_slug || "",                    // Mapping new slug field
     });
     setOpen(true);
   };
@@ -416,7 +422,7 @@ const AddCompanies = () => {
     <Box sx={{ padding: 3 }}>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading} // Show backdrop when loading is true
+        open={loading} 
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -630,6 +636,26 @@ const AddCompanies = () => {
                   variant="outlined"
                   multiline
                   rows={3}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Slug"
+                  name="web_slug"
+                  value={formData.web_slug}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Meta Keyword"
+                  name="meta_focusKeyword"
+                  value={formData.meta_focusKeyword}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -896,6 +922,38 @@ const AddCompanies = () => {
                     rows={3}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Slug"
+                    name="web_slug"
+                    value={editingCompany.web_slug}
+                    onChange={(e) =>
+                      setEditingCompany({
+                        ...editingCompany,
+                        web_slug: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="Meta Keyword"
+                    name="meta_focusKeyword"
+                    value={editingCompany.meta_focusKeyword}
+                    onChange={(e) =>
+                      setEditingCompany({
+                        ...editingCompany,
+                        meta_focusKeyword: e.target.value,
+                      })
+                    }
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+
                 <Grid item xs={12}>
                   <h3 style={{ marginBottom: "10px", color: "#333" }}>
                     Company Details
