@@ -4,7 +4,10 @@ import prisma from '../../util/prisma';
 export async function POST(request) {
   try {
     const data = await request.json();
-    const { category_name, category_image, category_description, category_status } = data;
+    const { category_name, category_image, category_description, category_status, meta_title,
+      meta_description,
+      meta_focusKeyword,
+      web_slug, } = data;
 
     // Validate required fields
     if (!category_name || !category_image) {
@@ -18,6 +21,10 @@ export async function POST(request) {
         category_description,
         category_status,
         category_image,
+        meta_title,
+        meta_description,
+        meta_focusKeyword,
+        web_slug,
         created_at: new Date(),
         updated_at: new Date(),
       },

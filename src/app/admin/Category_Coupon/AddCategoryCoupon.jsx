@@ -419,7 +419,7 @@ const AddCategoryCoupons = () => {
       <Dialog
         open={model}
         onClose={modelClose}
-        maxWidth="sm"
+        maxWidth="xl"
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -507,7 +507,7 @@ const AddCategoryCoupons = () => {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="sm"
+        maxWidth="xl"
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

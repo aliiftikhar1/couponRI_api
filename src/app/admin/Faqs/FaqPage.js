@@ -5,11 +5,13 @@ export default function FaqPage() {
   const [questions, setQuestions] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [formData, setFormData] = useState({ comp_id: '', question: '', answer: '' });
   const [editId, setEditId] = useState(null);
-  const [selectedCompany, setSelectedCompany] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // New state for notification
+  const [notification, setNotification] = useState({ message: '', type: '', visible: false });
 
   useEffect(() => {
     fetchQuestions();
@@ -26,7 +28,6 @@ export default function FaqPage() {
     const res = await fetch('/api/company');
     const data = await res.json();
     setCompanies(data);
-    console.log(data);
   };
 
   const handleSubmit = async (e) => {
@@ -37,6 +38,7 @@ export default function FaqPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+      setNotification({ message: 'FAQ updated successfully!', type: 'success', visible: true });
       setEditId(null);
     } else {
       await fetch('/api/faqs', {
@@ -44,10 +46,16 @@ export default function FaqPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+      setNotification({ message: 'FAQ added successfully!', type: 'success', visible: true });
     }
     setFormData({ comp_id: '', question: '', answer: '' });
     fetchQuestions();
-    setShowForm(false); // Hide form after submission
+    setShowForm(false);
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+      setNotification({ ...notification, visible: false });
+    }, 3000);
   };
 
   const handleEdit = (question) => {
@@ -61,202 +69,191 @@ export default function FaqPage() {
       method: 'DELETE',
     });
     fetchQuestions();
+    setNotification({ message: 'FAQ deleted successfully!', type: 'error', visible: true });
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+      setNotification({ ...notification, visible: false });
+    }, 3000);
   };
 
-  const filteredQuestions = selectedCompany
-    ? questions.filter((question) =>
-        question.comp_id === selectedCompany.id && question.question.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
-
-  // Slider functions
-  const handlePrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? Math.ceil(companies.length / companiesToShow()) - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === Math.ceil(companies.length / companiesToShow()) - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const companiesToShow = () => {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth >= 1024) {
-        return 4; // Large screens
-      } else if (window.innerWidth >= 768) {
-        return 2; // Medium screens
-      } else {
-        return 1; // Small screens
-      }
-    }
-    return 4; // Default to 4 companies per view in SSR or large screens
-  };
-
-  const handleCompanyClick = (company) => {
-    setSelectedCompany(company);
-  };
-
-  // Debugging: Log values
-  console.log('Companies Length:', companies.length);
-  console.log('Current Index:', currentIndex);
-  console.log('Companies to Show:', companiesToShow());
+  const filteredQuestions = questions.filter((question) => {
+    const matchesCompany = selectedCompanyId ? question.comp_id == selectedCompanyId : true;
+    const matchesSearchTerm = question.question.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCompany && matchesSearchTerm;
+  });
 
   return (
-    <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+    <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg relative">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">FAQ Management</h1>
 
-      {/* Plus Icon for showing the form */}
+      {/* Notification Popup */}
+      {notification.visible && (
+        <div
+          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg text-white ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          }`}
+        >
+          {notification.message}
+        </div>
+      )}
+
+      {/* Add New FAQ Button */}
       <div className="flex justify-end mb-6">
         <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300"
+          onClick={() => {
+            setShowForm(true);
+            setFormData({ comp_id: '', question: '', answer: '' });
+            setEditId(null);
+          }}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
         >
-          <span className='text-white font-bold hover:scale-110'>+</span>
+          Add New FAQ
         </button>
       </div>
 
       {/* Form for adding/editing FAQ */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="mb-8 bg-white p-6 rounded-lg shadow-md">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">Select Company</label>
-            <select
-              value={formData.comp_id}
-              onChange={(e) => setFormData({ ...formData, comp_id: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select a company</option>
-              {companies.map((company) => (
-                <option key={company.id} value={company.id}>
-                  {company.com_title}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">Question</label>
-            <input
-              type="text"
-              value={formData.question}
-              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter Question"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">Answer</label>
-            <textarea
-              value={formData.answer}
-              onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter Answer"
-              rows="3"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            {editId ? 'Update Question' : 'Add Question'}
-          </button>
-        </form>
+        <div className="fixed inset-0 flex items-center justify-center z-40 bg-black bg-opacity-50">
+          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg relative">
+            <h2 className="text-xl font-bold mb-4">{editId ? 'Update FAQ' : 'Add New FAQ'}</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2">Select Company</label>
+              <select
+                value={formData.comp_id}
+                onChange={(e) => setFormData({ ...formData, comp_id: e.target.value })}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select a company</option>
+                {companies.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.com_title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2">Question</label>
+              <input
+                type="text"
+                value={formData.question}
+                onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter Question"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2">Answer</label>
+              <textarea
+                value={formData.answer}
+                onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter Answer"
+                rows="3"
+                required
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(false);
+                  setEditId(null);
+                }}
+                className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {editId ? 'Update FAQ' : 'Add FAQ'}
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
-      {/* Company Slider */}
-      <div className="relative flex justify-between items-center w-full px-4 mb-6">
-        <button
-          onClick={handlePrevious}
-          className="text-white p-2 absolute z-50 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10094;</span>
-        </button>
-        <button
-          onClick={handleNext}
-          className="text-white p-2 absolute z-50 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10095;</span>
-        </button>
-        <div className="relative overflow-hidden rounded-lg w-full">
-          <div
-            className="flex transition-transform duration-700 space-x-4 ease-in-out py-10"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }} // Updated transform calculation
+      {/* Filters */}
+      <div className="flex flex-col md:flex-row md:space-x-4 mb-6">
+        <div className="mb-4 md:mb-0">
+          <label className="block text-gray-700 font-semibold mb-2">Filter by Company</label>
+          <select
+            value={selectedCompanyId}
+            onChange={(e) => setSelectedCompanyId(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {companies.map((company, index) => (
-              <div
-                key={index}
-                className={`flex-shrink-0 cursor-pointer`}
-                style={{ flexBasis: `${100 / companiesToShow()}%` }}
-                onClick={() => handleCompanyClick(company)}
-              >
-                <div className={`bg-white rounded-lg hover:shadow-lg hover:shadow-white border-2 hover:border-gray-600 border-gray-500 transition duration-300 transform hover:-translate-y-2 h-full flex flex-col ${
-                  selectedCompany && selectedCompany.id === company.id
-                    ? 'bg-blue-100 border-2 border-blue-500'
-                    : 'bg-white hover:bg-gray-100'
-                }`}>
-                  <div className="relative pb-56 flex-shrink-0">
-                    <img
-                      src={`https://m3xtrader.com/coupon/uploads/${company.comp_logo}`}
-                      alt={company.com_title}
-                      className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
-                    />
-                  </div>
-                  <div className="p-4 flex-grow">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-900">
-                      {company.com_title}
-                    </h3>
-                    <p className="text-sm text-gray-700">{company.comp_description}</p>
-                  </div>
-                </div>
-              </div>
+            <option value="">All Companies</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.com_title}
+              </option>
             ))}
-          </div>
+          </select>
         </div>
-      </div>
-
-      {/* FAQ Search and List */}
-      {selectedCompany && (
-        <>
+        <div className="flex-grow">
+          <label className="block text-gray-700 font-semibold mb-2">Search Questions</label>
           <input
             type="text"
             placeholder="Search questions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <ul className="space-y-4">
-            {filteredQuestions.map((question) => (
-              <li key={question.id} className="bg-white p-4 rounded-lg shadow-md">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-gray-700 mt-1"><strong>Question:</strong> {question.question}</p>
-                    <p className="text-gray-700 mt-1"><strong>Answer:</strong> {question.answer}</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(question)}
-                      className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(question.id)}
-                      className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+        </div>
+      </div>
+
+      {/* FAQs Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white rounded-lg shadow-md">
+          <thead>
+            <tr className="bg-gray-200 text-gray-700 text-left">
+              <th className="px-4 py-2">Company</th>
+              <th className="px-4 py-2">Question</th>
+              <th className="px-4 py-2">Answer</th>
+              <th className="px-4 py-2 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredQuestions.map((question) => {
+              const company = companies.find((c) => c.id == question.comp_id);
+              return (
+                <tr key={question.id} className="border-t">
+                  <td className="px-4 py-2">{company ? company.com_title : 'N/A'}</td>
+                  <td className="px-4 py-2">{question.question}</td>
+                  <td className="px-4 py-2">{question.answer}</td>
+                  <td className="px-4 py-2 text-center">
+                    <div className="flex justify-center space-x-2">
+                      <button
+                        onClick={() => handleEdit(question)}
+                        className="px-3 py-1 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => handleDelete(question.id)}
+                        className="px-3 py-1 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            {filteredQuestions.length === 0 && (
+              <tr>
+                <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
+                  No FAQs found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

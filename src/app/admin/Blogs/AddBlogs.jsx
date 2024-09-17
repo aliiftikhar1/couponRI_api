@@ -24,6 +24,10 @@ import {
   Snackbar,
   Alert,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useTable, useGlobalFilter, useSortBy, usePagination } from "react-table";
 import { FaUserEdit } from "react-icons/fa";
@@ -38,6 +42,7 @@ const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 const AddBlogs = () => {
   const editor = useRef(null);
   const [blogs, setBlogs] = useState([]);
+  const [blogCategories, setBlogCategories] = useState([]); // For holding fetched blog categories
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
@@ -91,8 +96,8 @@ const AddBlogs = () => {
       category: "",
       meta_title: "",
       meta_description: "",
-      meta_focusKeyword: "", // New field for meta keyword
-      web_slug: "",          // New field for web slug
+      meta_focusKeyword: "",
+      web_slug: "",
     });
   };
 
@@ -104,8 +109,8 @@ const AddBlogs = () => {
     category: "",
     meta_title: "",
     meta_description: "",
-    meta_focusKeyword: "", // New field for meta keyword
-    web_slug: "",          // New field for web slug
+    meta_focusKeyword: "",
+    web_slug: "",
   });
 
   const handleInputChange = (e) => {
@@ -159,8 +164,8 @@ const AddBlogs = () => {
       !formData.category ||
       !formData.meta_title ||
       !formData.meta_description ||
-      !formData.meta_focusKeyword ||  // Ensure this is filled
-      !formData.web_slug  // Ensure this is filled
+      !formData.meta_focusKeyword ||
+      !formData.web_slug
     ) {
       setSnackbarSubmit(true);
       setTimeout(() => {
@@ -185,6 +190,7 @@ const AddBlogs = () => {
       setLoad(false);
       setLoading(false); // Hide loading overlay
       modelClose();
+      
       window.location.reload();
     } catch (error) {
       console.error("Error occurred during submission", error);
@@ -217,7 +223,8 @@ const AddBlogs = () => {
       setLoad(false);
       setLoading(false); // Hide loading overlay
       handleClose();
-      window.location.reload();
+      fetchBlogs();
+      // window.location.reload();
     } catch (error) {
       console.error("Error occurred while updating the data:", error);
       toast.error("Failed to update the blog");
@@ -243,10 +250,17 @@ const AddBlogs = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setEditingBlog({
-        ...editingBlog,
-        image: file,
-      });
+      if (editingBlog) {
+        setEditingBlog({
+          ...editingBlog,
+          image: file,
+        });
+      } else {
+        setFormData({
+          ...formData,
+          image: file,
+        });
+      }
     }
   };
 
@@ -259,21 +273,37 @@ const AddBlogs = () => {
     setOpen(false);
     setEditingBlog(null);
   };
+  const fetchBlogs = async () => {
+    try {
+      const response = await fetch(`/api/blog`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch blogs");
+      }
+      const data = await response.json();
+      setBlogs(data);
+    } catch (error) {
+      setError("Error fetching blogs: " + error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    
+
+    const fetchBlogCategories = async () => {
       try {
-        const response = await fetch(`/api/blog`);
+        const response = await fetch(`/api/blogcategory`);
         if (!response.ok) {
-          throw new Error("Failed to fetch blogs");
+          throw new Error("Failed to fetch blog categories");
         }
-        const data = await response.json();
-        setBlogs(data);
+        const categories = await response.json();
+        setBlogCategories(categories);
       } catch (error) {
-        setError("Error fetching blogs: " + error.message);
+        console.error("Error fetching blog categories:", error);
       }
     };
-    fetchData();
+
+    fetchBlogs();
+    fetchBlogCategories();
   }, []);
 
   const columns = React.useMemo(
@@ -322,6 +352,10 @@ const AddBlogs = () => {
       {
         Header: "Category",
         accessor: "category",
+        Cell: ({ value }) => {
+          const category = blogCategories.find((cat) => cat.title === value);
+          return category ? category.title : "Unknown";
+        },
       },
       {
         Header: "Action",
@@ -345,7 +379,7 @@ const AddBlogs = () => {
         ),
       },
     ],
-    []
+    [blogCategories]
   );
 
   const {
@@ -357,8 +391,6 @@ const AddBlogs = () => {
     state,
     setGlobalFilter,
     gotoPage,
-    nextPage,
-    previousPage,
     setPageSize,
   } = useTable(
     {
@@ -454,6 +486,13 @@ const AddBlogs = () => {
                 </TableRow>
               );
             })}
+            {page.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  No blogs found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -474,7 +513,7 @@ const AddBlogs = () => {
       <Dialog
         open={model}
         onClose={modelClose}
-        maxWidth="sm"
+        maxWidth="xl"
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -519,24 +558,28 @@ const AddBlogs = () => {
                       description: newContent,
                     })
                   }
-                  onChange={(newContent) =>
-                    setFormData({
-                      ...formData,
-                      description: newContent,
-                    })
-                  }
+                  onChange={() => {}}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  label="Category"
-                  type="text"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  fullWidth
-                  variant="outlined"
-                />
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    label="Category"
+                  >
+                    <MenuItem value="">
+                      <em>Select Category</em>
+                    </MenuItem>
+                    {blogCategories.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.title}>
+                        {cat.title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -590,12 +633,7 @@ const AddBlogs = () => {
                   type="file"
                   accept="image/*"
                   name="image"
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      image: e.target.files[0], // Store File object
-                    })
-                  }
+                  onChange={handleImageChange}
                   style={{ display: "block", marginTop: "10px" }}
                 />
                 {formData.image && (
@@ -635,7 +673,7 @@ const AddBlogs = () => {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="sm"
+        maxWidth="xl"
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -665,12 +703,7 @@ const AddBlogs = () => {
                     name="title"
                     value={editingBlog.title}
                     fullWidth
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        title: e.target.value,
-                      })
-                    }
+                    onChange={handleInputChange}
                     variant="outlined"
                   />
                 </Grid>
@@ -685,28 +718,28 @@ const AddBlogs = () => {
                         description: newContent,
                       })
                     }
-                    onChange={(newContent) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        description: newContent,
-                      })
-                    }
+                    onChange={() => {}}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    label="Category"
-                    name="category"
-                    value={editingBlog.category}
-                    fullWidth
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        category: e.target.value,
-                      })
-                    }
-                    variant="outlined"
-                  />
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      name="category"
+                      value={editingBlog.category}
+                      onChange={handleInputChange}
+                      label="Category"
+                    >
+                      <MenuItem value="">
+                        <em>Select Category</em>
+                      </MenuItem>
+                      {blogCategories.map((cat) => (
+                        <MenuItem key={cat.id} value={cat.title}>
+                          {cat.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -714,12 +747,7 @@ const AddBlogs = () => {
                     type="text"
                     name="meta_title"
                     value={editingBlog.meta_title}
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        meta_title: e.target.value,
-                      })
-                    }
+                    onChange={handleInputChange}
                     fullWidth
                     variant="outlined"
                   />
@@ -730,12 +758,7 @@ const AddBlogs = () => {
                     type="text"
                     name="meta_description"
                     value={editingBlog.meta_description}
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        meta_description: e.target.value,
-                      })
-                    }
+                    onChange={handleInputChange}
                     fullWidth
                     variant="outlined"
                   />
@@ -746,12 +769,7 @@ const AddBlogs = () => {
                     type="text"
                     name="meta_focusKeyword"
                     value={editingBlog.meta_focusKeyword}
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        meta_focusKeyword: e.target.value,
-                      })
-                    }
+                    onChange={handleInputChange}
                     fullWidth
                     variant="outlined"
                   />
@@ -762,12 +780,7 @@ const AddBlogs = () => {
                     type="text"
                     name="web_slug"
                     value={editingBlog.web_slug}
-                    onChange={(e) =>
-                      setEditingBlog({
-                        ...editingBlog,
-                        web_slug: e.target.value,
-                      })
-                    }
+                    onChange={handleInputChange}
                     fullWidth
                     variant="outlined"
                   />

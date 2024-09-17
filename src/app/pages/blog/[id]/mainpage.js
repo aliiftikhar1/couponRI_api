@@ -47,7 +47,7 @@ const BlogDetailPage = ({id}) => {
   return (
     <CustomerRootLayout>
       <div className="container bg-white h-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold mb-4 lg:mb-10">Blog | {blog.title}</h1>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold mb-4 lg:mb-10">{blog.title}</h1>
         <div className="lg:flex lg:space-x-8">
           {/* Main blog content */}
           <div className="lg:w-3/4">

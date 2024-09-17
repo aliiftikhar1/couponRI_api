@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../util/prisma';
 
+// GET a single blog by ID
 export async function GET(request, { params }) {
   const id = parseInt(params.id);
 
@@ -9,60 +10,52 @@ export async function GET(request, { params }) {
   }
 
   try {
-    const category = await prisma.category.findUnique({
+    const blogcategory = await prisma.Blogcategories.findUnique({
       where: { id },
     });
 
-    if (!category) {
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+    if (!blogcategory) {
+      return NextResponse.json({ error: 'Blog category not found' }, { status: 404 });
     }
 
-    return NextResponse.json(category);
+    return NextResponse.json(blogcategory);
   } catch (error) {
-    console.error('Error fetching category:', error);
+    console.error('Error fetching blog:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-
+// UPDATE a blog by ID
 export async function PUT(request, { params }) {
   try {
     const data = await request.json();
-    const { category_name, category_image, category_description, category_status , meta_title,
-      meta_description,
-      meta_focusKeyword,
-      web_slug,} = data;
+    const { title, description } = data;
     const id = parseInt(params.id);
 
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid ID provided' }, { status: 400 });
     }
 
-    const updatedCategory = await prisma.category.update({
+    const updatedBlogcategory = await prisma.Blogcategories.update({
       where: { id },
       data: {
-        category_name,
-        category_image,
-        category_description,
-        category_status,
-        meta_title,
-        meta_description,
-        meta_focusKeyword,
-        web_slug,
-        updated_at: new Date(),
+        title,
+        description,
+        updatedAt: new Date(),
       },
     });
 
-    return NextResponse.json(updatedCategory);
+    return NextResponse.json(updatedBlogcategory);
   } catch (error) {
-    console.error('Error updating category:', error);
+    console.error('Error updating blog category:', error);
     if (error.code === 'P2025') { // Prisma specific error when record not found
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Blog category not found' }, { status: 404 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
+// DELETE a blog by ID
 export async function DELETE(request, { params }) {
   const id = parseInt(params.id);
 
@@ -71,15 +64,15 @@ export async function DELETE(request, { params }) {
   }
 
   try {
-    const deletedCategory = await prisma.category.delete({
+    const deletedBlogcategory = await prisma.BlogCategories.delete({
       where: { id },
     });
 
-    return NextResponse.json({ message: 'Category deleted successfully' });
+    return NextResponse.json({ message: 'Blog category deleted successfully' });
   } catch (error) {
-    console.error('Error deleting category:', error);
+    console.error('Error deleting blog category:', error);
     if (error.code === 'P2025') { // Prisma specific error when record not found
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Blog category not found' }, { status: 404 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

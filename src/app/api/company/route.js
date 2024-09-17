@@ -16,6 +16,7 @@ export async function POST(request) {
       meta_description,
       meta_focusKeyword,
       web_slug,
+      comp_affiliateLink,
       comp_rating, 
       company_details,  // New field
       other_details     // New field
@@ -35,6 +36,7 @@ export async function POST(request) {
       meta_description,
       meta_focusKeyword,
       web_slug,
+      comp_affiliateLink,
         comp_details:company_details,
         comp_other_details:other_details,
         created_at: new Date(),

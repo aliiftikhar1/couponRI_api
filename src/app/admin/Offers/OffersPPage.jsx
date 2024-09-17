@@ -16,17 +16,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Snackbar,
+  Alert,
+  Typography,
+  TextField,
 } from "@mui/material";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import {
   useTable,
   useGlobalFilter,
   useSortBy,
   usePagination,
 } from "react-table";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -39,15 +39,12 @@ const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 const OffersPPage = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-  const [sizes, setSizes] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const [error, setError] = useState("");
-  const [open, setOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [model, setModel] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [editingOffer, setEditingOffer] = useState(null);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const  [load,setLoad]=useState('')
-  const [snackbarSubmit, setSnackbarSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteSuccessSnackbar, setDeleteSuccessSnackbar] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState({
@@ -71,10 +68,10 @@ const OffersPPage = () => {
           setDeleteSuccessSnackbar(false);
         }, 5000);
 
-        const updatedCategories = sizes.filter(
-          (category) => category.id !== deleteConfirmation.id
+        const updatedOffers = offers.filter(
+          (offer) => offer.id !== deleteConfirmation.id
         );
-        setSizes(updatedCategories);
+        setOffers(updatedOffers);
       } else {
         console.error("Failed to delete offer");
       }
@@ -83,25 +80,6 @@ const OffersPPage = () => {
     } finally {
       setDeleteConfirmation({ open: false, id: null });
     }
-  };
-
-  const modelClose = () => {
-    setModel(false);
-    setFormData({
-      id: "",
-      comp_id: "",
-      offer_type: "",
-      offer_status: "Normal", // Default value
-      offer_title: "",
-      offer_code: "",
-      offer_description: "",
-      offer_link1: "",
-      offer_link2: "",
-      offer_users: "",
-      offer_expiry: "",
-      offer_isverify: "",
-      offer_details: "",
-    });
   };
 
   const handleDelete = (row) => {
@@ -113,22 +91,18 @@ const OffersPPage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-    fetchCompanies(); // Fetch companies when the component loads
+    fetchOffers();
+    fetchCompanies();
   }, []);
 
-  const fetchData = async () => {
+  const fetchOffers = async () => {
     try {
       const response = await axios.get("/api/offers");
-      setSizes(response.data);
+      setOffers(response.data);
     } catch (error) {
       console.error("Error fetching offers: ", error);
     }
   };
-  const handleModel = () => {
-    setModel(true);
-  };
-  
 
   const fetchCompanies = async () => {
     try {
@@ -142,38 +116,69 @@ const OffersPPage = () => {
   const [formData, setFormData] = useState({
     id: "",
     comp_id: "",
-    offer_type: "Code", // Set a default value if needed
-    offer_status: "Normal", // Set a default value
+    offer_type: "Code", // Default value
+    offer_status: "Normal", // Default value
     offer_title: "",
     offer_code: "",
     offer_description: "",
-    offer_link1: "",
-    offer_link2: "",
+    offer_affiliateLink: "", // Added field
     offer_users: "",
     offer_expiry: "",
-    offer_isverify: "",
+    offer_isverify: "Yes", // Default to "Yes"
     offer_details: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    if (editingCategory) {
-      setEditingCategory((prevData) => ({
+    if (editingOffer) {
+      setEditingOffer((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     }
   };
 
+  const handleAddOpen = () => {
+    setFormData({
+      id: "",
+      comp_id: "",
+      offer_type: "Code",
+      offer_status: "Normal",
+      offer_title: "",
+      offer_code: "",
+      offer_description: "",
+      offer_affiliateLink: "",
+      offer_users: "",
+      offer_expiry: "",
+      offer_isverify: "Yes",
+      offer_details: "",
+    });
+    setOpenAddDialog(true);
+  };
+
+  const handleAddClose = () => {
+    setOpenAddDialog(false);
+  };
+
+  const handleEditOpen = (offer) => {
+    setEditingOffer(offer);
+    setOpenEditDialog(true);
+  };
+
+  const handleEditClose = () => {
+    setOpenEditDialog(false);
+    setEditingOffer(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoad(true);
+    setLoading(true);
 
     const requiredFields = [
       "comp_id",
@@ -182,8 +187,7 @@ const OffersPPage = () => {
       "offer_title",
       "offer_code",
       "offer_description",
-      "offer_link1",
-      "offer_link2",
+      "offer_affiliateLink", // Added field
       "offer_users",
       "offer_expiry",
       "offer_isverify",
@@ -194,11 +198,11 @@ const OffersPPage = () => {
     );
 
     if (!isFormValid) {
-      setSnackbarSubmit(true);
+      setSnackbarOpen(true);
       setTimeout(() => {
-        setSnackbarSubmit(false);
+        setSnackbarOpen(false);
       }, 5000);
-      setLoad(false);
+      setLoading(false);
       return;
     }
 
@@ -207,94 +211,75 @@ const OffersPPage = () => {
         ...formData,
         comp_id: parseInt(formData.comp_id),
       };
+      
+      console.log("Submit daata: ",submitData);
 
-      const result = await axios.post("/api/offers", submitData);
-      toast.success("Record Has Been added Successfully!");
-      setLoad(false);
-      modelClose();
-      window.location.reload();
+      await axios.post("/api/offers", submitData);
+      toast.success("Record has been added successfully!");
+      setLoading(false);
+      handleAddClose();
+      fetchOffers();
     } catch (error) {
       console.error(
         "Error occurred while sending data to the API",
         error.response || error
       );
-      setLoad(false);
+      setLoading(false);
     }
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    setLoad(true);
+    setLoading(true);
 
-    if (
-      !editingCategory.comp_id ||
-      !editingCategory.offer_type ||
-      !editingCategory.offer_status ||
-      !editingCategory.offer_title ||
-      !editingCategory.offer_code ||
-      !editingCategory.offer_description ||
-      !editingCategory.offer_link1 ||
-      !editingCategory.offer_link2 ||
-      !editingCategory.offer_users ||
-      !editingCategory.offer_expiry ||
-      !editingCategory.offer_isverify
-    ) {
-      setSnackbarSubmit(true);
+    const requiredFields = [
+      "comp_id",
+      "offer_type",
+      "offer_status",
+      "offer_title",
+      "offer_code",
+      "offer_description",
+      "offer_affiliateLink", // Added field
+      "offer_users",
+      "offer_expiry",
+      "offer_isverify",
+    ];
+
+    const isFormValid = requiredFields.every(
+      (field) =>
+        editingOffer[field] !== undefined &&
+        editingOffer[field].toString().trim() !== ""
+    );
+
+    if (!isFormValid) {
+      setSnackbarOpen(true);
       setTimeout(() => {
-        setSnackbarSubmit(false);
+        setSnackbarOpen(false);
       }, 5000);
-      setLoad(false);
+      setLoading(false);
       return;
     }
 
     try {
       const submitData = {
-        ...editingCategory,
-        comp_id: parseInt(editingCategory.comp_id),
+        ...editingOffer,
+        comp_id: parseInt(editingOffer.comp_id),
       };
 
-      const result = await axios.put(
-        `/api/offers/${editingCategory.id}`,
-        submitData
-      );
-
+      console.log("Submit daata: ",submitData);
+      await axios.put(`/api/offers/${editingOffer.id}`, submitData);
       toast.success("Record has been updated successfully!");
-      setLoad(false);
-      handleClose();
-      window.location.reload();
+      setLoading(false);
+      handleEditClose();
+      fetchOffers();
     } catch (error) {
       console.error(
         "Error occurred while updating the data:",
         error.response || error
       );
       toast.error("Failed to update the record");
-      setLoad(false);
+      setLoading(false);
     }
-  };
-
-  const handleOpen = (sizes) => {
-    setEditingCategory(sizes);
-    setFormData({
-      id: sizes.id,
-      comp_id: sizes.comp_id,
-      offer_type: sizes.offer_type,
-      offer_status: sizes.offer_status || "Normal", // Default to "Normal" if undefined
-      offer_title: sizes.offer_title,
-      offer_code: sizes.offer_code,
-      offer_description: sizes.offer_description,
-      offer_link1: sizes.offer_link1,
-      offer_link2: sizes.offer_link2,
-      offer_users: sizes.offer_users,
-      offer_expiry: sizes.offer_expiry,
-      offer_isverify: sizes.offer_isverify,
-      offer_details: sizes.offer_details,
-    });
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setEditingCategory(null);
   };
 
   const columns = React.useMemo(
@@ -321,7 +306,7 @@ const OffersPPage = () => {
       },
       {
         Header: "Offer Status",
-        accessor: "offer_status", // Added Offer Status column
+        accessor: "offer_status",
       },
       {
         Header: "Offer Code",
@@ -333,11 +318,11 @@ const OffersPPage = () => {
       },
       {
         Header: "Action",
-        accessor: "updateButton",
+        accessor: "actions",
         Cell: ({ row }) => (
-          <div className=" flex gap-6">
+          <div className="flex gap-6">
             <FaUserEdit
-              onClick={() => handleOpen(row.original)}
+              onClick={() => handleEditOpen(row.original)}
               style={{
                 fontSize: "26px",
                 color: "#006a5c",
@@ -365,13 +350,11 @@ const OffersPPage = () => {
     state,
     setGlobalFilter,
     gotoPage,
-    nextPage,
-    previousPage,
     setPageSize,
   } = useTable(
     {
       columns,
-      data: sizes,
+      data: offers,
     },
     useGlobalFilter,
     useSortBy,
@@ -391,13 +374,12 @@ const OffersPPage = () => {
           />
         </Toolbar>
         <Button
-          className="font=[18px] px-3 py-2 font-normal"
           style={{
             height: "40px",
             backgroundColor: "#E3B505",
             color: "black",
           }}
-          onClick={handleModel}
+          onClick={handleAddOpen}
         >
           ADD New
         </Button>
@@ -436,46 +418,49 @@ const OffersPPage = () => {
                 </TableRow>
               );
             })}
+            {page.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  No offers found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
 
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25, { label: "All", value: sizes.length }]}
-        colSpan={5}
-        count={sizes.length}
+        rowsPerPageOptions={[
+          5,
+          10,
+          25,
+          { label: "All", value: offers.length },
+        ]}
+        count={offers.length}
         rowsPerPage={pageSize}
         page={pageIndex}
         showLastButton={true}
         showFirstButton={true}
-        SelectProps={{
-          inputProps: { "aria-label": "rows per page" },
-          native: true,
-        }}
         onPageChange={(event, newPage) => gotoPage(newPage)}
         onRowsPerPageChange={(event) => setPageSize(Number(event.target.value))}
       />
 
+      {/* Add Offer Dialog */}
       <Dialog
-        open={model}
-        style={{ maxwidth: "width:720px" }}
-        onClose={modelClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        open={openAddDialog}
+        onClose={handleAddClose}
+        fullWidth={true}
+       maxWidth="xl"
       >
-        <DialogTitle id="modal-modal-title">
-          <Typography variant="h6" component="div">
-            New Offer
-          </Typography>
-        </DialogTitle>
+        <DialogTitle>Add New Offer</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
-            <h3 style={{ marginTop: "20px", width: "100%" }}>Select Company</h3>
+            <h3>Select Company</h3>
             <select
               value={formData.comp_id}
               onChange={handleInputChange}
               name="comp_id"
-              style={{ marginTop: "20px", width: "100%", padding: "10px" }}
+              style={{ marginTop: "10px", width: "100%", padding: "10px" }}
             >
               <option key={0} value="">
                 Select Company
@@ -487,10 +472,10 @@ const OffersPPage = () => {
               ))}
             </select>
 
-            <h3 style={{ marginTop: "20px", width: "100%" }}>Offer Type</h3>
+            <h3>Offer Type</h3>
             <select
               name="offer_type"
-              value={formData.offer_type} // Ensure this binds to formData.offer_type
+              value={formData.offer_type}
               onChange={handleInputChange}
               style={{ marginTop: "10px", width: "100%", padding: "10px" }}
             >
@@ -498,10 +483,10 @@ const OffersPPage = () => {
               <option value="Offer">Offer</option>
             </select>
 
-            <h3 style={{ marginTop: "20px", width: "100%" }}>Offer Status</h3>
+            <h3>Offer Status</h3>
             <select
               name="offer_status"
-              value={formData.offer_status} // Bind to formData.offer_status
+              value={formData.offer_status}
               onChange={handleInputChange}
               style={{ marginTop: "10px", width: "100%", padding: "10px" }}
             >
@@ -513,137 +498,115 @@ const OffersPPage = () => {
 
             <TextField
               label="Offer Title"
-              type="text"
               name="offer_title"
               value={formData.offer_title}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              style={{ marginTop: "20px" }}
             />
             <TextField
               label="Offer Code"
-              type="text"
               name="offer_code"
               value={formData.offer_code}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              style={{ marginTop: "20px" }}
             />
             <TextField
               label="Offer Description"
               name="offer_description"
-              type="text"
               value={formData.offer_description}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              multiline
+              rows={3}
+              style={{ marginTop: "20px" }}
             />
             <TextField
-              label="Offer Link 1"
-              name="offer_link1"
-              type="text"
-              value={formData.offer_link1}
+              label="Affiliate Link"
+              name="offer_affiliateLink"
+              value={formData.offer_affiliateLink}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
-            />
-            <TextField
-              label="Offer Link 2"
-              name="offer_link2"
-              type="text"
-              value={formData.offer_link2}
-              onChange={handleInputChange}
-              fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              style={{ marginTop: "20px" }}
             />
             <TextField
               label="Offer Users"
               name="offer_users"
-              type="text"
               value={formData.offer_users}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              style={{ marginTop: "20px" }}
             />
             <TextField
               label="Offer Expiry"
               name="offer_expiry"
-              type="text"
+              type="date"
               value={formData.offer_expiry}
               onChange={handleInputChange}
               fullWidth
-              style={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              style={{ marginTop: "20px" }}
             />
-            <h3 style={{ marginTop: "20px", width: "330px" }}>Is Verify</h3>
+            <h3>Is Verify</h3>
             <select
               name="offer_isverify"
               value={formData.offer_isverify}
               onChange={handleInputChange}
-              style={{ marginTop: "20px", width: "100%", padding: "10px" }}
+              style={{ marginTop: "10px", width: "100%", padding: "10px" }}
             >
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
 
+            <Typography variant="subtitle1" style={{ marginTop: "20px" }}>
+              Offer Details
+            </Typography>
             <JoditEditor
               ref={editor}
               value={formData.offer_details}
               tabIndex={1}
-              onBlur={(newContent) => setContent(newContent)}
-              onChange={(newContent) =>
-                setFormData({
-                  ...formData,
-                  offer_details: newContent,
-                })
+              onBlur={(newContent) =>
+                setFormData({ ...formData, offer_details: newContent })
               }
+              onChange={() => {}}
             />
             <DialogActions>
-            <Button
-  type="submit"
-  disabled={loading}
-  variant="contained"
-  className="font=[18px] flex content-center items-center justify-center px-8 py-2 font-normal"
-  style={{
-    backgroundColor: "#E3B505",
-    color: "black",
-  }}
->
-  {`${loading ? "Loading...." : "Save"}`}
-</Button>
-
+              <Button onClick={handleAddClose} color="primary" variant="outlined">
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                variant="contained"
+                style={{ backgroundColor: "#E3B505", color: "black" }}
+              >
+                {loading ? "Loading...." : "Save"}
+              </Button>
             </DialogActions>
           </form>
         </DialogContent>
       </Dialog>
 
+      {/* Edit Offer Dialog */}
       <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{ width: "clamp(320px, 100%, 450px)", margin: "auto" }}
+        open={openEditDialog}
+        onClose={handleEditClose}
+        fullWidth={true}
+       maxWidth="xl"
       >
-        <DialogTitle id="modal-modal-title">
-          <Typography variant="h6" component="div">
-            Edit Offer Data
-          </Typography>
-        </DialogTitle>
+        <DialogTitle>Edit Offer</DialogTitle>
         <DialogContent>
-          {editingCategory && (
+          {editingOffer && (
             <form>
-              <TextField
-                label="ID"
-                value={editingCategory.id}
-                fullWidth
-                disabled
-                style={{ marginTop: "20px", display: "none" }}
-              />
+              <h3>Select Company</h3>
               <select
                 name="comp_id"
-                value={editingCategory.comp_id}
+                value={editingOffer.comp_id}
                 onChange={handleInputChange}
-                fullWidth
-                style={{ marginTop: "20px", padding: "10px" }}
+                style={{ marginTop: "10px", width: "100%", padding: "10px" }}
               >
                 <option value="">Select Company</option>
                 {companies.map((company) => (
@@ -652,113 +615,119 @@ const OffersPPage = () => {
                   </option>
                 ))}
               </select>
-              <TextField
-                label="Offer Type"
+
+              <h3>Offer Type</h3>
+              <select
                 name="offer_type"
-                value={editingCategory.offer_type}
-                fullWidth
+                value={editingOffer.offer_type}
                 onChange={handleInputChange}
-                style={{ marginTop: "20px" }}
-              />
-              <TextField
-                label="Offer Status"
+                style={{ marginTop: "10px", width: "100%", padding: "10px" }}
+              >
+                <option value="Code">Code</option>
+                <option value="Offer">Offer</option>
+              </select>
+
+              <h3>Offer Status</h3>
+              <select
                 name="offer_status"
-                value={editingCategory.offer_status}
-                fullWidth
+                value={editingOffer.offer_status}
                 onChange={handleInputChange}
-                style={{ marginTop: "20px" }}
-                select // Use a select element for dropdown
-                SelectProps={{ native: true }}
+                style={{ marginTop: "10px", width: "100%", padding: "10px" }}
               >
                 <option value="Normal">Normal</option>
                 <option value="Hot">Hot</option>
                 <option value="Trending">Trending</option>
                 <option value="Best Selling">Best Selling</option>
-              </TextField>
+              </select>
+
               <TextField
                 label="Offer Title"
                 name="offer_title"
-                value={editingCategory.offer_title}
-                fullWidth
+                value={editingOffer.offer_title}
                 onChange={handleInputChange}
+                fullWidth
                 style={{ marginTop: "20px" }}
               />
               <TextField
                 label="Offer Code"
                 name="offer_code"
-                value={editingCategory.offer_code}
-                fullWidth
+                value={editingOffer.offer_code}
                 onChange={handleInputChange}
+                fullWidth
                 style={{ marginTop: "20px" }}
               />
               <TextField
                 label="Offer Description"
                 name="offer_description"
-                value={editingCategory.offer_description}
-                fullWidth
+                value={editingOffer.offer_description}
                 onChange={handleInputChange}
+                fullWidth
+                multiline
+                rows={3}
                 style={{ marginTop: "20px" }}
               />
               <TextField
-                label="Offer Link 1"
-                name="offer_link1"
-                value={editingCategory.offer_link1}
-                fullWidth
+                label="Affiliate Link"
+                name="offer_affiliateLink"
+                value={editingOffer.offer_affiliateLink}
                 onChange={handleInputChange}
-                style={{ marginTop: "20px" }}
-              />
-              <TextField
-                label="Offer Link 2"
-                name="offer_link2"
-                value={editingCategory.offer_link2}
                 fullWidth
-                onChange={handleInputChange}
                 style={{ marginTop: "20px" }}
               />
               <TextField
                 label="Offer Users"
                 name="offer_users"
-                value={editingCategory.offer_users}
-                fullWidth
+                value={editingOffer.offer_users}
                 onChange={handleInputChange}
+                fullWidth
                 style={{ marginTop: "20px" }}
               />
               <TextField
                 label="Offer Expiry"
                 name="offer_expiry"
-                value={editingCategory.offer_expiry}
-                fullWidth
+                type="date"
+                value={editingOffer.offer_expiry}
                 onChange={handleInputChange}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 style={{ marginTop: "20px" }}
               />
-              <TextField
-                label="Is Verify"
+              <h3>Is Verify</h3>
+              <select
                 name="offer_isverify"
-                value={editingCategory.offer_isverify}
-                fullWidth
+                value={editingOffer.offer_isverify}
                 onChange={handleInputChange}
-                style={{ marginTop: "20px" }}
-              />
+                style={{ marginTop: "10px", width: "100%", padding: "10px" }}
+              >
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+
+              <Typography variant="subtitle1" style={{ marginTop: "20px" }}>
+                Offer Details
+              </Typography>
               <JoditEditor
                 ref={editor}
-                value={editingCategory.offer_details}
+                value={editingOffer.offer_details}
                 tabIndex={1}
-                onBlur={(newContent) => setContent(newContent)}
-                onChange={(newContent) =>
-                  setEditingCategory({
-                    ...editingCategory,
-                    offer_details: newContent,
-                  })
+                onBlur={(newContent) =>
+                  setEditingOffer({ ...editingOffer, offer_details: newContent })
                 }
+                onChange={() => {}}
               />
               <DialogActions>
+                <Button onClick={handleEditClose} color="primary" variant="outlined">
+                  Cancel
+                </Button>
                 <Button
                   variant="contained"
                   onClick={handleEdit}
                   disabled={loading}
-                  style={{ marginTop: "20px", width: "100%" }}
+                  style={{ backgroundColor: "#E3B505", color: "black" }}
                 >
-                  {`${loading ? "Loading...." : "Save"}`}
+                  {loading ? "Loading...." : "Save"}
                 </Button>
               </DialogActions>
             </form>
@@ -770,14 +739,6 @@ const OffersPPage = () => {
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert severity="success">Offer saved successfully!</Alert>
-      </Snackbar>
-      <Snackbar
-        open={snackbarSubmit}
-        autoHideDuration={5000}
-        onClose={() => setSnackbarSubmit(false)}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert severity="error">Please fill in all the required fields.</Alert>

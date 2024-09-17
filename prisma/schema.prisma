@@ -32,8 +32,9 @@ model Company {
   comp_other_details String?  @db.Text
   meta_description   String?
   meta_title         String?
-  meta_focusKeyword String?
-  web_slug              String?
+  meta_focusKeyword  String?
+  web_slug           String?
+  comp_affiliateLink String?
 }
 
 model Category {
@@ -46,39 +47,48 @@ model Category {
   updated_at           DateTime
   meta_description     String?
   meta_title           String?
-  meta_focusKeyword String?
-  web_slug              String?
+  meta_focusKeyword    String?
+  web_slug             String?
 }
 
-model Blog {
-  id               Int      @id @default(autoincrement())
-  title            String
-  description      String   @db.Text
-  image            String
-  category         String
+model Blogcategories{
+  id              Int     @id @default(autoincrement())
+  title           String?
+  description     String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  meta_description String?
-  meta_title       String?
+}
+
+
+model Blog {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String   @db.Text
+  image             String
+  category          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  meta_description  String?
+  meta_title        String?
   meta_focusKeyword String?
-  web_slug              String?
+  web_slug          String?
 }
 
 model Offer {
-  id                Int      @id @default(autoincrement())
-  comp_id           Int
-  offer_type        String
-  offer_status      String?
-  offer_title       String
-  offer_code        String
-  offer_description String
+  id                  Int      @id @default(autoincrement())
+  comp_id             Int
+  offer_type          String
+  offer_status        String?
+  offer_title         String
+  offer_code          String
+  offer_description   String
+  offer_users         String
+  offer_expiry        String
+  offer_isverify      String
+  offer_details       String
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
   offer_affiliateLink String?
-  offer_users       String
-  offer_expiry      String
-  offer_isverify    String
-  offer_details     String
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
 }
 
 model CategoryCoupon {

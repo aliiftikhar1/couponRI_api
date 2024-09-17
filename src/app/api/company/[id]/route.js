@@ -19,6 +19,7 @@ export async function PUT(request, { params }) {
       meta_description,
       meta_focusKeyword,
       web_slug,
+      comp_affiliateLink,
       company_details,
       other_details,
     } = data;
@@ -69,6 +70,7 @@ export async function PUT(request, { params }) {
         meta_description,
         meta_focusKeyword,
         web_slug,
+        comp_affiliateLink,
         comp_rating,
         comp_details:company_details,
         comp_other_details:other_details,

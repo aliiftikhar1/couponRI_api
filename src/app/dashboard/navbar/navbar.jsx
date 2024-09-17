@@ -9,7 +9,16 @@ const Navbar = () => {
     <header className="flex items-center justify-between bg-gray-700 p-3 mb-5  h-16">
       <div className="flex items-center">
         <div className="text-white text-xl font-bold capitalize ml-5">
-          {pathname.split("/").pop()}
+          {pathname.split("/").pop() === "Submittions" ? (
+            <>
+            Submissions
+            </>
+          ):(
+            <>
+            {pathname.split("/").pop()}
+            </>
+          )}
+         
         </div>
       </div>
       <div className="flex items-center space-x-6">
