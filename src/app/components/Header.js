@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(true);
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
 
@@ -21,7 +22,7 @@ export default function Header() {
   const handleSearchSubmit = () => {
     if (searchText.trim() !== '') {
       router.push(`/pages/search?query=${searchText}`);
-      setIsSearchOpen(false); // Hide the search input after submission
+      setIsSearchOpen(true); // Hide the search input after submission
     }
   };
 
@@ -31,12 +32,12 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center">
           <a href="/">
-            <img src="/logo/logo.jpg" alt="Logo" className="md:w-40 w-24" />
+            <img src="/logo/logo2.jpg" alt="Logo" className="md:w-40 md:py-1 w-24" />
           </a>
         </div>
 
         {/* Navigation for Desktop */}
-        <nav className="hidden lg:flex text-lg space-x-8 text-sm font-semibold">
+        <nav className="hidden lg:flex text-md space-x-8  font-semibold">
           <a href="/pages/blog" className="hover:text-blue-700">
             Blog
           </a>
@@ -79,6 +80,17 @@ export default function Header() {
               onClick={handleSearchToggle}
             />
           )}
+           <div className="flex space-x-3 ml-4">
+    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+      <FaFacebookF className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+      <FaTwitter className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+      <FaInstagram className="text-black hover:text-blue-700" />
+    </a>
+  </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -121,21 +133,34 @@ export default function Header() {
 
           {/* Search Option for Mobile */}
           <div className="flex items-center pt-4 border-t mt-4">
-            <MagnifyingGlassIcon
-              className="h-5 w-5 text-black cursor-pointer hover:text-blue-700"
-              onClick={handleSearchToggle}
-            />
-            {isSearchOpen && (
-              <input
-                type="text"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                className="ml-2 border border-gray-300 rounded-lg py-1 px-3 w-full"
-                placeholder="Search..."
-                onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
-              />
-            )}
-          </div>
+  <MagnifyingGlassIcon
+    className="h-5 w-5 text-black cursor-pointer hover:text-blue-700"
+    onClick={handleSearchToggle}
+  />
+  {isSearchOpen && (
+    <input
+      type="text"
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+      className="ml-2 border border-gray-300 rounded-lg py-1 px-3 w-full"
+      placeholder="Search..."
+      onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
+    />
+  )}
+
+  <div className="flex space-x-3 ml-4">
+    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+      <FaFacebookF className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+      <FaTwitter className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+      <FaInstagram className="text-black hover:text-blue-700" />
+    </a>
+  </div>
+</div>
+
         </nav>
       </div>
 

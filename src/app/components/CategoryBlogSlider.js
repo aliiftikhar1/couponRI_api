@@ -50,7 +50,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                   style={{ flexBasis: '100%' }} // Ensures each slide takes full width
                 >
                   <a href={`/pages/blog/${blog.id}`}>
-                    <div className="relative w-full h-64 sm:h-80 lg:h-[700px]">
+                    <div className="relative w-full h-64 sm:h-80 lg:h-[600px]">
                       <img
                         src={`https://m3xtrader.com/coupon/uploads/${blog.image}`}
                         alt={blog.title}
@@ -68,7 +68,7 @@ export default function BlogCategorySlider({ category, blogs }) {
         </div>
 
         {/* Right column: Remaining blogs */}
-        <div className="flex flex-col h-screen overflow-hidden space-y-4">
+        <div className="flex flex-col h-[600px] overflow-hidden space-y-4">
           {filteredBlogs
             .slice(currentIndex + 1)
             .concat(filteredBlogs.slice(0, currentIndex))

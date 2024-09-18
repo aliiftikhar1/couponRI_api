@@ -20,8 +20,8 @@ export async function PUT(request, { params }) {
       meta_focusKeyword,
       web_slug,
       comp_affiliateLink,
-      company_details,
-      other_details,
+      comp_details,
+        comp_other_details
     } = data;
     console.log(data);
 
@@ -72,8 +72,8 @@ export async function PUT(request, { params }) {
         web_slug,
         comp_affiliateLink,
         comp_rating,
-        comp_details:company_details,
-        comp_other_details:other_details,
+        comp_details,
+        comp_other_details,
         updated_at: new Date(),
       },
     });
