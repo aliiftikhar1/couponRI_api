@@ -36,6 +36,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import { useRouter } from "next/navigation";
+
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -285,6 +289,20 @@ const AddBlogs = () => {
       setError("Error fetching blogs: " + error.message);
     }
   };
+  const router = useRouter();
+  const [userRole, setUserRole] = useState("");
+  useEffect(() => {
+    // Decode JWT token to get user role
+    const token = Cookies.get("token");
+    if (!token) {
+      alert("Login to see the dashboard!");
+      router.push("/admin");
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserRole(decodedToken.role);
+      console.log("User Role:", decodedToken.role);
+    }
+  }, [router]);
 
   useEffect(() => {
     
@@ -371,10 +389,13 @@ const AddBlogs = () => {
                 cursor: "pointer",
               }}
             />
-            <MdDeleteForever
-              onClick={() => handleDelete(row.original)}
-              style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
-            />
+            {/* Conditionally render the delete button based on userRole */}
+            {userRole !== "sub admin" && (
+              <MdDeleteForever
+                onClick={() => handleDelete(row.original)}
+                style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
+              />
+            )}
           </div>
         ),
       },

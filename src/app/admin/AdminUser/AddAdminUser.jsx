@@ -21,6 +21,10 @@ import {
   Alert,
   IconButton,
   TablePagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import {
@@ -32,17 +36,14 @@ import {
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import CloseIcon from "@mui/icons-material/Close";
-import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
-import { useRouter } from "next/navigation";
 
 import axios from "axios";
 
-const BlogCategories = () => {
-  const [categories, setCategories] = useState([]);
+const AdminUsers = () => {
+  const [adminUsers, setAdminUsers] = useState([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -54,37 +55,26 @@ const BlogCategories = () => {
   });
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    name: "",
+    role: "admin",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   useEffect(() => {
-    fetchCategories();
+    fetchAdminUsers();
   }, []);
-  const router = useRouter();
-  const [userRole, setUserRole] = useState("");
-  useEffect(() => {
-    // Decode JWT token to get user role
-    const token = Cookies.get("token");
-    if (!token) {
-      alert("Login to see the dashboard!");
-      router.push("/admin");
-    } else {
-      const decodedToken = jwtDecode(token);
-      setUserRole(decodedToken.role);
-      console.log("User Role:", decodedToken.role);
-    }
-  }, [router]);
 
-  const fetchCategories = async () => {
+  const fetchAdminUsers = async () => {
     try {
-      const response = await axios.get("/api/blogcategory");
-      setCategories(response.data);
+      const response = await axios.get("/api/admin");
+      setAdminUsers(response.data);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching admin users:", error);
       setSnackbar({
         open: true,
-        message: "Failed to fetch categories.",
+        message: "Failed to fetch admin users.",
         type: "error",
       });
     }
@@ -92,8 +82,11 @@ const BlogCategories = () => {
 
   const handleAddOpen = () => {
     setFormData({
-      title: "",
-      description: "",
+      name: "",
+      role: "admin", // Default role set to 'admin'
+      email: "",
+      password: "",
+      confirmPassword: "",
     });
     setOpenAddDialog(true);
   };
@@ -102,18 +95,21 @@ const BlogCategories = () => {
     setOpenAddDialog(false);
   };
 
-  const handleEditOpen = (category) => {
-    setEditingCategory(category);
+  const handleEditOpen = (user) => {
+    setEditingUser(user);
     setFormData({
-      title: category.title,
-      description: category.description,
+      name: user.name,
+      role: user.role || "admin",
+      email: user.email,
+      password: "",
+      confirmPassword: "",
     });
     setOpenEditDialog(true);
   };
 
   const handleEditClose = () => {
     setOpenEditDialog(false);
-    setEditingCategory(null);
+    setEditingUser(null);
   };
 
   const handleInputChange = (e) => {
@@ -127,7 +123,9 @@ const BlogCategories = () => {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.description) {
+    const { name, role, email, password, confirmPassword } = formData;
+
+    if (!name || !email || !password || !confirmPassword) {
       setSnackbar({
         open: true,
         message: "Please fill in all required fields.",
@@ -136,21 +134,29 @@ const BlogCategories = () => {
       return;
     }
 
-    try {
-      console.log("form data is : ",formData);
-      await axios.post("/api/blogcategory", formData);
+    if (password !== confirmPassword) {
       setSnackbar({
         open: true,
-        message: "Category added successfully.",
+        message: "Passwords do not match.",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      await axios.post("/api/admin", { name, role, email, password });
+      setSnackbar({
+        open: true,
+        message: "Admin user added successfully.",
         type: "success",
       });
-      fetchCategories();
+      fetchAdminUsers();
       handleAddClose();
     } catch (error) {
-      console.error("Error adding category:", error);
+      console.error("Error adding admin user:", error);
       setSnackbar({
         open: true,
-        message: "Failed to add category.",
+        message: "Failed to add admin user.",
         type: "error",
       });
     }
@@ -159,7 +165,9 @@ const BlogCategories = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.description) {
+    const { name, role, email, password, confirmPassword } = formData;
+
+    if (!name || !email) {
       setSnackbar({
         open: true,
         message: "Please fill in all required fields.",
@@ -168,20 +176,33 @@ const BlogCategories = () => {
       return;
     }
 
-    try {
-      await axios.put(`/api/blogcategory/${editingCategory.id}`, formData);
+    if (password && password !== confirmPassword) {
       setSnackbar({
         open: true,
-        message: "Category updated successfully.",
+        message: "Passwords do not match.",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      const updateData = { name, role, email };
+      if (password) {
+        updateData.password = password;
+      }
+      await axios.put(`/api/admin/${editingUser.id}`, updateData);
+      setSnackbar({
+        open: true,
+        message: "Admin user updated successfully.",
         type: "success",
       });
-      fetchCategories();
+      fetchAdminUsers();
       handleEditClose();
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error("Error updating admin user:", error);
       setSnackbar({
         open: true,
-        message: "Failed to update category.",
+        message: "Failed to update admin user.",
         type: "error",
       });
     }
@@ -193,18 +214,18 @@ const BlogCategories = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`/api/blogcategory/${deleteConfirmation.id}`);
+      await axios.delete(`/api/admin/${deleteConfirmation.id}`);
       setSnackbar({
         open: true,
-        message: "Category deleted successfully.",
+        message: "Admin user deleted successfully.",
         type: "warning",
       });
-      fetchCategories();
+      fetchAdminUsers();
     } catch (error) {
-      console.error("Error deleting category:", error);
+      console.error("Error deleting admin user:", error);
       setSnackbar({
         open: true,
-        message: "Failed to delete category.",
+        message: "Failed to delete admin user.",
         type: "error",
       });
     } finally {
@@ -223,12 +244,16 @@ const BlogCategories = () => {
         accessor: "id",
       },
       {
-        Header: "Title",
-        accessor: "title",
+        Header: "Name",
+        accessor: "name",
       },
       {
-        Header: "Description",
-        accessor: "description",
+        Header: "Role",
+        accessor: "role",
+      },
+      {
+        Header: "Email",
+        accessor: "email",
       },
       {
         Header: "Created At",
@@ -244,27 +269,20 @@ const BlogCategories = () => {
         Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
-          <div className="flex gap-6">
+          <div style={{ display: "flex", gap: "10px" }}>
             <FaUserEdit
               onClick={() => handleEditOpen(row.original)}
-              style={{
-                fontSize: "26px",
-                color: "#006a5c",
-                paddingRight: "6px",
-                cursor: "pointer",
-              }}
+              style={{ fontSize: "20px", color: "#1976d2", cursor: "pointer" }}
             />
-            {userRole !== "sub admin" && (
-              <MdDeleteForever
-                onClick={() => handleDelete(row.original)}
-                style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
-              />
-            )}
+            <MdDeleteForever
+              onClick={() => handleDelete(row.original.id)}
+              style={{ fontSize: "20px", color: "#d32f2f", cursor: "pointer" }}
+            />
           </div>
         ),
       },
     ],
-    [userRole]
+    []
   );
 
   const {
@@ -280,7 +298,7 @@ const BlogCategories = () => {
   } = useTable(
     {
       columns,
-      data: categories,
+      data: adminUsers,
     },
     useGlobalFilter,
     useSortBy,
@@ -312,7 +330,7 @@ const BlogCategories = () => {
           />
         </Toolbar>
         <Button variant="contained" color="primary" onClick={handleAddOpen}>
-          Add New Category
+          Add New Admin User
         </Button>
       </div>
 
@@ -321,7 +339,10 @@ const BlogCategories = () => {
         <Table {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup) => (
-              <TableRow key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+              <TableRow
+                key={headerGroup.id}
+                {...headerGroup.getHeaderGroupProps()}
+              >
                 {headerGroup.headers.map((column) => (
                   <TableCell
                     key={column.id}
@@ -354,7 +375,7 @@ const BlogCategories = () => {
             {page.length === 0 && (
               <TableRow>
                 <TableCell colSpan={columns.length} align="center">
-                  No categories found.
+                  No admin users found.
                 </TableCell>
               </TableRow>
             )}
@@ -368,27 +389,25 @@ const BlogCategories = () => {
           5,
           10,
           25,
-          { label: "All", value: categories.length },
+          { label: "All", value: adminUsers.length },
         ]}
         component="div"
-        count={categories.length}
+        count={adminUsers.length}
         rowsPerPage={pageSize}
         page={pageIndex}
         onPageChange={(event, newPage) => gotoPage(newPage)}
-        onRowsPerPageChange={(event) =>
-          setPageSize(Number(event.target.value))
-        }
+        onRowsPerPageChange={(event) => setPageSize(Number(event.target.value))}
       />
 
-      {/* Add Category Dialog */}
+      {/* Add Admin User Dialog */}
       <Dialog
         open={openAddDialog}
         onClose={handleAddClose}
-        maxWidth="xl"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle>
-          Add New Category
+          Add New Admin User
           <IconButton
             aria-label="close"
             onClick={handleAddClose}
@@ -405,24 +424,57 @@ const BlogCategories = () => {
         <DialogContent>
           <form onSubmit={handleAddSubmit}>
             <TextField
-              label="Title"
-              name="title"
-              value={formData.title}
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <FormControl fullWidth margin="normal" required>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                name="role"
+                value={formData.role}
+                label="Role"
+                onChange={handleInputChange}
+              >
+                {/* Updated roles */}
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="sub admin">Sub Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
               onChange={handleInputChange}
               fullWidth
               required
               margin="normal"
             />
             <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
               onChange={handleInputChange}
               fullWidth
               required
               margin="normal"
-              multiline
-              rows={4}
+            />
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              margin="normal"
             />
             <DialogActions>
               <Button onClick={handleAddClose} color="primary">
@@ -436,15 +488,15 @@ const BlogCategories = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Category Dialog */}
+      {/* Edit Admin User Dialog */}
       <Dialog
         open={openEditDialog}
         onClose={handleEditClose}
-        maxWidth="xl"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle>
-          Edit Category
+          Edit Admin User
           <IconButton
             aria-label="close"
             onClick={handleEditClose}
@@ -461,24 +513,57 @@ const BlogCategories = () => {
         <DialogContent>
           <form onSubmit={handleEditSubmit}>
             <TextField
-              label="Title"
-              name="title"
-              value={formData.title}
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <FormControl fullWidth margin="normal" required>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                name="role"
+                value={formData.role}
+                label="Role"
+                onChange={handleInputChange}
+              >
+                {/* Updated roles */}
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="sub admin">Sub Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
               onChange={handleInputChange}
               fullWidth
               required
               margin="normal"
             />
             <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
               onChange={handleInputChange}
               fullWidth
-              required
               margin="normal"
-              multiline
-              rows={4}
+              helperText="Leave blank to keep current password."
+            />
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+              helperText="Leave blank to keep current password."
             />
             <DialogActions>
               <Button onClick={handleEditClose} color="primary">
@@ -505,7 +590,7 @@ const BlogCategories = () => {
         <DialogContent>
           {deleteConfirmation.id && (
             <p>
-              Are you sure you want to delete the category with ID{" "}
+              Are you sure you want to delete the admin user with ID{" "}
               {deleteConfirmation.id}?
             </p>
           )}
@@ -539,4 +624,4 @@ const BlogCategories = () => {
   );
 };
 
-export default BlogCategories;
+export default AdminUsers;

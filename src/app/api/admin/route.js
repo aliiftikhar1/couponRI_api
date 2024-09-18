@@ -24,7 +24,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name,email, password } = body;
+    const { name,email,role, password } = body;
 
     // Hash the password using bcryptjs
     const salt = bcrypt.genSaltSync(10); // Generate a salt
@@ -35,6 +35,7 @@ export async function POST(request) {
       data: {
         name,
         email,
+        role,
         password: hashedPassword, // Save the hashed password
         createdAt: new Date(),
         updatedAt: new Date(),

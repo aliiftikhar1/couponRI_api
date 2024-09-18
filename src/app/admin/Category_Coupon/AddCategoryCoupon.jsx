@@ -38,6 +38,10 @@ import { MdDeleteForever } from "react-icons/md";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import { useRouter } from "next/navigation";
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -236,6 +240,21 @@ const AddCategoryCoupons = () => {
     setEditingCategory(null);
   };
 
+  const router = useRouter();
+  const [userRole, setUserRole] = useState("");
+  useEffect(() => {
+    // Decode JWT token to get user role
+    const token = Cookies.get("token");
+    if (!token) {
+      alert("Login to see the dashboard!");
+      router.push("/admin");
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserRole(decodedToken.role);
+      console.log("User Role:", decodedToken.role);
+    }
+  }, [router]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -284,6 +303,7 @@ const AddCategoryCoupons = () => {
         accessor: "updateButton",
         Cell: ({ row }) => (
           <div className="flex gap-6">
+            {/* Edit Icon */}
             <FaUserEdit
               onClick={() => handleOpen(row.original)}
               style={{
@@ -293,15 +313,18 @@ const AddCategoryCoupons = () => {
                 cursor: "pointer",
               }}
             />
-            <MdDeleteForever
-              onClick={() => handleDelete(row.original)}
-              style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
-            />
+            {/* Conditionally show Delete Icon if user role is not 'sub admin' */}
+            {userRole !== "sub admin" && (
+              <MdDeleteForever
+                onClick={() => handleDelete(row.original)}
+                style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
+              />
+            )}
           </div>
         ),
       },
     ],
-    [offers]
+    [offers, userRole]
   );
   
 

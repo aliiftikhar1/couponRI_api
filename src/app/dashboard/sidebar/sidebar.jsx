@@ -1,6 +1,5 @@
 "use client";
-import { useState } from 'react';
-import Cookies from 'js-cookie';
+import { useState, useEffect } from 'react';
 import {
   FaSignOutAlt,
   FaChevronDown,
@@ -13,23 +12,18 @@ import {
   FaTicketAlt,
   FaInbox,
   FaFolderOpen,
+  FaUser,
 } from 'react-icons/fa';
-
-const menuItems = [
-  {
-    title: "CouponRI",
-    list: [
-      {
-        title: "Settings",
-        path: "/dashboard/settings",
-        icon: <FaCog />,
-      },
-    ],
-  },
-];
+import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode'; // Corrected import
+import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState({});
+  const router = useRouter();
 
   const toggleDropdown = (key) => {
     setIsDropdownOpen((prevState) => ({
@@ -43,6 +37,108 @@ const Sidebar = () => {
     window.location.href = '/admin';
   };
 
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (!token) {
+      alert('Login to see the dashboard!');
+      router.push('/admin');
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserName(decodedToken.name);
+      setUserEmail(decodedToken.email);
+      setUserRole(decodedToken.role);
+      console.log("---DECODED----");
+      console.log(
+        "Name",
+        decodedToken.name,
+        "email",
+        decodedToken.email,
+        "Role",
+        decodedToken.role
+      );
+      // Removed console.log of userName, userEmail, userRole here
+    }
+  }, [router]);
+
+  useEffect(() => {
+    // This runs after userName has updated
+    console.log("userName has been updated:", userName);
+  }, [userName]);
+
+  // Define menu items with roles
+  const menuItems = [
+    {
+      title: "Users",
+      path: "/admin/AdminUser",
+      icon: <FaUser className="h-5 w-5" />,
+      roles: ["admin"], // Only admin can see this
+    },
+    {
+      title: "Companies",
+      path: "/admin/Companies",
+      icon: <FaBuilding className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "Categories",
+      path: "/admin/Categories",
+      icon: <FaTags className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "Offers",
+      path: "/admin/Offers",
+      icon: <FaPercent className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "Category Coupon",
+      path: "/admin/Category_Coupon",
+      icon: <FaTicketAlt className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "Submissions",
+      path: "/admin/Submittions",
+      icon: <FaInbox className="h-5 w-5" />,
+      roles: ["admin"],
+    },
+    {
+      title: "Blog Categories",
+      path: "/admin/BlogCategories",
+      icon: <FaFolderOpen className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "Blogs",
+      path: "/admin/Blogs",
+      icon: <FaBlog className="h-5 w-5" />,
+      roles: ["admin", "sub admin"],
+    },
+    {
+      title: "FAQ's",
+      path: "/admin/Faqs",
+      icon: <FaQuestionCircle className="h-5 w-5" />,
+      roles: ["admin"],
+    },
+  ];
+
+  // Define dropdown menu items with roles
+  const dropdownMenuItems = [
+    {
+      title: "CouponRI",
+      roles: ["admin"], // Only admin can see this dropdown
+      list: [
+        {
+          title: "Settings",
+          path: "/dashboard/settings",
+          icon: <FaCog />,
+          roles: ["admin"],
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="bg-gray-700 text-white w-full min-h-screen flex flex-col">
       {/* Profile Section */}
@@ -52,109 +148,70 @@ const Sidebar = () => {
           alt="Profile"
           className="rounded-full mx-auto mb-4 w-24 h-24"
         />
-        <h2 className="text-xl font-semibold">CouponRI</h2>
+        <h2 className="text-xl font-semibold">{userName}</h2>
         <p className="text-green-400 mt-1">● Online</p>
       </div>
 
       {/* Menu Section */}
       <div className="flex-1 p-4 border-t border-gray-600">
         <ul className="mt-6 space-y-3">
-          {/* Permanent Links */}
-          <li>
-            <a href="/admin/Companies">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaBuilding className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Companies</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Categories">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaTags className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Categories</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Offers">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaPercent className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Offers</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Category_Coupon">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaTicketAlt className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Category Coupon</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Submittions">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaInbox className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Submissions</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/BlogCategories">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaFolderOpen className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Blog Categories</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Blogs">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaBlog className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">Blogs</span>
-              </button>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/Faqs">
-              <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
-                <FaQuestionCircle className="h-5 w-5" />
-                <span className="ml-3 text-sm font-medium">FAQ's</span>
-              </button>
-            </a>
-          </li>
+          {/* Dynamic Menu Items */}
+          {menuItems.map(
+            (item) =>
+              item.roles.includes(userRole) && (
+                <li key={item.title}>
+                  <a href={item.path}>
+                    <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
+                      {item.icon}
+                      <span className="ml-3 text-sm font-medium">
+                        {item.title}
+                      </span>
+                    </button>
+                  </a>
+                </li>
+              )
+          )}
 
           {/* Dropdown Menu */}
-          {menuItems.map((category, index) => (
-            <li key={category.title}>
-              <button
-                className="flex items-center w-full p-3 hover:bg-blue-700 rounded-md focus:outline-none"
-                onClick={() => toggleDropdown(index)}
-              >
-                <span className="ml-3 text-sm font-medium">{category.title}</span>
-                <FaChevronDown
-                  className={`h-4 w-4 ml-auto transform transition-transform duration-200 ${
-                    isDropdownOpen[index] ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {isDropdownOpen[index] && (
-                <ul className="ml-6 mt-2 space-y-2">
-                  {category.list.map((item) => (
-                    <li key={item.title}>
-                      <a href={item.path}>
-                        <button className="flex items-center p-2 hover:bg-blue-700 rounded-md w-full">
-                          {item.icon}
-                          <span className="ml-3 text-sm font-medium">{item.title}</span>
-                        </button>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
+          {dropdownMenuItems.map(
+            (category, index) =>
+              category.roles.includes(userRole) && (
+                <li key={category.title}>
+                  <button
+                    className="flex items-center w-full p-3 hover:bg-blue-700 rounded-md focus:outline-none"
+                    onClick={() => toggleDropdown(index)}
+                  >
+                    <span className="ml-3 text-sm font-medium">
+                      {category.title}
+                    </span>
+                    <FaChevronDown
+                      className={`h-4 w-4 ml-auto transform transition-transform duration-200 ${
+                        isDropdownOpen[index] ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {isDropdownOpen[index] && (
+                    <ul className="ml-6 mt-2 space-y-2">
+                      {category.list.map(
+                        (item) =>
+                          item.roles.includes(userRole) && (
+                            <li key={item.title}>
+                              <a href={item.path}>
+                                <button className="flex items-center p-2 hover:bg-blue-700 rounded-md w-full">
+                                  {item.icon}
+                                  <span className="ml-3 text-sm font-medium">
+                                    {item.title}
+                                  </span>
+                                </button>
+                              </a>
+                            </li>
+                          )
+                      )}
+                    </ul>
+                  )}
+                </li>
+              )
+          )}
 
           {/* Logout Button */}
           <li className="mt-6">

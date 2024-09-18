@@ -32,6 +32,10 @@ import { MdDeleteForever } from "react-icons/md";
 import { toast } from "react-toastify";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import { useRouter } from "next/navigation";
+
 
 // Dynamically import the editor since it might use 'self' or 'window'
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -89,6 +93,20 @@ const OffersPPage = () => {
       console.error("Invalid Offer for deletion");
     }
   };
+  const router = useRouter();
+  const [userRole, setUserRole] = useState("");
+  useEffect(() => {
+    // Decode JWT token to get user role
+    const token = Cookies.get("token");
+    if (!token) {
+      alert("Login to see the dashboard!");
+      router.push("/admin");
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserRole(decodedToken.role);
+      console.log("User Role:", decodedToken.role);
+    }
+  }, [router]);
 
   useEffect(() => {
     fetchOffers();
@@ -317,7 +335,7 @@ const OffersPPage = () => {
         accessor: "offer_expiry",
       },
       {
-        Header: "Action",
+        Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
           <div className="flex gap-6">
@@ -330,15 +348,17 @@ const OffersPPage = () => {
                 cursor: "pointer",
               }}
             />
-            <MdDeleteForever
-              onClick={() => handleDelete(row.original)}
-              style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
-            />
+            {userRole !== "sub admin" && (
+              <MdDeleteForever
+                onClick={() => handleDelete(row.original)}
+                style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
+              />
+            )}
           </div>
         ),
       },
     ],
-    [companies]
+    [companies, userRole]
   );
 
   const {

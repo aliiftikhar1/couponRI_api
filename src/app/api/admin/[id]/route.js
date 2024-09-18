@@ -30,7 +30,7 @@ export async function PUT(request, { params }) {
     }
 
     const body = await request.json();
-    const { name, age, cnic, country, city, branch, role, email, password, imgurl, base64 } = body;
+    const { name, email,role, password} = body;
 
     const admin = await prisma.adminUser.findUnique({ where: { id } });
     if (!admin) {
@@ -42,33 +42,13 @@ export async function PUT(request, { params }) {
       const salt = bcrypt.genSaltSync(10);
       hashedPassword = bcrypt.hashSync(password, salt);
     }
-
-    const response = await fetch('https://admin.applelegal.co/uploadImage.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ image: base64 }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to upload image');
-    }
-
-    const result = await response.json();
     const updatedAdmin = await prisma.adminUser.update({
       where: { id },
       data: {
         name,
-        age,
-        cnic,
-        country,
-        city,
-        branch,
         role,
         email,
         password: hashedPassword,
-        imgurl: result.image_url,
         updatedAt: new Date(),
       },
     });

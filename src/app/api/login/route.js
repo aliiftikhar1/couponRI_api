@@ -30,16 +30,23 @@ export async function POST(request) {
       }, { status: 401 });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ email: user.email,name:user.name,id: user.id}, SECRET_KEY, {
-      expiresIn: '1h' // token will expire in 1 hour
-    });
+    
+    console.log("Email:",user.email,"Name:", user.name, "Role:",user.role,"user id:",user.id);
+    const token = jwt.sign({ email: user.email, name: user.name, role: user.role, id: user.id }, SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+    
+    console.log("Generated Token:", token); // Add this line to check the token content
+    
+//     const decodedToken = jwt.decode(token);
+// console.log("Decoded Token:", decodedToken);
 
     return NextResponse.json({
       status: 200,
       message: "Login Successfully",
       token
     });
+    
   } catch (error) {
     console.error('Error during login:', error);
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });

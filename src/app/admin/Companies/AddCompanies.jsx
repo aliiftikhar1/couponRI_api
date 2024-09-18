@@ -36,6 +36,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useTable, useGlobalFilter, useSortBy, usePagination } from "react-table";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import { useRouter } from "next/navigation";
 
 const AddCompanies = () => {
   const editor = useRef(null);
@@ -361,6 +364,21 @@ const AddCompanies = () => {
     fetchData();
   }, []);
 
+  const router = useRouter();
+  const [userRole, setUserRole] = useState("");
+  useEffect(() => {
+    // Decode JWT token to get user role
+    const token = Cookies.get("token");
+    if (!token) {
+      alert("Login to see the dashboard!");
+      router.push("/admin");
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserRole(decodedToken.role);
+      console.log("User Role:", decodedToken.role);
+    }
+  }, [router]);
+
   const columns = React.useMemo(
     () => [
       {
@@ -425,15 +443,18 @@ const AddCompanies = () => {
                 cursor: "pointer",
               }}
             />
-            <MdDeleteForever
-              onClick={() => handleDelete(row.original)}
-              style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
-            />
+            {/* Conditionally render the delete button based on userRole */}
+            {userRole !== "sub admin" && (
+              <MdDeleteForever
+                onClick={() => handleDelete(row.original)}
+                style={{ fontSize: "26px", color: "#b03f37", cursor: "pointer" }}
+              />
+            )}
           </div>
         ),
       },
     ],
-    [categories]
+    [categories, userRole]
   );
 
   const {
@@ -459,6 +480,8 @@ const AddCompanies = () => {
   );
 
   const { pageIndex, pageSize, globalFilter } = state;
+
+ 
 
   return (
     <Box sx={{ padding: 3 }}>
