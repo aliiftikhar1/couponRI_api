@@ -22,7 +22,9 @@ export default function BlogCategorySlider({ category, blogs }) {
 
   return (
     <div className="w-full bg-white p-6 shadow-md">
-      <h2 className="text-2xl font-bold text-blue-500 mb-4">{category}</h2>
+      <div className='flex justify-start items-start w-full'>
+      <h2 className="text-2xl bg-[#06089B] font-bold mt-4 mb-4 px-4 py-2 text-white text-left">{category}</h2>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left column: Slider */}
         <div className="relative items-center flex col-span-1 lg:col-span-2">

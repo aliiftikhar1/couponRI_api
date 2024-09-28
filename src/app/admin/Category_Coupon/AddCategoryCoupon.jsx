@@ -39,9 +39,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
-
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -64,12 +63,16 @@ const AddCategoryCoupons = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSubmit, setSnackbarSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [load, setLoad] = useState(false);
   const [deleteSuccessSnackbar, setDeleteSuccessSnackbar] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState({
     open: false,
     id: null,
   });
+  const [mounted, setMounted] = useState(false); // For hydration
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleDelete = (row) => {
     if (row && row.id) {
@@ -163,74 +166,62 @@ const AddCategoryCoupons = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoad(true);
-    setLoading(true); // Show loading overlay
-  
+    setLoading(true);
+
     if (!formData.name || !formData.offerIds.length) {
       setSnackbarSubmit(true);
       setTimeout(() => {
         setSnackbarSubmit(false);
       }, 5000);
-      setLoad(false);
-      setLoading(false); // Hide loading overlay
+      setLoading(false);
       return;
     }
-  
+
     try {
       const categoryToSubmit = {
         name: formData.name,
-        offers: formData.offerIds, // Send as an array of offer IDs
+        offers: formData.offerIds,
       };
-  
+
       await axios.post(`http://localhost:3000/api/category_coupon`, categoryToSubmit);
       toast.success("Category has been added successfully!");
-      setLoad(false);
-      setLoading(false); // Hide loading overlay
       modelClose();
       window.location.reload();
     } catch (error) {
       console.error("Error occurred during submission", error);
-      setLoad(false);
-      setLoading(false); // Hide loading overlay
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    setLoad(true);
-    setLoading(true); // Show loading overlay
+    setLoading(true);
 
     try {
       const categoryToUpdate = {
         name: editingCategory.name,
-        offers: editingCategory.offerIds, // Send as an array of offer IDs
+        offers: editingCategory.offerIds,
       };
 
-      await axios.put(
-        `/api/category_coupon/${editingCategory.id}`,
-        categoryToUpdate
-      );
+      await axios.put(`/api/category_coupon/${editingCategory.id}`, categoryToUpdate);
 
       toast.success("Category has been updated successfully!");
-      setLoad(false);
-      setLoading(false); // Hide loading overlay
       handleClose();
       window.location.reload();
     } catch (error) {
       console.error("Error occurred while updating the data:", error);
       toast.error("Failed to update the category");
-      setLoad(false);
-      setLoading(false); // Hide loading overlay
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleOpen = (category) => {
-    // Parse the offers string into an array of offer IDs
     const offerIds = Array.isArray(category.offers)
       ? category.offers
       : category.offers ? category.offers.split(',').map(id => parseInt(id, 10)) : [];
-    
+
     setEditingCategory({ ...category, offerIds });
     setOpen(true);
   };
@@ -243,7 +234,6 @@ const AddCategoryCoupons = () => {
   const router = useRouter();
   const [userRole, setUserRole] = useState("");
   useEffect(() => {
-    // Decode JWT token to get user role
     const token = Cookies.get("token");
     if (!token) {
       alert("Login to see the dashboard!");
@@ -251,7 +241,6 @@ const AddCategoryCoupons = () => {
     } else {
       const decodedToken = jwtDecode(token);
       setUserRole(decodedToken.role);
-      console.log("User Role:", decodedToken.role);
     }
   }, [router]);
 
@@ -294,7 +283,6 @@ const AddCategoryCoupons = () => {
         Header: "Offers",
         accessor: "offer",
         Cell: ({ value }) => {
-          // Directly return the offer string as received from the API
           return Array.isArray(value) ? value.join(", ") : value;
         },
       },
@@ -303,7 +291,6 @@ const AddCategoryCoupons = () => {
         accessor: "updateButton",
         Cell: ({ row }) => (
           <div className="flex gap-6">
-            {/* Edit Icon */}
             <FaUserEdit
               onClick={() => handleOpen(row.original)}
               style={{
@@ -313,7 +300,6 @@ const AddCategoryCoupons = () => {
                 cursor: "pointer",
               }}
             />
-            {/* Conditionally show Delete Icon if user role is not 'sub admin' */}
             {userRole !== "sub admin" && (
               <MdDeleteForever
                 onClick={() => handleDelete(row.original)}
@@ -326,7 +312,6 @@ const AddCategoryCoupons = () => {
     ],
     [offers, userRole]
   );
-  
 
   const {
     getTableProps,
@@ -352,12 +337,11 @@ const AddCategoryCoupons = () => {
 
   const { pageIndex, pageSize, globalFilter } = state;
 
+  if (!mounted) return null; // Fix for hydration error
+
   return (
     <Box sx={{ padding: 3 }}>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading} // Show backdrop when loading is true
-      >
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
 
@@ -415,7 +399,7 @@ const AddCategoryCoupons = () => {
               return (
                 <TableRow key={row.id} {...row.getRowProps()}>
                   {row.cells.map((cell) => (
-                    <TableCell key={cell.id} {...cell.getCellProps()}>
+                    <TableCell key={cell.column.id} {...cell.getCellProps()}>
                       {cell.render("Cell")}
                     </TableCell>
                   ))}
@@ -439,14 +423,7 @@ const AddCategoryCoupons = () => {
       />
 
       {/* Add Category Coupon Dialog */}
-      <Dialog
-        open={model}
-        onClose={modelClose}
-        maxWidth="xl"
-        fullWidth
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Dialog open={model} onClose={modelClose} maxWidth="xl" fullWidth>
         <DialogTitle>
           <Typography variant="h6">New Category Coupon</Typography>
           <IconButton
@@ -509,7 +486,7 @@ const AddCategoryCoupons = () => {
             <DialogActions>
               <Button
                 type="submit"
-                disabled={load}
+                disabled={loading}
                 variant="contained"
                 sx={{
                   backgroundColor: "#E3B505",
@@ -519,109 +496,14 @@ const AddCategoryCoupons = () => {
                   },
                 }}
               >
-                {`${load ? "Loading...." : "Save"}`}
+                {`${loading ? "Loading..." : "Save"}`}
               </Button>
             </DialogActions>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Edit Category Coupon Dialog */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        maxWidth="xl"
-        fullWidth
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <DialogTitle>
-          <Typography variant="h6">Edit Category Coupon</Typography>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {editingCategory && (
-            <form>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    label="Category Name"
-                    name="name"
-                    value={editingCategory.name}
-                    fullWidth
-                    onChange={(e) =>
-                      setEditingCategory({
-                        ...editingCategory,
-                        name: e.target.value,
-                      })
-                    }
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth variant="outlined">
-                    <InputLabel id="select-edit-offers-label">Offers</InputLabel>
-                    <Select
-                      labelId="select-edit-offers-label"
-                      id="select-edit-offers"
-                      multiple
-                      value={editingCategory.offerIds}
-                      onChange={handleOffersChange}
-                      input={<OutlinedInput label="Offers" />}
-                      renderValue={(selected) =>
-                        selected
-                          .map((id) => {
-                            const offer = offers.find((o) => o.id === id);
-                            return offer ? offer.offer_title : "";
-                          })
-                          .join(", ")
-                      }
-                      MenuProps={MenuProps}
-                    >
-                      {offers.map((offer) => (
-                        <MenuItem key={offer.id} value={offer.id}>
-                          <Checkbox checked={editingCategory.offerIds.indexOf(offer.id) > -1} />
-                          <ListItemText primary={offer.offer_title} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <DialogActions>
-                <Button
-                  variant="contained"
-                  onClick={handleEdit}
-                  disabled={loading}
-                  sx={{
-                    backgroundColor: "#E3B505",
-                    color: "black",
-                    ":hover": {
-                      backgroundColor: "#d3a004",
-                    },
-                    mt: 2,
-                    width: "100%",
-                  }}
-                >
-                  {`${loading ? "Loading...." : "Save"}`}
-                </Button>
-              </DialogActions>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
-
+      {/* Snackbar and Delete Confirmation */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
@@ -651,7 +533,6 @@ const AddCategoryCoupons = () => {
         open={deleteConfirmation.open}
         onClose={handleCancelDelete}
         aria-labelledby="delete-confirmation-title"
-        aria-describedby="delete-confirmation-description"
       >
         <DialogTitle id="delete-confirmation-title">
           <Typography variant="h6">Confirm Deletion</Typography>

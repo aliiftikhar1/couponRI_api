@@ -15,8 +15,9 @@ import {
   FaUser,
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode'; // Corrected import
+import { jwtDecode } from 'jwt-decode'; // Corrected import
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // Import Next.js Link component for smooth transitions
 
 const Sidebar = () => {
   const [userName, setUserName] = useState('');
@@ -34,7 +35,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     Cookies.remove('token');
-    window.location.href = '/admin';
+    router.push('/admin'); // Navigate using Next.js router
   };
 
   useEffect(() => {
@@ -56,12 +57,10 @@ const Sidebar = () => {
         "Role",
         decodedToken.role
       );
-      // Removed console.log of userName, userEmail, userRole here
     }
   }, [router]);
 
   useEffect(() => {
-    // This runs after userName has updated
     console.log("userName has been updated:", userName);
   }, [userName]);
 
@@ -160,14 +159,14 @@ const Sidebar = () => {
             (item) =>
               item.roles.includes(userRole) && (
                 <li key={item.title}>
-                  <a href={item.path}>
+                  <Link href={item.path} passHref>
                     <button className="flex items-center p-3 hover:bg-blue-700 rounded-md w-full">
                       {item.icon}
                       <span className="ml-3 text-sm font-medium">
                         {item.title}
                       </span>
                     </button>
-                  </a>
+                  </Link>
                 </li>
               )
           )}
@@ -196,14 +195,14 @@ const Sidebar = () => {
                         (item) =>
                           item.roles.includes(userRole) && (
                             <li key={item.title}>
-                              <a href={item.path}>
+                              <Link href={item.path} passHref>
                                 <button className="flex items-center p-2 hover:bg-blue-700 rounded-md w-full">
                                   {item.icon}
                                   <span className="ml-3 text-sm font-medium">
                                     {item.title}
                                   </span>
                                 </button>
-                              </a>
+                              </Link>
                             </li>
                           )
                       )}

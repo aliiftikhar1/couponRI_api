@@ -21,16 +21,19 @@ const CompanyCard = ({ company, topDiscount }) => {
         />
       </div>
       <div className="h-full">
-        <h3 className="text-sm font-semibold text-gray-700">{company.com_title}</h3>
-        <p className="text-sm text-gray-600 mb-2">
+        <h3 className="text-sm font-semibold text-gray-700 my-3">{company.com_title}</h3>
+        {/* <p className="text-sm text-gray-600 my-2">
           {company.comp_description || 'No description available.'}
-        </p>
+        </p>  */}
+
+<div className='flex'>
         <a
           href={`/pages/onecompany/${company.id}`}
-          className="bg-[#06089B] text-white w-full h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200 mt-2"
+          className="bg-[#06089B] text-white  h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200 mt-2"
         >
           View Details
         </a>
+        </div>
       </div>
     </div>
   );

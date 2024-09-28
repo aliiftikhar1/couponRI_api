@@ -39,8 +39,13 @@ export async function POST(request) {
 // Fetch all blog records
 export async function GET() {
   try {
-    const blogs = await prisma.blog.findMany();
-    console.log("blogs are :", blogs);
+    const blogs = await prisma.blog.findMany({
+      orderBy: {
+        createdAt: 'desc', // Order by createdAt field in descending order
+      },
+    }
+    );
+    // console.log("blogs are :", blogs);
     return NextResponse.json(blogs);
   } catch (error) {
     console.error('Error fetching blogs:', error);

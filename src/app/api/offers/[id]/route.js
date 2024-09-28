@@ -73,9 +73,10 @@ export async function PUT(request) {
   }
 }
 
-export async function DELETE(request) {
+export async function DELETE(request, { params }) {
   try {
-    const { id } = await request.json();
+    const id = parseInt(params.id, 10);
+    // const { id } = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -86,8 +87,9 @@ export async function DELETE(request) {
         { status: 400 }
       );
     }
+    console.log(id);
 
-    await prisma.Offer.delete({
+    await prisma.offer.delete({
       where: { id: id },
     });
 

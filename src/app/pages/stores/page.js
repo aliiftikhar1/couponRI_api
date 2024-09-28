@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import CustomerRootLayout from '../../../app/user/layout';
-import CompanyCard from './components/companycard';
+import CompanyCard from './components/companycard'; 
 
 const AllStores = () => {
   const [companies, setCompanies] = useState([]);
   const [topDiscounts, setTopDiscounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortOption, setSortOption] = useState('default');
+  const [selectedLetter, setSelectedLetter] = useState(null); 
 
   useEffect(() => {
     const fetchCompaniesAndOffers = async () => {
@@ -57,18 +57,16 @@ const AllStores = () => {
     fetchCompaniesAndOffers();
   }, []);
 
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-  };
+  // Filter companies by selected alphabet
+  const filteredCompanies = selectedLetter
+    ? companies.filter(company => company.com_title.toUpperCase().startsWith(selectedLetter))
+    : companies;
 
-  const sortedCompanies = [...companies].sort((a, b) => {
-    if (sortOption === 'alphabetical') {
-      return a.com_title.localeCompare(b.com_title);
-    } else if (sortOption === 'best-seller') {
-      return (topDiscounts[b.id] || 0) - (topDiscounts[a.id] || 0);
-    }
-    return 0;
-  });
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  const handleAlphabetClick = (letter) => {
+    setSelectedLetter(letter);
+  };
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading...</div>;
@@ -86,28 +84,35 @@ const AllStores = () => {
     <CustomerRootLayout>
       <div className="bg-white py-6 sm:py-12">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6 sm:mb-12">Top Stores</h1>
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8">
-            <div className="text-lg font-semibold text-gray-700 mb-4 sm:mb-0">Showing {companies.length} stores</div>
-            <div className="relative inline-block text-left">
-              <select
-                onChange={handleSortChange}
-                value={sortOption}
-                className="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          <h1 className="text-2xl sm:text-4xl font-bold text-center text-blue-800 mb-6 sm:mb-12">Featured Stores</h1>
+
+          {/* Alphabet Filter */}
+          <div className="flex justify-center mb-6">
+            {alphabet.map(letter => (
+              <button
+                key={letter}
+                onClick={() => handleAlphabetClick(letter)}
+                className={`px-4 py-2 mx-1 text-sm font-semibold border rounded ${
+                  selectedLetter === letter ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+                }`}
               >
-                <option value="default">Sort by Default</option>
-                <option value="alphabetical">Sort Alphabetically (A-Z)</option>
-                <option value="best-seller">Sort by Best Discount</option>
-              </select>
-            </div>
+                {letter}
+              </button>
+            ))}
           </div>
-          <div className="grid gap-4 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            {sortedCompanies.map((company) => (
-              <div key={company.id} className="p-4">
+
+          {/* Store list in a grid with 5 columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {filteredCompanies.map((company) => (
+              <div
+                key={company.id}
+                className="flex items-center justify-center "
+              >
                 <CompanyCard company={company} topDiscount={topDiscounts[company.id]} />
               </div>
             ))}
           </div>
+
         </div>
       </div>
     </CustomerRootLayout>

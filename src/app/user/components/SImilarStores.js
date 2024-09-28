@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CompanyCard from '../../../app/pages/stores/components/companycard'; 
+import CompanyCard from '../../../app/pages/stores/components/companycard';
 
 const SimilarStores = ({ company }) => {
   const [similarStores, setSimilarStores] = useState([]);
@@ -12,7 +12,7 @@ const SimilarStores = ({ company }) => {
       try {
         const [companiesResponse, offersResponse] = await Promise.all([
           fetch('/api/company'),
-          fetch('/api/offers')
+          fetch('/api/offers'),
         ]);
 
         if (!companiesResponse.ok || !offersResponse.ok) {
@@ -23,7 +23,7 @@ const SimilarStores = ({ company }) => {
         const offersData = await offersResponse.json();
 
         const discounts = {};
-        offersData.forEach(offer => {
+        offersData.forEach((offer) => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
           if (discountMatch) {
             const discount = parseInt(discountMatch[1], 10);
@@ -34,13 +34,24 @@ const SimilarStores = ({ company }) => {
           }
         });
 
-        const matchedStores = companiesData.filter((comp) =>
-          comp.id !== company.id && comp.comp_category === company.comp_category
-        );
+        // Parse the current company's categories
+        const companyCategories = company.comp_category.split(',').map((cat) => cat.trim());
+
+        const matchedStores = companiesData.filter((comp) => {
+          // Parse the categories of the other stores
+          const storeCategories = comp.comp_category.split(',').map((cat) => cat.trim());
+
+          // Check if any of the store's categories match the current company's categories
+          const hasMatchingCategory = storeCategories.some((storeCat) =>
+            companyCategories.includes(storeCat)
+          );
+
+          return comp.id !== company.id && hasMatchingCategory;
+        });
 
         const discountWithFallback = {};
-        matchedStores.forEach(company => {
-          discountWithFallback[company.id] = discounts[company.id] || 'Not Available';
+        matchedStores.forEach((store) => {
+          discountWithFallback[store.id] = discounts[store.id] || 'Not Available';
         });
 
         setTopDiscounts(discountWithFallback);
@@ -57,20 +68,34 @@ const SimilarStores = ({ company }) => {
   }, [company]);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading similar stores...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        Loading similar stores...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex items-center justify-center min-h-screen bg-red-100 text-red-700">{`Error: ${error}`}</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-red-100 text-red-700">
+        {`Error: ${error}`}
+      </div>
+    );
   }
 
   if (!similarStores.length) {
-    return <div className="flex items-center justify-center min-h-screen bg-yellow-100 text-yellow-700">No similar stores found.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-yellow-100 text-yellow-700">
+        No similar stores found.
+      </div>
+    );
   }
 
   return (
     <div className="mt-10">
-      <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-center">Stores Similar to {company.com_title}</h2>
+      <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-center">
+        Stores Similar to {company.com_title}
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {similarStores.map((store) => (
           <div key={store.id} className="p-4">

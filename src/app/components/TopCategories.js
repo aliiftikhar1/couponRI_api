@@ -42,19 +42,27 @@ const FeaturedCategories = () => {
   return (
     <div className="py-12 bg-gray-50">
       <h2 className="text-3xl font-bold text-center mb-8">Top Categories</h2>
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-4 sm:px-6 lg:px-8">
-        {categories.map((category) => (
-          <a href={`/pages/onecategory/${category.id}`}>
-          <div key={category.id} className="bg-white border border-gray-200 shadow-sm p-4 overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
-            <img
-              src={`https://m3xtrader.com/coupon/uploads/${category.category_image}`} // Replace with the correct path to the images
-              alt={category.cat_title}
-              className="w-full h-40 sm:h-48 object-cover rounded-lg"
-            />
-            <h3 className="text-center text-lg sm:text-xl font-semibold mt-4">{category.category_name}</h3>
-          </div>
-          </a>
-        ))}
+
+      {/* Horizontally scrollable container */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center items-center space-x-12 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 p-4">
+          {categories.map((category) => (
+            <a 
+              key={category.id} 
+              href={`/pages/onecategory/${category.id}`} 
+              className="flex-none duration-300 ease-in-out text-center transform hover:scale-105"
+            >
+              <div className="w-40 h-40 sm:w-40 sm:h-40 mx-auto overflow-hidden rounded-full border-4 border-gray-300">
+                <img
+                  src={`https://m3xtrader.com/coupon/uploads/${category.category_image}`} // Replace with the correct path to the images
+                  alt={category.cat_title}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-center text-md sm:text-md font-semibold mt-4">{category.category_name}</h3>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );

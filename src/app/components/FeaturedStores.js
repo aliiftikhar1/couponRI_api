@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Correct import for navigation
 
 const FeaturedStores = () => {
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleRows, setVisibleRows] = useState(2); // To control how many rows are visible
+  const [visibleRows, setVisibleRows] = useState(1); // Control how many rows are visible
+  const router = useRouter(); // Using router for navigation
 
   useEffect(() => {
     const fetchStores = async () => {
@@ -28,8 +30,9 @@ const FeaturedStores = () => {
     fetchStores();
   }, []);
 
+  // Handle Show More - Navigates to a new page
   const handleShowMore = () => {
-    setVisibleRows((prevRows) => prevRows + 2); // Show 2 more rows
+    router.push('/pages/stores'); // Correct usage of router to navigate to the stores page
   };
 
   if (loading) {
@@ -50,7 +53,7 @@ const FeaturedStores = () => {
       <div className="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4 sm:px-6 lg:px-8">
         {stores.slice(0, visibleStores).map((store) => (
           <a href={`/pages/onecompany/${store.id}`} key={store.id}>
-            <div className=" p-4 flex items-center justify-center  transition-shadow duration-300 ease-in-out">
+            <div className="p-4 flex items-center justify-center transition-shadow duration-300 ease-in-out">
               <img
                 src={`https://m3xtrader.com/coupon/uploads/${store.comp_logo}`} // Replace with the correct path to the images
                 alt={store.com_title}

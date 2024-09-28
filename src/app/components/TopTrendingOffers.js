@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const TopTrendingOffers = () => {
   const [offers, setOffers] = useState([]);
@@ -8,6 +8,7 @@ const TopTrendingOffers = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const newTabRef = useRef(null);
 
   useEffect(() => {
     const fetchOffersAndCompanies = async () => {
@@ -17,33 +18,42 @@ const TopTrendingOffers = () => {
           throw new Error('Failed to fetch offers data');
         }
         const offersData = await offersResponse.json();
-  
+
         const companiesResponse = await fetch('/api/company');
         if (!companiesResponse.ok) {
           throw new Error('Failed to fetch companies data');
         }
         const companiesData = await companiesResponse.json();
-  
+
         const offersWithCompanyDetails = offersData
-          .filter(offer => offer.offer_status === 'Trending') // Filter only 'Hot' offers
+          .filter(offer => offer.offer_status === 'Trending')
           .map((offer) => {
             const company = companiesData.find((comp) => comp.id === offer.comp_id);
-  
-            // Extracting the discount percentage from the title
-            const discountMatch = offer.offer_title.match(/(\d+)%/);
-            const discount = discountMatch ? parseInt(discountMatch[1], 10) : null;
-  
-            // Removing the discount percentage from the title
-            const filteredTitle = offer.offer_title.replace(/(\d+)%/, '').trim();
-  
+
+            // Matching discount formats and capturing the next relevant word
+            const discountMatch =
+              offer.offer_title.match(/(\d+%)\s*(\w+)/) ||   // Match percentage discount and next word
+              offer.offer_title.match(/\$(\d+)\s*(\w+)/) ||  // Match dollar discount and next word
+              offer.offer_title.match(/(Free\s\w+)/i);       // Match "Free" offers
+
+            let discountDisplay = null;
+            if (discountMatch) {
+              if (discountMatch[0].includes('%')) {
+                discountDisplay = `${discountMatch[1]} ${discountMatch[2]}`;  // Display percentage with next word
+              } else if (discountMatch[0].includes('$')) {
+                discountDisplay = `$${discountMatch[1]} ${discountMatch[2]}`; // Display dollar amount with next word
+              } else if (discountMatch[0].toLowerCase().includes('free')) {
+                discountDisplay = 'Free';                                     // Display "Free"
+              }
+            }
+
             return {
               ...offer,
               company,
-              discount,
-              filteredTitle,
+              discountDisplay,  // Store the formatted discount and next word for display
             };
           });
-  
+
         setOffers(offersWithCompanyDetails);
         setLoading(false);
       } catch (error) {
@@ -52,14 +62,18 @@ const TopTrendingOffers = () => {
         setLoading(false);
       }
     };
-  
+
     fetchOffersAndCompanies();
   }, []);
-  
 
   const handleShowPopup = (offer) => {
+    newTabRef.current = window.open(offer.offer_affiliateLink, '_blank', 'noopener,noreferrer');
     setSelectedOffer(offer);
     setShowPopup(true);
+  };
+
+  const handleShowOfferPopup = (offer) => {
+    window.open(offer.offer_affiliateLink, '_blank', 'noopener,noreferrer');
   };
 
   const handleClosePopup = () => {
@@ -67,8 +81,8 @@ const TopTrendingOffers = () => {
     setShowPopup(false);
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
 
   if (loading) {
@@ -88,16 +102,16 @@ const TopTrendingOffers = () => {
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-black mb-8">Top Trending Offers</h1>
       <div className="container mx-auto grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {offers.map((offer) => (
-          <div key={offer.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-300 transition-transform duration-300 hover:scale-105">
+          <div key={offer.id} className="bg-white rounded-lg shadow-md p-4 overflow-hidden border border-gray-300 transition-transform duration-300 hover:scale-105">
             <div className="relative pb-56">
               <img
                 src={`https://m3xtrader.com/coupon/uploads/${offer.company.comp_logo}`}
                 alt={offer.company.com_title}
-                className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
+                className="absolute inset-0 w-full h-full object-fill rounded-t-lg"
               />
-              {offer.discount && (
+              {offer.discountDisplay && (
                 <div className="absolute top-2 left-2 bg-blue-900 text-white text-xs font-semibold px-2 py-1 rounded">
-                  {offer.discount}% OFF
+                  {offer.discountDisplay}  {/* Display discount with the next word */}
                 </div>
               )}
               <div className="absolute bottom-2 right-2 bg-white text-black text-xs font-semibold px-2 py-1 rounded-full shadow-lg">
@@ -108,12 +122,21 @@ const TopTrendingOffers = () => {
               <h3 className="text-lg font-semibold text-gray-900">{offer.company.com_title}</h3>
               <p className="text-sm text-gray-900 font-semibold mb-2">{offer.offer_title}</p>
               <span className="flex justify-end">
-                <button
-                  onClick={() => handleShowPopup(offer)}
-                   className="bg-[#06089B] text-white w-full h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600"
-                >
-                  Show Code
-                </button>
+                {offer.offer_type === 'Code' ? (
+                  <button
+                    onClick={() => handleShowPopup(offer)}
+                    className="bg-[#06089B] text-white w-full h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  >
+                    Show Code
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleShowOfferPopup(offer)}
+                    className="bg-[#06089B] text-white w-full h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  >
+                    Get Offer
+                  </button>
+                )}
               </span>
             </div>
           </div>

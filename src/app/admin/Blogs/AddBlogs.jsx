@@ -97,7 +97,7 @@ const AddBlogs = () => {
       title: "",
       description: "",
       image: "",
-      category: "",
+      category: [],
       meta_title: "",
       meta_description: "",
       meta_focusKeyword: "",
@@ -110,12 +110,13 @@ const AddBlogs = () => {
     title: "",
     description: "",
     image: "",
-    category: "",
+    category: [], // Now an array for multiple categories
     meta_title: "",
     meta_description: "",
     meta_focusKeyword: "",
     web_slug: "",
   });
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -165,7 +166,7 @@ const AddBlogs = () => {
       !formData.title ||
       !formData.description ||
       !formData.image ||
-      !formData.category ||
+      formData.category.length === 0 || // Check for empty categories
       !formData.meta_title ||
       !formData.meta_description ||
       !formData.meta_focusKeyword ||
@@ -184,9 +185,11 @@ const AddBlogs = () => {
       const imageBase64 = await convertToBase64(formData.image);
       const uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
 
+      // Convert category array to comma-separated string
       const blogToSubmit = {
         ...formData,
         image: uploadedImageUrl,
+        category: formData.category.join(", "), // Convert categories to a comma-separated string
       };
 
       await axios.post(`/api/blog`, blogToSubmit);
@@ -216,9 +219,11 @@ const AddBlogs = () => {
         uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
       }
 
+      // Convert category array to comma-separated string
       const blogToUpdate = {
         ...editingBlog,
         image: uploadedImageUrl,
+        category: editingBlog.category.join(", "), // Convert categories to a comma-separated string
       };
 
       await axios.put(`/api/blog/${editingBlog.id}`, blogToUpdate);
@@ -228,7 +233,6 @@ const AddBlogs = () => {
       setLoading(false); // Hide loading overlay
       handleClose();
       fetchBlogs();
-      // window.location.reload();
     } catch (error) {
       console.error("Error occurred while updating the data:", error);
       toast.error("Failed to update the blog");
@@ -277,6 +281,7 @@ const AddBlogs = () => {
     setOpen(false);
     setEditingBlog(null);
   };
+
   const fetchBlogs = async () => {
     try {
       const response = await fetch(`/api/blog`);
@@ -289,10 +294,11 @@ const AddBlogs = () => {
       setError("Error fetching blogs: " + error.message);
     }
   };
+
   const router = useRouter();
   const [userRole, setUserRole] = useState("");
+
   useEffect(() => {
-    // Decode JWT token to get user role
     const token = Cookies.get("token");
     if (!token) {
       alert("Login to see the dashboard!");
@@ -300,13 +306,10 @@ const AddBlogs = () => {
     } else {
       const decodedToken = jwtDecode(token);
       setUserRole(decodedToken.role);
-      console.log("User Role:", decodedToken.role);
     }
   }, [router]);
 
   useEffect(() => {
-    
-
     const fetchBlogCategories = async () => {
       try {
         const response = await fetch(`/api/blogcategory`);
@@ -371,10 +374,26 @@ const AddBlogs = () => {
         Header: "Category",
         accessor: "category",
         Cell: ({ value }) => {
-          const category = blogCategories.find((cat) => cat.title === value);
-          return category ? category.title : "Unknown";
+          if (!value) {
+            return "Unknown";
+          }
+      
+          // Split the comma-separated string into an array
+          const categoriesArray = value.split(",").map((cat) => cat.trim());
+      
+          // Find matching titles in the blogCategories list
+          const categoryTitles = categoriesArray
+            .map((category) => {
+              const foundCategory = blogCategories.find((cat) => cat.title === category);
+              return foundCategory ? foundCategory.title : "Unknown";
+            })
+            .filter((title) => title !== "Unknown") // Optionally, filter out unknown categories
+            .join(", "); // Join them back into a string
+      
+          return categoryTitles || "Unknown";
         },
       },
+      
       {
         Header: "Action",
         accessor: "updateButton",
@@ -389,7 +408,6 @@ const AddBlogs = () => {
                 cursor: "pointer",
               }}
             />
-            {/* Conditionally render the delete button based on userRole */}
             {userRole !== "sub admin" && (
               <MdDeleteForever
                 onClick={() => handleDelete(row.original)}
@@ -400,7 +418,7 @@ const AddBlogs = () => {
         ),
       },
     ],
-    [blogCategories]
+    [blogCategories, userRole]
   );
 
   const {
@@ -584,15 +602,27 @@ const AddBlogs = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel>Category</InputLabel>
+                  <InputLabel>Categories</InputLabel>
                   <Select
                     name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    label="Category"
+                    multiple
+                    value={Array.isArray(formData.category) ? formData.category : []}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        category: e.target.value, // Ensure it's an array
+                      });
+                    }}
+                    label="Categories"
+                    renderValue={(selected) => {
+                      if (Array.isArray(selected)) {
+                        return selected.join(", ");
+                      }
+                      return ""; // Fallback for empty or invalid selection
+                    }}
                   >
                     <MenuItem value="">
-                      <em>Select Category</em>
+                      <em>Select Categories</em>
                     </MenuItem>
                     {blogCategories.map((cat) => (
                       <MenuItem key={cat.id} value={cat.title}>
@@ -602,6 +632,7 @@ const AddBlogs = () => {
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   label="Meta Title"
@@ -744,15 +775,27 @@ const AddBlogs = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel>Category</InputLabel>
+                    <InputLabel>Categories</InputLabel>
                     <Select
                       name="category"
-                      value={editingBlog.category}
-                      onChange={handleInputChange}
-                      label="Category"
+                      multiple
+                      value={Array.isArray(editingBlog?.category) ? editingBlog.category : []}
+                      onChange={(e) => {
+                        setEditingBlog({
+                          ...editingBlog,
+                          category: e.target.value, // Ensure it's an array
+                        });
+                      }}
+                      label="Categories"
+                      renderValue={(selected) => {
+                        if (Array.isArray(selected)) {
+                          return selected.join(", ");
+                        }
+                        return ""; // Fallback for empty or invalid selection
+                      }}
                     >
                       <MenuItem value="">
-                        <em>Select Category</em>
+                        <em>Select Categories</em>
                       </MenuItem>
                       {blogCategories.map((cat) => (
                         <MenuItem key={cat.id} value={cat.title}>
@@ -762,6 +805,7 @@ const AddBlogs = () => {
                     </Select>
                   </FormControl>
                 </Grid>
+
                 <Grid item xs={12}>
                   <TextField
                     label="Meta Title"

@@ -23,14 +23,11 @@ const CouponCategories = () => {
   return (
     <div className="container border-y-2 bg-white mx-auto p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {categories.map((category, index) => (
-          <a href={`/pages/categorycoupons/${category.id}`}>
-          <div
-            key={index}
-            className="bg-white text-center py-4 px-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-          >
-            <p className="text-gray-900 font-semibold">{category.name}</p>
-          </div>
+        {categories.slice(0, 5).map((category) => (
+          <a key={category.id} href={`/pages/categorycoupons/${category.id}`}>
+            <div className="bg-[#07079F] hover:bg-[#FEC202] transition-colors text-center py-4 px-6 rounded-lg shadow-md hover:shadow-lg  duration-300">
+              <p className="text-white font-bold">{category.name}</p>
+            </div>
           </a>
         ))}
       </div>

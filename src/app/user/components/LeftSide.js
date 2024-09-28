@@ -21,9 +21,9 @@ const LeftSide = ({ company, offers }) => {
           throw new Error('Failed to fetch data');
         }
         const companiesData = await response.json();
-
+  
         const discounts = {};
-        
+  
         offers.forEach((offer) => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
           if (discountMatch) {
@@ -34,18 +34,27 @@ const LeftSide = ({ company, offers }) => {
             }
           }
         });
-
-        const matchedStores = companiesData.filter(
-          (comp) =>
-            comp.id !== company.id && comp.comp_category === company.comp_category
-        );
-
+  
+        // Split the category string of the current company into an array
+        const companyCategories = company.comp_category.split(',').map(Number);
+  
+        const matchedStores = companiesData.filter((comp) => {
+          // Split the category string of each company into an array
+          const compCategories = comp.comp_category.split(',').map(Number);
+  
+          // Check if there is any common category
+          return (
+            comp.id !== company.id &&
+            compCategories.some((catId) => companyCategories.includes(catId))
+          );
+        });
+  
         const discountWithFallback = {};
         matchedStores.forEach((store) => {
           discountWithFallback[store.id] =
             discounts[store.id] || 'Not Available';
         });
-
+  
         setTopDiscounts(discountWithFallback);
         setSimilarStores(matchedStores);
         setLoading(false);
@@ -55,7 +64,7 @@ const LeftSide = ({ company, offers }) => {
         setLoading(false);
       }
     };
-
+  
     const fetchCategoryCoupons = async () => {
       try {
         const response = await fetch('/api/category_coupon');
@@ -71,12 +80,13 @@ const LeftSide = ({ company, offers }) => {
         setCategoryLoading(false);
       }
     };
-
+  
     if (company) {
       fetchSimilarStores();
     }
     fetchCategoryCoupons();
   }, [company, offers]);
+  
 
   if (!company) {
     return <div>Loading...</div>;
@@ -148,7 +158,7 @@ const LeftSide = ({ company, offers }) => {
         </p>
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+      {/* <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
         <h3 className="text-lg sm:text-xl font-semibold mb-4">Categories Available</h3>
         {categoryLoading ? (
           <div>Loading categories...</div>
@@ -163,7 +173,7 @@ const LeftSide = ({ company, offers }) => {
             ))}
           </ul>
         )}
-      </div>
+      </div> */}
 
       <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
         <h3 className="text-lg sm:text-xl font-semibold mb-4">

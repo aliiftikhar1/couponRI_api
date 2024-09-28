@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
+import { useRef } from 'react';
 
 const RightSide = ({ offers, company }) => {
   const offersArray = Array.isArray(offers) ? offers : [];
@@ -21,16 +22,47 @@ const RightSide = ({ offers, company }) => {
 };
 
 const OfferCard = ({ offer, company }) => {
+  const newTabRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [showCode, setShowCode] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const discountMatch = offer.offer_title.match(/(\d+)%/);
-  const discountPercentage = discountMatch ? discountMatch[1] : 'N/A';
+  // Function to parse offer title for % discounts, $ discounts, or Free offers
+  const getOfferDetails = (title) => {
+    let leftSideText = '';
+    let rightSideText = '';
+    let offerType = '';
 
-  const handleShowCode = () => {
+    // Check for percentage discount first
+    const percentageMatch = title.match(/(\d+)%/);
+    if (percentageMatch) {
+      leftSideText = `${percentageMatch[1]}%`; // Include the percentage sign
+      rightSideText = 'OFF'; // Display "OFF" below the percentage value
+      offerType = 'percentage';
+    } else {
+      // Check for dollar discount
+      const dollarMatch = title.match(/\$(\d+)/);
+      if (dollarMatch) {
+        leftSideText = `$${dollarMatch[1]}`; // Include the dollar sign
+        rightSideText = 'OFF'; // Display "OFF" below the dollar value
+        offerType = 'dollar';
+      } else {
+        // Check for "Free" offer
+        if (title.toLowerCase().includes('free')) {
+          leftSideText = 'Free'; // Display "Free"
+          rightSideText = 'Shipping'; // Or any other relevant word
+          offerType = 'free';
+        }
+      }
+    }
+
+    return { leftSideText, rightSideText, offerType };
+  };
+
+  const { leftSideText, rightSideText, offerType } = getOfferDetails(offer.offer_title);
+
+  const handleShowCode = (offer) => {
+    newTabRef.current = window.open(offer.offer_affiliateLink, '_blank', 'noopener,noreferrer');
     setShowPopup(true);
-    setShowCode(true);
   };
 
   const handleClosePopup = () => {
@@ -45,24 +77,35 @@ const OfferCard = ({ offer, company }) => {
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md flex flex-col items-start border-b border-gray-200 relative">
       <div className="flex items-center space-x-4">
         <div className="flex flex-col items-center">
-          <span className="text-blue-600 text-xl sm:text-2xl font-bold">{discountPercentage}%</span>
-          <span className="text-gray-600 text-sm">OFF</span>
-          <span className="bg-orange-400 text-white text-xs font-bold rounded px-2 py-1 mt-2">Code</span>
+          {/* Display the offer value and the sign (e.g., %, $, or Free) */}
+          <span className="text-blue-600 text-xl sm:text-2xl font-bold">{leftSideText}</span>
+          <span className="text-gray-600 text-sm">{rightSideText}</span> {/* Display the word below */}
+          {/* Display "Code" or "Free" based on offer type */}
+          {offerType !== 'Code' ? (
+            <span className="bg-orange-400 text-white text-xs font-bold rounded px-2 py-1 mt-2">Code</span>
+          ) : (
+            <span className="bg-green-500 text-white text-xs font-bold rounded px-2 py-1 mt-2">Offer</span>
+          )}
         </div>
-        <div className="ml-4">
-          <h3 className="text-lg sm:text-xl font-semibold mb-1">{offer.offer_title}</h3>
-          <p className="text-gray-600 text-sm sm:text-base mb-2">{offer.offer_description}</p>
-          <p className="text-sm text-gray-500 flex items-center">
-            <FaCheckCircle className="text-blue-600 mr-1" /> Verified coupon
-          </p>
+        <div className="ml-4 grid grid-cols-5 w-full">
+          <div className='col-span-4'>
+            <h3 className="text-lg sm:text-xl font-semibold mb-1">{offer.offer_title}</h3>
+            <p className="text-gray-600 text-sm sm:text-base mb-2">{offer.offer_description}</p>
+            <p className="text-sm text-gray-500 flex items-center">
+              <FaCheckCircle className="text-blue-600 mr-1" /> Verified coupon
+            </p>
+          </div>
+          <div className='col-span-1'>
+            <button
+              onClick={() => handleShowCode(offer)} // Pass the function reference correctly here
+              className="mt-4 bg-[#07069F] text-white w-full sm:w-auto h-10 text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition-transform duration-300"
+            >
+              Show Offer Code
+            </button>
+          </div>
         </div>
       </div>
-      <button
-        onClick={handleShowCode}
-        className="mt-4 bg-[#07069F] text-white w-full sm:w-auto h-10 text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition-transform duration-300"
-      >
-        Show Offer Code
-      </button>
+
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-md relative">
@@ -78,7 +121,9 @@ const OfferCard = ({ offer, company }) => {
               className="h-16 mx-auto mb-4"
             />
             <h3 className="text-xl font-semibold mb-2 text-center">{offer.offer_title}</h3>
-            <p className="text-lg text-center font-bold mb-4">{offer.offer_code ? offer.offer_code : 'No coupon code needed'}</p>
+            <p className="text-lg text-center font-bold mb-4">
+              {offer.offer_code ? offer.offer_code : 'No coupon code needed'}
+            </p>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full mb-4"
               onClick={() => window.open(offer.redeem_link, '_blank')}
@@ -94,8 +139,12 @@ const OfferCard = ({ offer, company }) => {
             </div>
             <div className="relative mb-0 w-full bg-[#2F3841] h-40 my-4">
               <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white">
-                <p className="text-sm font-semibold mb-2">Get coupon alerts for {company.com_title} and never miss another deal!</p>
-                <label htmlFor="userInput" className="text-sm font-medium mb-1">Your Input:</label>
+                <p className="text-sm font-semibold mb-2">
+                  Get coupon alerts for {company.com_title} and never miss another deal!
+                </p>
+                <label htmlFor="userInput" className="text-sm font-medium mb-1">
+                  Your Input:
+                </label>
                 <input
                   id="userInput"
                   type="text"

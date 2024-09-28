@@ -3,9 +3,9 @@ import CompanyDetail from "./mainpage";
 
 export async function generateMetadata({ params }) {
   // Get the base URL from environment variables
-  const baseUrl = 'http://couponri.com'; 
+  // const baseUrl = 'http://couponri.com'; 
 
-  // const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://localhost:3000';
 
   const res = await fetch(`${baseUrl}/api/company/${params.id}`);
   if (!res.ok) {

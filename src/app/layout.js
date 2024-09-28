@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <body className=" bg-white">
   
 
-      <div>{children}</div>
+      {children}
 
 
     </body>

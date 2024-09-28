@@ -26,7 +26,7 @@ export async function POST(request) {
       data: {
         com_title,
         comp_logo,
-        comp_category: parseInt(comp_category, 10),
+        comp_category,
         comp_description,
         comp_phone,
         comp_email,
@@ -56,7 +56,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const companies = await prisma.company.findMany();
-    console.log("COMPANIES: ",companies);
+    // console.log("COMPANIES: ",companies);
     return NextResponse.json(companies);
   } catch (error) {
     console.error("Error Fetching Companies:", error);

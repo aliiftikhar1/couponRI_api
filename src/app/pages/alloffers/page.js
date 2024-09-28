@@ -49,6 +49,17 @@ const OffersPage = () => {
   const handleShowPopup = (offer) => {
     setSelectedOffer(offer);
     setShowPopup(true);
+    // Open the affiliate link in a new tab when "Show Code" is clicked
+
+      window.open(offer. offer_affiliateLink, '_blank');
+    
+  };
+
+  const handleGetOffer = (offer) => {
+    // Directly open the affiliate link in a new tab without showing the popup
+
+      window.open(offer. offer_affiliateLink, '_blank');
+
   };
 
   const handleClosePopup = () => {
@@ -124,7 +135,7 @@ const OffersPage = () => {
                     Expiry: {new Date(offer.offer_expiry).toLocaleDateString()}
                   </span>
                   <button
-                    onClick={() => handleShowPopup(offer)}
+                    onClick={() => offer.offer_type === 'Code' ? handleShowPopup(offer) : handleGetOffer(offer)}
                     className="mt-3 bg-purple-600 text-white w-full sm:w-40 h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-purple-700"
                   >
                     {offer.offer_type === 'Code' ? 'Show Code' : 'Get Offer'}

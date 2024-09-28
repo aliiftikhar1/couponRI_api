@@ -38,7 +38,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const Offers_= await prisma.Offer.findMany();
-    console.log(Offers_);
+    // console.log(Offers_);
     return NextResponse.json(Offers_);
   } catch (error) {
     console.log("Error getting Offer  :", error);

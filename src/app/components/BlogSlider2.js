@@ -25,7 +25,7 @@ const BlogSlider2 = ({ blogs }) => {
 
   return (
     <div className="bg-white">
-      <h1 className="text-4xl font-bold text-black text-center py-4">Blogs</h1>
+      {/* <h1 className="text-4xl font-bold text-black text-center py-4">Blogs</h1> */}
       <div className="relative flex items-center justify-between w-full bg-white p-6 rounded-lg shadow-md">
         {/* <div className="flex absolute z-50 w-full h-full justify-between mb-4 px-4"> */}
           <button

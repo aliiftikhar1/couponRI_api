@@ -41,7 +41,10 @@ const BlogSection = ({ blogs, title, category }) => {
 
   return (
     <div className="relative flex flex-col bg-white h-full justify-center items-center w-full px-4">
-      <h2 className="text-2xl bg-[#06089B] font-bold mt-4 p-2 text-white w-full">{title}</h2>
+      <div className='flex justify-start items-start w-full'>
+      <h2 className="text-2xl bg-[#06089B] font-bold mt-4 px-4 py-2 text-white text-left">{title}</h2>
+      </div>
+      
       <button
         onClick={handlePrevious}
         className="text-white p-2 absolute z-50 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
