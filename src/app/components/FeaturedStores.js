@@ -17,8 +17,13 @@ const FeaturedStores = () => {
         if (!response.ok) {
           throw new Error('Failed to fetch stores data');
         }
+  
         const storesData = await response.json();
-        setStores(storesData);
+  
+        // Filter the stores to only include those with comp_status = 'Featured'
+        const featuredStores = storesData.filter((store) => store.comp_status === 'Featured');
+  
+        setStores(featuredStores);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching stores:', error);
@@ -26,9 +31,10 @@ const FeaturedStores = () => {
         setLoading(false);
       }
     };
-
+  
     fetchStores();
   }, []);
+  
 
   // Handle Show More - Navigates to a new page
   const handleShowMore = () => {
@@ -57,7 +63,7 @@ const FeaturedStores = () => {
               <img
                 src={`https://m3xtrader.com/coupon/uploads/${store.comp_logo}`} // Replace with the correct path to the images
                 alt={store.com_title}
-                className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-full hover:shadow-xl" // Circular image
+                className="w-24 h-24 sm:w-32 sm:h-32 object-contain bg-white shadow-md rounded-full hover:shadow-xl" // Circular image
               />
             </div>
           </a>

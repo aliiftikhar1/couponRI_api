@@ -22,7 +22,8 @@ export async function PUT(request, { params }) {
       web_slug,
       comp_affiliateLink,
       comp_details,
-        comp_other_details
+        comp_other_details,
+        comp_status, 
     } = data;
     console.log(data);
 
@@ -76,6 +77,7 @@ export async function PUT(request, { params }) {
         comp_rating,
         comp_details,
         comp_other_details,
+        comp_status, 
         updated_at: new Date(),
       },
     });

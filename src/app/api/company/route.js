@@ -20,7 +20,8 @@ export async function POST(request) {
       comp_affiliateLink,
       comp_rating, 
       comp_details,
-        comp_other_details,   
+        comp_other_details, 
+        comp_status,  
     } = data;
 
     const newCompany = await prisma.company.create({
@@ -41,6 +42,7 @@ export async function POST(request) {
       comp_affiliateLink,
         comp_details,
         comp_other_details,
+        comp_status, 
         created_at: new Date(),
         updated_at: new Date(),
       },

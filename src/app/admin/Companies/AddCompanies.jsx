@@ -47,6 +47,7 @@ const AddCompanies = () => {
   const editor = useRef(null);
   const [companies, setCompanies] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false); // For Edit Dialog
   const [editingCompany, setEditingCompany] = useState(null);
@@ -59,21 +60,22 @@ const AddCompanies = () => {
     id: null,
   });
 
-  // Fetch categories and companies
-  const fetchCategoriesAndCompanies = async () => {
+  // Fetch categories, companies, and offers
+  const fetchCategoriesCompaniesAndOffers = async () => {
     try {
-      const [categoriesResponse, companiesResponse] = await Promise.all([
+      const [categoriesResponse, companiesResponse, offersResponse] = await Promise.all([
         fetch(`/api/category`),
         fetch(`/api/company`),
+        fetch(`/api/offers`),
       ]);
 
-      if (!categoriesResponse.ok || !companiesResponse.ok) {
+      if (!categoriesResponse.ok || !companiesResponse.ok || !offersResponse.ok) {
         throw new Error("Failed to fetch data");
       }
 
       const categoriesData = await categoriesResponse.json();
       const companiesData = await companiesResponse.json();
-      console.log("Companies data:", companiesData);
+      const offersData = await offersResponse.json();
 
       // Convert category IDs to strings for consistency
       const processedCategoriesData = categoriesData.map((category) => ({
@@ -91,6 +93,7 @@ const AddCompanies = () => {
 
       setCategories(processedCategoriesData);
       setCompanies(processedCompaniesData);
+      setOffers(offersData);
     } catch (error) {
       setError("Error fetching data: " + error.message);
       toast.error("Error fetching data.");
@@ -98,8 +101,19 @@ const AddCompanies = () => {
   };
 
   useEffect(() => {
-    fetchCategoriesAndCompanies();
+    fetchCategoriesCompaniesAndOffers();
   }, []);
+
+  // Count offers for a company
+  const countOffersForCompany = (companyId) => {
+    return offers.filter((offer) => offer.comp_id === companyId).length;
+  };
+
+  // Count expired offers for a company
+  const countExpiredOffersForCompany = (companyId) => {
+    const currentDate = new Date();
+    return offers.filter((offer) => offer.comp_id === companyId && new Date(offer.expiry_date) < currentDate).length;
+  };
 
   // Handle Delete
   const handleDelete = (row) => {
@@ -163,7 +177,8 @@ const AddCompanies = () => {
       meta_description: "",
       meta_focusKeyword: "",
       web_slug: "",
-      comp_webtitle: "", // Reset comp_webtitle here
+      comp_webtitle: "",
+      comp_status: "Featured", // Reset comp_status
     });
   };
 
@@ -185,7 +200,8 @@ const AddCompanies = () => {
     meta_description: "",
     meta_focusKeyword: "",
     web_slug: "",
-    comp_webtitle: "", // Add this line for comp_webtitle
+    comp_webtitle: "",
+    comp_status: "Featured", // Add comp_status
   });
 
   // Handle Input Changes
@@ -312,15 +328,15 @@ const AddCompanies = () => {
         comp_category: formData.comp_category.join(","),
         meta_focusKeyword: formData.meta_focusKeyword,
         web_slug: formData.web_slug,
-        comp_details: formData.company_details, // Include company details
-        comp_other_details: formData.other_details, // Include other details
+        comp_details: formData.company_details,
+        comp_other_details: formData.other_details,
       };
       console.log("Company to Submit ", companyToSubmit);
 
       await axios.post(`/api/company`, companyToSubmit);
       toast.success("Company has been added successfully!");
       modelClose();
-      fetchCategoriesAndCompanies();
+      fetchCategoriesCompaniesAndOffers();
     } catch (error) {
       console.error("Error occurred during submission", error);
       toast.error("Error adding the company.");
@@ -348,15 +364,15 @@ const AddCompanies = () => {
         comp_category: editingCompany.comp_category.join(","),
         meta_focusKeyword: editingCompany.meta_focusKeyword,
         web_slug: editingCompany.web_slug,
-        comp_details: editingCompany.company_details, // Include company details
-        comp_other_details: editingCompany.other_details, // Include other details
+        comp_details: editingCompany.company_details,
+        comp_other_details: editingCompany.other_details,
       };
       console.log("Company to Update ", companyToUpdate);
 
       await axios.put(`/api/company/${editingCompany.id}`, companyToUpdate);
       toast.success("Company has been updated successfully!");
       handleClose();
-      fetchCategoriesAndCompanies();
+      fetchCategoriesCompaniesAndOffers();
     } catch (error) {
       console.error("Error occurred while updating the data:", error);
       toast.error("Failed to update the company.");
@@ -370,13 +386,14 @@ const AddCompanies = () => {
     setEditingCompany({
       ...company,
       company_details: company.comp_details,
-      comp_category: company.comp_category, // Already an array of strings
+      comp_category: company.comp_category,
       other_details: company.comp_other_details,
       meta_title: company.meta_title || "",
       meta_description: company.meta_description || "",
       meta_focusKeyword: company.meta_focusKeyword || "",
       web_slug: company.web_slug || "",
-      comp_webtitle: company.comp_webtitle || "", // Populate comp_webtitle
+      comp_webtitle: company.comp_webtitle || "",
+      comp_status: company.comp_status || "Featured", // Set comp_status in editingCompany
     });
     setOpen(true);
   };
@@ -422,34 +439,28 @@ const AddCompanies = () => {
         ),
       },
       {
-        Header: "Description",
-        accessor: "comp_description",
-        Cell: ({ value }) => (
-          <div
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 4,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "normal",
-            }}
-          >
-            {value}
-          </div>
-        ),
+        Header: "Number of Offers", // Display number of offers
+        accessor: "num_offers",
+        Cell: ({ row }) => {
+          const offersCount = countOffersForCompany(row.original.id);
+          return offersCount ? offersCount : "No offers";
+        },
       },
       {
-        Header: "Phone",
-        accessor: "comp_phone",
+        Header: "Expired Offers", // Display expired offers
+        accessor: "num_expired_offers",
+        Cell: ({ row }) => {
+          const expiredOffersCount = countExpiredOffersForCompany(row.original.id);
+          return expiredOffersCount ? expiredOffersCount : "No expired offers";
+        },
       },
       {
-        Header: "Email",
-        accessor: "comp_email",
+        Header: "Affiliate Link",
+        accessor: "comp_affiliateLink",
       },
       {
-        Header: "Website",
-        accessor: "comp_website",
+        Header: "Status", // Display status
+        accessor: "comp_status",
       },
       {
         Header: "Action",
@@ -477,7 +488,7 @@ const AddCompanies = () => {
         ),
       },
     ],
-    [categories]
+    [categories, offers]
   );
 
   // Initialize React Table
@@ -670,6 +681,23 @@ const AddCompanies = () => {
                         {category.category_name}
                       </MenuItem>
                     ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Status Selection */}
+              <Grid item xs={12}>
+                <FormControl fullWidth variant="outlined" required>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    name="comp_status"
+                    value={formData.comp_status}
+                    onChange={handleInputChange}
+                    label="Status"
+                  >
+                    <MenuItem value="Featured">Featured</MenuItem>
+                    <MenuItem value="Trending">Trending</MenuItem>
+                    <MenuItem value="Top Rated">Top Rated</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -966,6 +994,23 @@ const AddCompanies = () => {
                           {category.category_name}
                         </MenuItem>
                       ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Status Selection */}
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined" required>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      name="comp_status"
+                      value={editingCompany.comp_status}
+                      onChange={handleInputChange}
+                      label="Status"
+                    >
+                      <MenuItem value="Featured">Featured</MenuItem>
+                      <MenuItem value="Trending">Trending</MenuItem>
+                      <MenuItem value="Top Rated">Top Rated</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

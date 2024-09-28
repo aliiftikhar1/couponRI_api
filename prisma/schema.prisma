@@ -23,6 +23,7 @@ model Company {
   comp_webtitle        String?
   comp_logo          String
   comp_category      String
+  comp_status        String?
   comp_description   String   @db.Text
   comp_phone         String
   comp_email         String

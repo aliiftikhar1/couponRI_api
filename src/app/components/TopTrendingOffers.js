@@ -101,7 +101,7 @@ const TopTrendingOffers = () => {
     <div className="bg-white p-4 sm:p-6 lg:p-8">
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-black mb-8">Top Trending Offers</h1>
       <div className="container mx-auto grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        {offers.map((offer) => (
+        {offers.slice(0, 8).map((offer) => (  // Only display the first 8 offers
           <div key={offer.id} className="bg-white rounded-lg shadow-md p-4 overflow-hidden border border-gray-300 transition-transform duration-300 hover:scale-105">
             <div className="relative pb-56">
               <img
