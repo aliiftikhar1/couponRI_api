@@ -27,7 +27,7 @@ const CouponHeader = ({ company }) => {
       </div>
 
       <div className="md:mt-0 ml-6 text-center md:text-left">
-        <h1 className="text-2xl md:text-3xl font-bold">{company.com_title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{(company.comp_webtitle)?(<>{company.comp_webtitle}</>):(<>Web Title</>)}</h1>
         <p className="text-sm md:text-lg flex items-center justify-center md:justify-start">
           {company.com_title} Coupon Codes for {currentMonth} {currentYear} Verified & Tested
           <CheckCircleIcon className="h-5 md:h-6 w-5 md:w-6 pt-1 ml-1 md:ml-2" />

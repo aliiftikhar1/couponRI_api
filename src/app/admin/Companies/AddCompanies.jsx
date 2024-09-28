@@ -73,7 +73,8 @@ const AddCompanies = () => {
 
       const categoriesData = await categoriesResponse.json();
       const companiesData = await companiesResponse.json();
-console.log("Companies data:",companiesData);
+      console.log("Companies data:", companiesData);
+
       // Convert category IDs to strings for consistency
       const processedCategoriesData = categoriesData.map((category) => ({
         ...category,
@@ -162,6 +163,7 @@ console.log("Companies data:",companiesData);
       meta_description: "",
       meta_focusKeyword: "",
       web_slug: "",
+      comp_webtitle: "", // Reset comp_webtitle here
     });
   };
 
@@ -183,12 +185,12 @@ console.log("Companies data:",companiesData);
     meta_description: "",
     meta_focusKeyword: "",
     web_slug: "",
+    comp_webtitle: "", // Add this line for comp_webtitle
   });
 
   // Handle Input Changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "comp_category") {
       const selectedValues = Array.isArray(value)
         ? value
@@ -286,7 +288,7 @@ console.log("Companies data:",companiesData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     if (
       !formData.com_title ||
       !formData.comp_logo ||
@@ -299,22 +301,22 @@ console.log("Companies data:",companiesData);
       setLoading(false);
       return;
     }
-  
+
     try {
       const imageBase64 = await convertToBase64(formData.comp_logo);
       const uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
-  
+
       const companyToSubmit = {
         ...formData,
         comp_logo: uploadedImageUrl,
         comp_category: formData.comp_category.join(","),
         meta_focusKeyword: formData.meta_focusKeyword,
         web_slug: formData.web_slug,
-        comp_details: formData.company_details,  // Include company details
-        comp_other_details: formData.other_details,  // Include other details
+        comp_details: formData.company_details, // Include company details
+        comp_other_details: formData.other_details, // Include other details
       };
       console.log("Company to Submit ", companyToSubmit);
-  
+
       await axios.post(`/api/company`, companyToSubmit);
       toast.success("Company has been added successfully!");
       modelClose();
@@ -326,32 +328,31 @@ console.log("Companies data:",companiesData);
       setLoading(false);
     }
   };
-  
 
   // Handle Form Submission for Editing Company
   const handleEdit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       let uploadedImageUrl = editingCompany.comp_logo;
-  
+
       if (editingCompany.comp_logo instanceof File) {
         const imageBase64 = await convertToBase64(editingCompany.comp_logo);
         uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
       }
-  
+
       const companyToUpdate = {
         ...editingCompany,
         comp_logo: uploadedImageUrl,
         comp_category: editingCompany.comp_category.join(","),
         meta_focusKeyword: editingCompany.meta_focusKeyword,
         web_slug: editingCompany.web_slug,
-        comp_details: editingCompany.company_details,  // Include company details
-        comp_other_details: editingCompany.other_details,  // Include other details
+        comp_details: editingCompany.company_details, // Include company details
+        comp_other_details: editingCompany.other_details, // Include other details
       };
       console.log("Company to Update ", companyToUpdate);
-  
+
       await axios.put(`/api/company/${editingCompany.id}`, companyToUpdate);
       toast.success("Company has been updated successfully!");
       handleClose();
@@ -363,7 +364,6 @@ console.log("Companies data:",companiesData);
       setLoading(false);
     }
   };
-  
 
   // Handle Opening Edit Dialog
   const handleOpen = (company) => {
@@ -376,6 +376,7 @@ console.log("Companies data:",companiesData);
       meta_description: company.meta_description || "",
       meta_focusKeyword: company.meta_focusKeyword || "",
       web_slug: company.web_slug || "",
+      comp_webtitle: company.comp_webtitle || "", // Populate comp_webtitle
     });
     setOpen(true);
   };
@@ -403,9 +404,7 @@ console.log("Companies data:",companiesData);
         Cell: ({ value }) => {
           if (!value || value.length === 0) return "No categories";
           const categoryNames = value.map((categoryId) => {
-            const category = categories.find(
-              (c) => c.id === categoryId
-            );
+            const category = categories.find((c) => c.id === categoryId);
             return category ? category.category_name : "Unknown";
           });
           return categoryNames.join(", ");
@@ -425,21 +424,20 @@ console.log("Companies data:",companiesData);
       {
         Header: "Description",
         accessor: "comp_description",
-        Cell: ({ value }) => {
-          return (
-            <div
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "normal",
-              }}
-            >
-              {value}
-            </div>
-  )}
+        Cell: ({ value }) => (
+          <div
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 4,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "normal",
+            }}
+          >
+            {value}
+          </div>
+        ),
       },
       {
         Header: "Phone",
@@ -593,12 +591,7 @@ console.log("Companies data:",companiesData);
 
       {/* Pagination Controls */}
       <TablePagination
-        rowsPerPageOptions={[
-          5,
-          10,
-          25,
-          { label: "All", value: companies.length || 1 },
-        ]}
+        rowsPerPageOptions={[5, 10, 25, { label: "All", value: companies.length || 1 }]}
         colSpan={5}
         count={companies.length}
         rowsPerPage={pageSize}
@@ -664,9 +657,7 @@ console.log("Companies data:",companiesData);
                         return <em>Select Category</em>;
                       }
                       return categories
-                        .filter((category) =>
-                          selected.includes(category.id)
-                        )
+                        .filter((category) => selected.includes(category.id))
                         .map((category) => category.category_name)
                         .join(", ");
                     }}
@@ -731,7 +722,6 @@ console.log("Companies data:",companiesData);
                   fullWidth
                   onChange={handleInputChange}
                   variant="outlined"
-                  // type="url"
                 />
               </Grid>
 
@@ -793,6 +783,18 @@ console.log("Companies data:",companiesData);
                   label="Meta Keyword"
                   name="meta_focusKeyword"
                   value={formData.meta_focusKeyword}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+
+              {/* Web Title */}
+              <Grid item xs={12}>
+                <TextField
+                  label="Web Title"
+                  name="comp_webtitle"
+                  value={formData.comp_webtitle}
                   onChange={handleInputChange}
                   fullWidth
                   variant="outlined"
@@ -1016,7 +1018,6 @@ console.log("Companies data:",companiesData);
                     fullWidth
                     onChange={handleInputChange}
                     variant="outlined"
-                    // type="url"
                   />
                 </Grid>
 
@@ -1078,6 +1079,18 @@ console.log("Companies data:",companiesData);
                     label="Meta Keyword"
                     name="meta_focusKeyword"
                     value={editingCompany.meta_focusKeyword}
+                    onChange={handleInputChange}
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
+
+                {/* Web Title */}
+                <Grid item xs={12}>
+                  <TextField
+                    label="Web Title"
+                    name="comp_webtitle"
+                    value={editingCompany.comp_webtitle}
                     onChange={handleInputChange}
                     fullWidth
                     variant="outlined"

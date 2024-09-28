@@ -20,6 +20,7 @@ model AdminUser {
 model Company {
   id                 Int      @id @default(autoincrement())
   com_title          String
+  comp_webtitle        String?
   comp_logo          String
   comp_category      String
   comp_description   String   @db.Text
