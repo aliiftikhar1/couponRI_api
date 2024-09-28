@@ -10,7 +10,7 @@ const CompanyCard = ({ company, topDiscount }) => {
     <div className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 relative">
       <div className="flex justify-end items-center mb-4">
         <span className="bg-white text-gray-900 text-xs font-bold rounded-full px-2 py-1 shadow-lg">
-          {topDiscount !== 'Not Available' ? `${topDiscount}% OFF` : topDiscount}
+          {topDiscount !== 'Not Available' ? topDiscount : 'Not Available'}
         </span>
       </div>
       <div className="h-[150px]">
@@ -22,17 +22,13 @@ const CompanyCard = ({ company, topDiscount }) => {
       </div>
       <div className="h-full">
         <h3 className="text-sm font-semibold text-gray-700 my-3">{company.com_title}</h3>
-        {/* <p className="text-sm text-gray-600 my-2">
-          {company.comp_description || 'No description available.'}
-        </p>  */}
-
-<div className='flex'>
-        <a
-          href={`/pages/onecompany/${company.id}`}
-          className="bg-[#06089B] text-white  h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200 mt-2"
-        >
-          View Details
-        </a>
+        <div className='flex'>
+          <a
+            href={`/pages/onecompany/${company.id}`}
+            className="bg-[#06089B] text-white  h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200 mt-2"
+          >
+            View Details
+          </a>
         </div>
       </div>
     </div>
@@ -74,13 +70,28 @@ const CategoryDetail = () => {
 
         const discounts = {};
         offersData.forEach((offer) => {
-          const discountMatch = offer.offer_title.match(/^(\d+)%/);
-          if (discountMatch) {
-            const discount = parseInt(discountMatch[1], 10);
-            const companyId = offer.comp_id;
-            if (!discounts[companyId] || discounts[companyId] < discount) {
-              discounts[companyId] = discount;
-            }
+          let discount = 'Not Available';
+
+          // Check for percentage discounts
+          const percentageMatch = offer.offer_title.match(/^(\d+)%/);
+          if (percentageMatch) {
+            discount = `${percentageMatch[1]}% OFF`;
+          }
+
+          // Check for dollar discounts
+          const dollarMatch = offer.offer_title.match(/\$(\d+)(?: OFF)?/);
+          if (dollarMatch) {
+            discount = `$${dollarMatch[1]} OFF`;
+          }
+
+          // Check for free offers
+          if (offer.offer_title.toLowerCase().includes('free')) {
+            discount = 'FREE';
+          }
+
+          const companyId = offer.comp_id;
+          if (!discounts[companyId] || discounts[companyId] !== 'FREE') {
+            discounts[companyId] = discount;
           }
         });
 
@@ -123,7 +134,7 @@ const CategoryDetail = () => {
 
   return (
     <CustomerRootLayout>
-      <div className="flex flex-col md:flex-row  bg-gray-50">
+      <div className="flex flex-col md:flex-row bg-gray-50">
         {/* Sidebar for categories (hidden on mobile) */}
         <div className="hidden md:block w-1/5 bg-white p-4 shadow-lg">
           <h2 className="text-2xl font-bold text-black mb-6">Categories</h2>

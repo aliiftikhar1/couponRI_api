@@ -12,9 +12,6 @@ export async function GET(request, { params }) {
   try {
     const blog = await prisma.blog.findUnique({
       where: { id },
-      orderBy: {
-        createdAt: 'desc', // Order by createdAt field in descending order
-      },
     });
 
     if (!blog) {
