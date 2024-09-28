@@ -54,6 +54,12 @@ const CompanyDetail = ({ id }) => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (company && company.web_slug) {
+      // Use history.replaceState to change the URL without a page reload
+      window.history.replaceState(null, '', `/company/${company.web_slug}`);
+    }
+  }, [company]);
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading...</div>;
   }

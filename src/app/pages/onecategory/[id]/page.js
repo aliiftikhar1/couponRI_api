@@ -111,6 +111,12 @@ const CategoryDetail = () => {
 
     fetchCategoriesAndOffers();
   }, [params]);
+  useEffect(() => {
+    if (category && category.web_slug) {
+      // Use history.replaceState to change the URL without a page reload
+      window.history.replaceState(null, '', `/category/${category.web_slug}`);
+    }
+  }, [category]);
 
   const handleCategoryClick = (categoryId) => {
     router.push(`/pages/onecategory/${categoryId}`);
@@ -131,6 +137,8 @@ const CategoryDetail = () => {
   if (!companies.length) {
     return <div className="flex items-center justify-center min-h-screen bg-yellow-100 text-yellow-700">No companies found for this category.</div>;
   }
+
+  
 
   return (
     <CustomerRootLayout>

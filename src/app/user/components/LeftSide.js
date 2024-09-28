@@ -24,6 +24,7 @@ const LeftSide = ({ company, offers }) => {
   
         const discounts = {};
   
+        if(offers>0){
         offers.forEach((offer) => {
           const discountMatch = offer.offer_title.match(/^(\d+)%/);
           if (discountMatch) {
@@ -34,6 +35,7 @@ const LeftSide = ({ company, offers }) => {
             }
           }
         });
+      }
   
         // Split the category string of the current company into an array
         const companyCategories = company.comp_category.split(',').map(Number);
