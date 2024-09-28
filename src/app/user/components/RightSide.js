@@ -87,20 +87,20 @@ const OfferCard = ({ offer, company }) => {
             <span className="bg-green-500 text-white text-xs font-bold rounded px-2 py-1 mt-2">Offer</span>
           )}
         </div>
-        <div className="ml-4 grid grid-cols-5 w-full">
-          <div className='col-span-4'>
+        <div className="ml-4 grid grid-cols-6 w-full">
+          <div className='col-span-5'>
             <h3 className="text-lg sm:text-xl font-semibold mb-1">{offer.offer_title}</h3>
             <p className="text-gray-600 text-sm sm:text-base mb-2">{offer.offer_description}</p>
             <p className="text-sm text-gray-500 flex items-center">
               <FaCheckCircle className="text-blue-600 mr-1" /> Verified coupon
             </p>
           </div>
-          <div className='col-span-1'>
+          <div className='absolute top-6 right-10'>
             <button
               onClick={() => handleShowCode(offer)} // Pass the function reference correctly here
               className="mt-4 bg-[#07069F] text-white w-full sm:w-auto h-10 text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition-transform duration-300"
             >
-              Show Offer Code
+              Show Code
             </button>
           </div>
         </div>

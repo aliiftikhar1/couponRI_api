@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="md:w-1/4">
             <img src="/logo/logo.jpg" alt="CouponRI" className=" h-32" />
             <p className="text-gray-600">
-              CouponRI.com brings joys of continuous discounts from one of the most desirable brands on the web. Our discount listings are truly an opportunity for fashionable clients who believe in controlling their budgets and looking fabulous.
+            CouponRI helps you save money by providing and listing the most current promo codes, coupon codes, and discount deals available for top online retailers. Should you make a purchase using the discount links or voucher codes provided by us, we earn a commission. For your further assurance of saving maximum, we will be obliged if you check the validity of any coupon or promo code on the website of the retailer where you intend to make the purchase. For more discounts, visit our blog for expert shopping tips, hot sales, and top product recommendations.
             </p>
           </div>
 
