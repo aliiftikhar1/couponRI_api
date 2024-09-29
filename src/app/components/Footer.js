@@ -29,7 +29,7 @@ export default function Footer() {
         const data = await response.json();
         console.log("Footer data: ",data);
         const filtereddata = data
-        .filter(offer => offer.offer_status === 'Trending')
+        .filter(offer => offer.offer_status === 'Best Selling')
         console.log("Filtered data: ",filtereddata);
         setTrendingOffers(filtereddata);
       } catch (error) {
@@ -47,7 +47,7 @@ export default function Footer() {
         {/* Footer Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           {/* Logo and Description */}
-          <div className="md:w-1/4">
+          <div className="md:w-1/2">
             <img src="/logo/logo.jpg" alt="CouponRI" className=" h-32" />
             <p className="text-gray-600">
             CouponRI helps you save money by providing and listing the most current promo codes, coupon codes, and discount deals available for top online retailers. Should you make a purchase using the discount links or voucher codes provided by us, we earn a commission. For your further assurance of saving maximum, we will be obliged if you check the validity of any coupon or promo code on the website of the retailer where you intend to make the purchase. For more discounts, visit our blog for expert shopping tips, hot sales, and top product recommendations.
@@ -58,7 +58,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full md:w-3/4">
             {/* About CouponRI */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">About CouponRI</h3>
+              <h3 className="text-xl font-bold">Site Links</h3>
               <ul className="space-y-2">
                 <li>
                   <a href="#" className="text-gray-600 hover:text-black">About Us</a>
@@ -72,28 +72,28 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Special Discounts */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">Top Trending Offers</h3>
+             {/* Browse Coupons */}
+             <div className="space-y-4">
+              <h3 className="text-xl font-bold">Special Offers</h3>
               <ul className="space-y-2">
-                {trendingOffers.map((offer) => (
-                  <li key={offer.id}>
-                    <a href={`/pages/onecompany/${offer.comp_id}`} className="text-gray-600 hover:text-black">
-                      {offer.offer_title} {/* Adjust based on your offer object structure */}
+                {categories.map((category) => (
+                  <li key={category.id}>
+                    <a href={`/pages/categorycoupons/${category.id}`} className="text-gray-600 hover:text-black">
+                      {category.name}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Browse Coupons */}
+            {/* Special Discounts */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">Category Coupons</h3>
+              <h3 className="text-xl font-bold">Best Selling Offers</h3>
               <ul className="space-y-2">
-                {categories.map((category) => (
-                  <li key={category.id}>
-                    <a href={`/pages/categorycoupons/${category.id}`} className="text-gray-600 hover:text-black">
-                      {category.name}
+                {trendingOffers.map((offer) => (
+                  <li key={offer.id}>
+                    <a href={`/pages/onecompany/${offer.comp_id}`} className="text-gray-600 hover:text-black">
+                      {offer.offer_title} {/* Adjust based on your offer object structure */}
                     </a>
                   </li>
                 ))}
@@ -112,6 +112,8 @@ export default function Footer() {
                 </a>
               </div>
             </div>
+
+           
           </div>
         </div>
       </div>
