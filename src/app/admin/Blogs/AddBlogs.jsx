@@ -341,20 +341,12 @@ const AddBlogs = () => {
         Header: "Description",
         accessor: "description",
         Cell: ({ value }) => {
-          return (
-            <div
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "normal",
-              }}
-            >
-              {value}
-            </div>
-          );
+          // Remove HTML tags if any
+          const plainText = value.replace(/<[^>]+>/g, "");
+          // Truncate to 1000 characters
+          const truncatedText =
+            plainText.length > 1000 ? plainText.substring(0, 1000) + "..." : plainText;
+          return <div>{truncatedText}</div>;
         },
       },
       {
