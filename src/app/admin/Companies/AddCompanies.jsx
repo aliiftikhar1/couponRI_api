@@ -176,6 +176,7 @@ const AddCompanies = () => {
       meta_title: "",
       meta_description: "",
       meta_focusKeyword: "",
+      comp_affiliateLink:"",
       web_slug: "",
       comp_webtitle: "",
       comp_status: "Featured", // Reset comp_status
@@ -199,6 +200,7 @@ const AddCompanies = () => {
     meta_title: "",
     meta_description: "",
     meta_focusKeyword: "",
+    comp_affiliateLink:"",
     web_slug: "",
     comp_webtitle: "",
     comp_status: "Featured", // Add comp_status
@@ -364,6 +366,7 @@ const AddCompanies = () => {
         comp_category: editingCompany.comp_category.join(","),
         meta_focusKeyword: editingCompany.meta_focusKeyword,
         web_slug: editingCompany.web_slug,
+        comp_affiliateLink: editingCompany.comp_affiliateLink,
         comp_details: editingCompany.company_details,
         comp_other_details: editingCompany.other_details,
       };
@@ -391,6 +394,7 @@ const AddCompanies = () => {
       meta_title: company.meta_title || "",
       meta_description: company.meta_description || "",
       meta_focusKeyword: company.meta_focusKeyword || "",
+      comp_affiliateLink: company.comp_affiliateLink || "",
       web_slug: company.web_slug || "",
       comp_webtitle: company.comp_webtitle || "",
       comp_status: company.comp_status || "Featured", // Set comp_status in editingCompany
@@ -744,7 +748,7 @@ const AddCompanies = () => {
               {/* Website */}
               <Grid item xs={12}>
                 <TextField
-                  label="Website"
+                  label="Website Link"
                   name="comp_website"
                   value={formData.comp_website}
                   fullWidth
@@ -790,6 +794,17 @@ const AddCompanies = () => {
                   variant="outlined"
                   multiline
                   rows={3}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label="Affiliate Link"
+                  name="comp_affiliateLink"
+                  value={formData.comp_affiliateLink}
+                  fullWidth
+                  onChange={handleInputChange}
+                  variant="outlined"
                 />
               </Grid>
 
@@ -1057,7 +1072,7 @@ const AddCompanies = () => {
                 {/* Website */}
                 <Grid item xs={12}>
                   <TextField
-                    label="Website"
+                    label="Website Link"
                     name="comp_website"
                     value={editingCompany.comp_website}
                     fullWidth
@@ -1105,6 +1120,17 @@ const AddCompanies = () => {
                     rows={3}
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                <TextField
+                  label="Affiliate Link"
+                  name="comp_affiliateLink"
+                  value={editingCompany.comp_affiliateLink}
+                  fullWidth
+                  onChange={handleInputChange}
+                  variant="outlined"
+                />
+              </Grid>
 
                 {/* Slug */}
                 <Grid item xs={12}>
