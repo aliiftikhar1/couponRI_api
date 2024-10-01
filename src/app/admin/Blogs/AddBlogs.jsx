@@ -556,6 +556,7 @@ const AddBlogs = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">New Blog</Typography>
@@ -729,6 +730,7 @@ const AddBlogs = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">Edit Blog</Typography>

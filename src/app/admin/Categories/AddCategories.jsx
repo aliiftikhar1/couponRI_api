@@ -543,6 +543,7 @@ const AddCategories = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">New Category</Typography>
@@ -719,6 +720,7 @@ const AddCategories = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">Edit Category Data</Typography>
@@ -914,6 +916,7 @@ const AddCategories = () => {
         onClose={handleCancelDelete}
         aria-labelledby="delete-confirmation-title"
         aria-describedby="delete-confirmation-description"
+        
       >
         <DialogTitle id="delete-confirmation-title">
           <Typography variant="h6">Confirm Deletion</Typography>

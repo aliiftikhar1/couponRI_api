@@ -471,6 +471,7 @@ const OffersPPage = () => {
         onClose={handleAddClose}
         fullWidth={true}
        maxWidth="xl"
+       disableEnforceFocus
       >
         <DialogTitle>Add New Offer</DialogTitle>
         <DialogContent>
@@ -616,6 +617,7 @@ const OffersPPage = () => {
         onClose={handleEditClose}
         fullWidth={true}
        maxWidth="xl"
+       disableEnforceFocus
       >
         <DialogTitle>Edit Offer</DialogTitle>
         <DialogContent>

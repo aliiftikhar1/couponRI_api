@@ -386,6 +386,7 @@ const BlogCategories = () => {
         onClose={handleAddClose}
         maxWidth="xl"
         fullWidth
+        disableEnforceFocus
       >
         <DialogTitle>
           Add New Category
@@ -442,6 +443,7 @@ const BlogCategories = () => {
         onClose={handleEditClose}
         maxWidth="xl"
         fullWidth
+        disableEnforceFocus
       >
         <DialogTitle>
           Edit Category

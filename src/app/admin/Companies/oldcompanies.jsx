@@ -517,6 +517,7 @@ const AddCompanies = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">New Company</Typography>
@@ -755,6 +756,7 @@ const AddCompanies = () => {
         fullWidth
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">Edit Company Data</Typography>

@@ -625,6 +625,7 @@ const AddCompanies = () => {
         fullWidth
         aria-labelledby="add-company-title"
         aria-describedby="add-company-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">New Company</Typography>
@@ -946,6 +947,7 @@ const AddCompanies = () => {
         fullWidth
         aria-labelledby="edit-company-title"
         aria-describedby="edit-company-description"
+        disableEnforceFocus
       >
         <DialogTitle>
           <Typography variant="h6">Edit Company Data</Typography>
