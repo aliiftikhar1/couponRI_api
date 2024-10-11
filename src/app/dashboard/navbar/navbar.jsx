@@ -49,7 +49,7 @@ const Navbar = () => {
       </div>
       <div className="flex items-center space-x-6">
         <div className="font-bold text-2xl text-white">
-         Email :  {userEmail}
+         Email : {userEmail}
         </div>
         {/* <div className="flex items-center bg-white p-1 rounded-lg h-10">
           <MdSearch className="text-black" />
