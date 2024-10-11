@@ -1,8 +1,34 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { MdNotifications, MdOutlineChat, MdPublic, MdSearch } from "react-icons/md";
-
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode'; // Corrected import
+import { useRouter } from 'next/navigation';
+import { useState,useEffect } from "react";
 const Navbar = () => {
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (!token) {
+      console.log("you are not logged in")
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserName(decodedToken.name);
+      setUserEmail(decodedToken.email);
+      setUserRole(decodedToken.role);
+      console.log("---DECODED----");
+      console.log(
+        "Name",
+        decodedToken.name,
+        "email",
+        decodedToken.email,
+        "Role",
+        decodedToken.role
+      );
+    }
+  }, []);
   const pathname = usePathname();
 
   return (
@@ -22,7 +48,10 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center space-x-6">
-        <div className="flex items-center bg-white p-1 rounded-lg h-10">
+        <div className="font-bold text-2xl text-white">
+         Email :  {userEmail}
+        </div>
+        {/* <div className="flex items-center bg-white p-1 rounded-lg h-10">
           <MdSearch className="text-black" />
           <input
             type="text"
@@ -38,7 +67,7 @@ const Navbar = () => {
         </div>
         <div className="relative text-white mr-4">
           <MdPublic size={28} />
-        </div>
+        </div> */}
       </div>
     </header>
   );
