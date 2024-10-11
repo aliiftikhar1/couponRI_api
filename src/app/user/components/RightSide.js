@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
-import { useRef } from 'react';
 
 const RightSide = ({ offers, company }) => {
   const offersArray = Array.isArray(offers) ? offers : [];
@@ -25,6 +24,7 @@ const OfferCard = ({ offer, company }) => {
   const newTabRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [copyMessage, setCopyMessage] = useState(''); // New state for copy message
 
   // Function to parse offer title for % discounts, $ discounts, or Free offers
   const getOfferDetails = (title) => {
@@ -58,104 +58,131 @@ const OfferCard = ({ offer, company }) => {
     return { leftSideText, rightSideText, offerType };
   };
 
-  const { leftSideText, rightSideText, offerType } = getOfferDetails(offer.offer_title);
+  const { leftSideText, rightSideText } = getOfferDetails(offer.offer_title);
 
   const handleShowCode = (offer) => {
     newTabRef.current = window.open(offer.offer_affiliateLink, '_blank', 'noopener,noreferrer');
     setShowPopup(true);
   };
 
+  const handleGetOffer = (offer) => {
+    newTabRef.current = window.open(offer.offer_affiliateLink, '_blank', 'noopener,noreferrer');
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
+    setCopyMessage(''); // Reset copy message when closing popup
   };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
+  const handleCopyCode = () => {
+    if (offer.offer_code) {
+      navigator.clipboard.writeText(offer.offer_code);
+      setCopyMessage('Coupon code copied!'); // Set copy message
+      setTimeout(() => setCopyMessage(''), 2000); // Clear message after 2 seconds
+    }
+  };
+
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md flex flex-col items-start border-b border-gray-200 relative">
-      <div className="flex items-center space-x-4">
-        <div className="flex flex-col items-center">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border-b border-gray-200 relative flex flex-col justify-between h-full ">
+      <div className="flex justify-center items-center space-x-4">
+        <div className="flex flex-col items-center px-4">
           {/* Display the offer value and the sign (e.g., %, $, or Free) */}
           <span className="text-blue-600 text-xl sm:text-2xl font-bold">{leftSideText}</span>
           <span className="text-gray-600 text-sm">{rightSideText}</span> {/* Display the word below */}
           {/* Display "Code" or "Free" based on offer type */}
-          {offerType !== 'Code' ? (
+          {offer.offer_type !== 'Offer' ? (
             <span className="bg-orange-400 text-white text-xs font-bold rounded px-2 py-1 mt-2">Code</span>
           ) : (
             <span className="bg-green-500 text-white text-xs font-bold rounded px-2 py-1 mt-2">Offer</span>
           )}
         </div>
-        <div className="ml-4 grid grid-cols-6 w-full">
-          <div className='col-span-5'>
+        <div className="ml-4 flex-1 flex flex-col justify-between">
+          <div>
             <h3 className="text-lg sm:text-xl font-semibold mb-1">{offer.offer_title}</h3>
             <p className="text-gray-600 text-sm sm:text-base mb-2">{offer.offer_description}</p>
             <p className="text-sm text-gray-500 flex items-center">
               <FaCheckCircle className="text-blue-600 mr-1" /> Verified coupon
             </p>
           </div>
-          <div className='absolute top-6 right-10'>
-            <button
-              onClick={() => handleShowCode(offer)} // Pass the function reference correctly here
-              className="mt-4 bg-[#07069F] text-white w-full sm:w-auto h-10 text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition-transform duration-300"
-            >
-              Show Code
-            </button>
+          {/* Button on the right side */}
+          <div className="flex justify-end">
+            {offer.offer_type !== 'Offer' ? (
+              <button
+                className="relative bg-[#07069F] text-white py-3 px-8 text-sm font-bold rounded-lg cursor-pointer overflow-hidden transition duration-300 ease-in-out hover:bg-[#07069F] group"
+                onClick={() => handleShowCode(offer)}
+              >
+                Show Code
+                <span className="corner top-right-corner absolute top-0 right-0 w-[30px] h-[30px] bg-[#cdcdf8] clip-path-polygon-100_0_0_0_100_100 transition-transform duration-0 transform-origin-top-right group-hover:scale-125 group-hover:right-[3px] group-hover:-translate-x-[0px] group-hover:-translate-y-[0px]"></span>
+                <span className="corner bottom-left-corner absolute top-0 right-0 w-[30px] h-[30px] bg-[#5858c3] clip-path-polygon-0_100_100_100_0_0 transition-transform duration-0 transform-origin-bottom-left group-hover:scale-125 group-hover:right-[3px] group-hover:-translate-x-[0px] group-hover:translate-y-[0px]"></span>
+              </button>
+            ) : (
+              <button
+                className="relative bg-[#07069F] text-white py-3 px-8 text-sm font-bold rounded-lg cursor-pointer overflow-hidden transition duration-300 ease-in-out hover:bg-[#07069F] group"
+                onClick={() => handleGetOffer(offer)}
+              >
+                Get Offer
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-md relative">
+          <div className="bg-white p-6 sm:p-8 flex flex-col justify-center rounded-lg shadow-lg w-full h-[90vh] max-w-3xl relative">
             <button
               onClick={handleClosePopup}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-xl font-bold"
+              className="absolute top-2 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold"
             >
               &times;
             </button>
             <img
               src={`https://m3xtrader.com/coupon/uploads/${company.comp_logo}`}
               alt={company.com_title}
-              className="h-16 mx-auto mb-4"
+              className="h-40 w-40 rounded-full mx-auto mb-4"
             />
-            <h3 className="text-xl font-semibold mb-2 text-center">{offer.offer_title}</h3>
-            <p className="text-lg text-center font-bold mb-4">
+            <h3 className="text-xl font-semibold mb-2 text-center">
+              {offer.offer_title}
+            </h3>
+            <div className='px-16 py-2 border-[1px] mb-4 w-auto mx-auto border-gray-800 h-auto flex justify-center items-center'>
+            <p className="text-3xl text-center font-semibold ">
               {offer.offer_code ? offer.offer_code : 'No coupon code needed'}
             </p>
+            </div>
+            {/* Copy Code Button */}
+            {offer.offer_code && (
+              <button
+                onClick={handleCopyCode}
+                className="bg-gray-200 text-gray-700 px-4 py-2 mx-auto rounded-full hover:bg-gray-300 w-auto mb-4"
+              >
+                Copy Code
+              </button>
+            )}
+
+            {copyMessage && (
+              <p className="text-green-600 text-center mb-2">{copyMessage}</p>
+            )}
+
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full mb-4"
-              onClick={() => window.open(offer.redeem_link, '_blank')}
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-auto mx-auto mb-4"
+              onClick={() => window.open(offer.offer_affiliateLink, '_blank')}
             >
-              {offer.offer_code ? 'Continue to this offer' : 'Redeem at ' + company.com_title}
+              Use a {company.com_title}
             </button>
-            <div className="bg-gray-100 p-4">
-              <p className="text-lg text-gray-700">Offer Description:</p>
-              <p className="text-sm text-gray-600 mb-2">{offer.offer_description}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-gray-600">Expiration Date: {offer.offer_expiry}</p>
-            </div>
-            <div className="relative mb-0 w-full bg-[#2F3841] h-40 my-4">
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white">
-                <p className="text-sm font-semibold mb-2">
-                  Get coupon alerts for {company.com_title} and never miss another deal!
-                </p>
-                <label htmlFor="userInput" className="text-sm font-medium mb-1">
-                  Your Input:
-                </label>
-                <input
-                  id="userInput"
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 mb-2"
-                  placeholder="Type something..."
-                />
-                <p className="text-xs">No spam, just savings. Read our Privacy Policy for more info.</p>
-              </div>
-            </div>
+
+            <p className="text-center text-sm text-gray-600 mb-2">
+              Copy the code, then go to {company.com_title} and paste it in during checkout.
+            </p>
+
+            {/* <div className="text-center">
+              <p className="text-sm text-gray-600 mb-2">Did this code work?</p>
+              <button className="bg-green-500 text-white px-2 py-1 rounded mx-2 hover:bg-green-600">Yes</button>
+              <button className="bg-red-500 text-white px-2 py-1 rounded mx-2 hover:bg-red-600">No</button>
+            </div> */}
           </div>
         </div>
       )}

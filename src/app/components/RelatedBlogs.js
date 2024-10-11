@@ -128,7 +128,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
-                <Link href={`/pages/blog/${blog.id}`} className="block text-blue-500 hover:underline font-semibold">
+                <Link href={`/blog/${blog.web_slug}`} className="block text-blue-500 hover:underline font-semibold">
                   {blog.title}
                 </Link>
                 <div
@@ -165,7 +165,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
-                <Link href={`/pages/onecompany/${store.id}`} className="block text-blue-500 hover:underline font-semibold">
+                <Link href={`/store/${store.id}`} className="block text-blue-500 hover:underline font-semibold">
                   {store.com_title}
                 </Link>
                 <div
@@ -202,7 +202,7 @@ const RelatedBlogs = ({ category, currentBlogId }) => {
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
-                <Link href={`/pages/onecompany/${offer.comp_id}`} className="block text-blue-500 hover:underline font-semibold">
+                <Link href={`/store/${offer.comp_id}`} className="block text-blue-500 hover:underline font-semibold">
                   {offer.offer_title}
                 </Link>
                 <p className="text-sm text-gray-700 mt-1">{offer.offer_description}</p>

@@ -156,8 +156,15 @@ const LeftSide = ({ company, offers }) => {
         )}
         </ul>
         <p className="text-blue-600 mt-4 underline cursor-pointer">
-          Coupon Codes &gt; {company?.com_title || 'SuperMade'} Discount Code
-        </p>
+  <a 
+    href={`${company.comp_affiliateLink}`} 
+    target="_blank" 
+    rel="noopener noreferrer"
+  >
+    Coupon Codes &gt; {company?.com_title || 'SuperMade'} Discount Code
+  </a>
+</p>
+
       </div>
 
       {/* <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
@@ -189,10 +196,10 @@ const LeftSide = ({ company, offers }) => {
           <div>No similar stores found.</div>
         ) : (
           <ul className="list-disc list-inside text-gray-700 text-sm sm:text-base">
-            {similarStores.map((store) => (
-              <li key={store.id}>{store.com_title}</li>
-            ))}
-          </ul>
+          {similarStores.slice(0, 10).map((store) => (
+            <li key={store.id}>{store.com_title}</li>
+          ))}
+        </ul>
         )}
       </div>
 

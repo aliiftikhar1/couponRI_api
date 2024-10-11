@@ -24,7 +24,7 @@ const CompanyCard = ({ company, topDiscount }) => {
         </div>
         <div className="mt-4">
           <a
-            href={`/pages/onecompany/${company.id}`}
+            href={`/store/${company.web_slug}`}
             className="bg-[#06089B] text-white w-full h-10 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200"
           >
             View Details

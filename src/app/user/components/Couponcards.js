@@ -9,7 +9,7 @@ const CouponCard = ({ company, topDiscount }) => {
   const router = useRouter();
 
   const handleButtonClick = () => {
-    router.push(`/pages/onecompany/${company.id}`);
+    router.push(`/store/${company.id}`);
   };
 
   return (

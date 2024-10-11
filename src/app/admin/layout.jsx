@@ -24,6 +24,7 @@ const Layout = ({ children }) => {
   }
 
   return (
+    
     <div className="flex w-full min-h-screen bg-white">
       <div className="flex w-[350px]">
         <ToastContainer />

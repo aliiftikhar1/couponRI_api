@@ -44,13 +44,13 @@ const LatestBlogPage = () => {
 
   // Show more blogs when the button is clicked
   const showMoreBlogs = () => {
-    router.push(`/pages/blog`);
+    router.push(`/blog`);
     // setVisibleBlogs((prevVisibleBlogs) => prevVisibleBlogs + 8);
   };
 
   // Navigate to the blog detail page
   const handleReadMore = (id) => {
-    router.push(`/pages/blog/${id}`); // Assuming the blog details page is under /blog/[id]
+    router.push(`/blog/${id}`); // Assuming the blog details page is under /blog/[id]
   };
 
   return (
@@ -61,7 +61,7 @@ const LatestBlogPage = () => {
           <div
             key={blog.id}
             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-            onClick={() => handleReadMore(blog.id)}
+            onClick={() => handleReadMore(blog.web_slug)}
           >
             <img
               src={`https://m3xtrader.com/coupon/uploads/${blog.image}`}
@@ -70,18 +70,18 @@ const LatestBlogPage = () => {
             />
             <div className="p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-gray-900">{blog.title}</h3>
-              
+
               <div className="text-gray-700 text-sm mt-2 overflow-hidden text-ellipsis"
-    style={{
-      display: '-webkit-box',
-      WebkitLineClamp: 3, // Limit to 3 lines
-      WebkitBoxOrient: 'vertical',
-    }}
-    dangerouslySetInnerHTML={{ __html: blog.description }}
-  >
-</div>
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3, // Limit to 3 lines
+                  WebkitBoxOrient: 'vertical',
+                }}
+                dangerouslySetInnerHTML={{ __html: blog.description }}
+              >
+              </div>
               <button
-                onClick={() => handleReadMore(blog.id)}
+                onClick={() => handleReadMore(blog.web_slug)}
                 className="text-blue-500 hover:underline mt-4 block"
               >
                 Read More

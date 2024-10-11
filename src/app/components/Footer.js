@@ -48,7 +48,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           {/* Logo and Description */}
           <div className="md:w-1/2">
-            <img src="/logo/logo.jpg" alt="CouponRI" className=" h-32" />
+            <img src="/logo/logo.jpg" alt="CouponRI" className=" h-24" />
             <p className="text-gray-600">
             CouponRI helps you save money by providing and listing the most current promo codes, coupon codes, and discount deals available for top online retailers. Should you make a purchase using the discount links or voucher codes provided by us, we earn a commission. For your further assurance of saving maximum, we will be obliged if you check the validity of any coupon or promo code on the website of the retailer where you intend to make the purchase. For more discounts, visit our blog for expert shopping tips, hot sales, and top product recommendations.
             </p>
@@ -61,13 +61,22 @@ export default function Footer() {
               <h3 className="text-xl font-bold">Site Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-black">About Us</a>
+                  <a href="/pages/aboutus" className="text-gray-600 hover:text-black">About Us</a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-black">Contact Us</a>
+                  <a href="/pages/contactus" className="text-gray-600 hover:text-black">Contact Us</a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-black">Free Shipping</a>
+                  <a href="/pages/submitoffer" className="text-gray-600 hover:text-black">Submit Coupon</a>
+                </li>
+                <li>
+                  <a href="/blogs" className="text-gray-600 hover:text-black">Blogs</a>
+                </li>
+                <li>
+                  <a href="/store" className="text-gray-600 hover:text-black">Stores</a>
+                </li>
+                <li>
+                  <a href="/pages/privacypolicy" className="text-gray-600 hover:text-black">Privacy Policy</a>
                 </li>
               </ul>
             </div>
@@ -88,15 +97,45 @@ export default function Footer() {
 
             {/* Special Discounts */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">Best Selling Offers</h3>
+              <h3 className="text-xl font-bold">Top Coupons</h3>
               <ul className="space-y-2">
-                {trendingOffers.map((offer) => (
-                  <li key={offer.id}>
-                    <a href={`/pages/onecompany/${offer.comp_id}`} className="text-gray-600 hover:text-black">
-                      {offer.offer_title} {/* Adjust based on your offer object structure */}
+                
+                  <li >
+                    <a href={`/category/apparel-coupons`} className="text-gray-600 hover:text-black">
+                     Apparel
                     </a>
                   </li>
-                ))}
+                  <li >
+                    <a href={`/category/Footwear`} className="text-gray-600 hover:text-black">
+                     Shoes
+                    </a>
+                  </li>
+                  <li >
+                    <a href={`/category/Digital-Services`} className="text-gray-600 hover:text-black">
+                     Digital Services
+                    </a>
+                  </li>
+                  <li >
+                    <a href={`/category/beauty-and-personal-care`} className="text-gray-600 hover:text-black">
+                     Health And Beauty
+                    </a>
+                  </li>
+                  <li >
+                    <a href={`/category/Electronics`} className="text-gray-600 hover:text-black">
+                     Electronics
+                    </a>
+                  </li>
+                  <li >
+                    <a href={`/category/Home-and-Garden`} className="text-gray-600 hover:text-black">
+                     Home Decor
+                    </a>
+                  </li>
+                  <li >
+                    <a href={`/category/beauty-and-personal-care`} className="text-gray-600 hover:text-black">
+                     Health & Beauty
+                    </a>
+                  </li>
+                
               </ul>
 
               <div className="flex space-x-8 mt-6">

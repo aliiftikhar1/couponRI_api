@@ -50,25 +50,23 @@ const CategoryPage = () => {
       <div className="py-12 bg-gray-50">
         <h2 className="text-3xl font-bold text-center mb-8">Top Categories</h2>
 
-        {/* Horizontally scrollable container */}
+        {/* Responsive grid layout */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-start items-center space-x-12  pb-4 p-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
             {categories.map((category) => (
               <a
                 key={category.id}
-                href={`/pages/onecategory/${category.id}`}
-                className="flex-none duration-300 ease-in-out text-center transform hover:scale-105"
-                style={{ width: 'calc(20% - 1rem)', margin: '0.5rem', marginBottom:'30px'
-                 }} // 5 items per row
+                href={`/category/${category.web_slug}`}
+                className="duration-300 ease-in-out text-center transform hover:scale-105"
               >
-                <div className="w-40 h-40 mx-auto overflow-hidden rounded-full border-4 border-gray-300">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 mx-auto overflow-hidden rounded-full border-4 border-gray-300">
                   <img
                     src={`https://m3xtrader.com/coupon/uploads/${category.category_image}`} // Replace with the correct path to the images
                     alt={category.cat_title}
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <h3 className="text-center text-md sm:text-md font-semibold mt-4">
+                <h3 className="text-center text-sm sm:text-md font-semibold mt-4">
                   {category.category_name}
                 </h3>
               </a>

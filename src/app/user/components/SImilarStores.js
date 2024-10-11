@@ -96,13 +96,14 @@ const SimilarStores = ({ company }) => {
       <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-center">
         Stores Similar to {company.com_title}
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {similarStores.map((store) => (
-          <div key={store.id} className="p-4">
-            <CompanyCard company={store} topDiscount={topDiscounts[store.id]} />
-          </div>
-        ))}
-      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-6">
+  {similarStores.slice(0, 6).map((store) => (
+    <div key={store.id} className="p-4">
+      <CompanyCard company={store} topDiscount={topDiscounts[store.id]} />
+    </div>
+  ))}
+</div>
+
     </div>
   );
 };

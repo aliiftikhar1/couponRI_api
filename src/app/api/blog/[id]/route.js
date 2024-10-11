@@ -3,22 +3,20 @@ import prisma from '../../../util/prisma';
 
 // GET a single blog by ID
 export async function GET(request, { params }) {
-  const id = parseInt(params.id);
-
-  if (isNaN(id)) {
-    return NextResponse.json({ error: 'Invalid ID provided' }, { status: 400 });
-  }
+  const id = params.id;
+  console.log("BLOG : ",id);
 
   try {
-    const blog = await prisma.blog.findUnique({
-      where: { id },
+    const blog = await prisma.blog.findMany({
+      where: { web_slug: id },
     });
 
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
+    console.log("Blogs data: ",blog);
 
-    return NextResponse.json(blog);
+    return NextResponse.json(blog[0]);
   } catch (error) {
     console.error('Error fetching blog:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

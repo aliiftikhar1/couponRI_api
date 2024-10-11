@@ -49,7 +49,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                   className="w-full flex-shrink-0"
                   style={{ flexBasis: '100%' }} // Ensures each slide takes full width
                 >
-                  <a href={`/pages/blog/${blog.id}`}>
+                  <a href={`/blog/${blog.web_slug}`}>
                     <div className="relative w-full h-64 sm:h-80 lg:h-[700px]">
                       <img
                         src={`https://m3xtrader.com/coupon/uploads/${blog.image}`}
@@ -82,7 +82,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                   />
                 </div>
                 <div className="flex-1">
-                  <a href={`/pages/blog/${blog.id}`}>
+                  <a href={`/blog/${blog.web_slug}`}>
                     <h3 className="text-lg font-semibold text-gray-900 hover:underline">
                       {blog.title}
                     </h3>

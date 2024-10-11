@@ -91,11 +91,11 @@ export async function GET(request, { params }) {
   const { id } = params;
   try {
     const companies = await prisma.company.findMany({
-      where: { id: parseInt(id)},
+      where: { web_slug: id},
     });
 
     console.log("companies are: ",companies);
-    return NextResponse.json(companies);
+    return NextResponse.json(companies[0]);
   } catch (error) {
     console.error("Error Fetching Companies:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

@@ -149,6 +149,7 @@ const AddCategories = () => {
     }
   };
 
+  
   const uploadImageToExternalAPI = async (imageBase64) => {
     try {
       const response = await fetch(

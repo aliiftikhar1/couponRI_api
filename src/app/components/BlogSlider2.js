@@ -20,7 +20,7 @@ const BlogSlider2 = ({ blogs }) => {
   };
 
   const handleBlogClick = (blog) => {
-    router.push(`/pages/blog/${blog.id}`); // Navigate to the blog details page
+    router.push(`/blog/${blog.web_slug}`); // Navigate to the blog details page
   };
 
   return (

@@ -2,8 +2,9 @@ import React from "react";
 import BlogDetailPage from "./mainpage"; // Ensure you are importing the correct component
 
 export async function generateMetadata({ params }) {
-  const baseUrl = 'http://couponri.com';
-  // const baseUrl = 'http://localhost:3000';
+  // const baseUrl = 'http://couponri.com';
+  const baseUrl = 'http://localhost:3000';
+  
   try {
     const res = await fetch(`${baseUrl}/api/blog/${params.id}`);
     

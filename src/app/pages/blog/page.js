@@ -90,7 +90,7 @@ function BlogPosts({ blogs }) {
     dangerouslySetInnerHTML={{ __html: post.description }}
   >
 </div>
-              <Link href={`/pages/blog/${post.id}`} className="text-blue-600 hover:underline">
+              <Link href={`/blog/${post.web_slug}`} className="text-blue-600 hover:underline">
                 Read more
               </Link>
             </div>

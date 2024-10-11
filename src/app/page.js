@@ -51,8 +51,6 @@ export default function Home() {
 >
   <BlogSlider blogs={blogs} />
 </div>
-
-
       <FeaturedStores />
       <BlogCategorySlider category="Money Saving" blogs={blogs} />
       <AdsBanner />

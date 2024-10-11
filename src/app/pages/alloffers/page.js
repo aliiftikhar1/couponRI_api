@@ -10,6 +10,8 @@ const OffersPage = () => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [copyMessage, setCopyMessage] = useState(''); // New state for copy message
+
 
   useEffect(() => {
     const fetchOffersAndCompanies = async () => {
@@ -62,6 +64,13 @@ const OffersPage = () => {
 
   };
 
+  const handleCopyCode = () => {
+    if (selectedOffer.offer_code) {
+      navigator.clipboard.writeText(selectedOffer.offer_code);
+      setCopyMessage('Coupon code copied!'); // Set copy message
+      setTimeout(() => setCopyMessage(''), 2000); // Clear message after 2 seconds
+    }
+  };
   const handleClosePopup = () => {
     setSelectedOffer(null);
     setShowPopup(false);
@@ -106,94 +115,104 @@ const OffersPage = () => {
                 </div>
               )}
               <div className="p-2 sm:p-4 text-left w-full sm:w-2/3 flex flex-col justify-center">
-                <h3 className="text-lg sm:text-xl font-bold text-black mb-1 sm:mb-2">{offer.offer_title}</h3>
-                <p className="text-sm sm:text-base text-gray-700 mb-2">{offer.offer_description}</p>
-                <div className="mb-2">
-                  {offer.offer_link1 && (
-                    <a
-                      href={offer.offer_link1}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-blue-600 hover:underline text-sm sm:text-base"
-                    >
-                      Offer Link 1
-                    </a>
-                  )}
-                  {offer.offer_link2 && (
-                    <a
-                      href={offer.offer_link2}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-blue-600 hover:underline text-sm sm:text-base"
-                    >
-                      Offer Link 2
-                    </a>
-                  )}
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="block text-gray-500 text-sm sm:text-base">
-                    Expiry: {new Date(offer.offer_expiry).toLocaleDateString()}
-                  </span>
-                  <button
-                    onClick={() => offer.offer_type === 'Code' ? handleShowPopup(offer) : handleGetOffer(offer)}
-                    className="mt-3 bg-purple-600 text-white w-full sm:w-40 h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-purple-700"
-                  >
-                    {offer.offer_type === 'Code' ? 'Show Code' : 'Get Offer'}
-                  </button>
-                </div>
-              </div>
+  <h3 className="text-lg sm:text-xl font-bold text-black mb-1 sm:mb-2">{offer.offer_title}</h3>
+  
+  {/* Truncated description */}
+  <p className="text-sm sm:text-base text-gray-700 mb-2 line-clamp-2">
+    {offer.offer_description}
+  </p>
+
+  <div className="flex justify-between items-center">
+    <span className="block text-gray-500 text-sm sm:text-base">
+      Expiry: {new Date(offer.offer_expiry).toLocaleDateString()}
+    </span>
+
+    <div className="flex justify-end">
+      {offer.offer_type !== 'Offer' ? (
+        <button
+          className="relative bg-[#07069F] text-white py-3 px-8 text-sm font-bold rounded-lg cursor-pointer overflow-hidden transition duration-300 ease-in-out hover:bg-[#07069F] group"
+          onClick={() => handleShowPopup(offer)}
+        >
+          Show Code
+          <span className="corner top-right-corner absolute top-0 right-0 w-[30px] h-[30px] bg-[#cdcdf8] clip-path-polygon-100_0_0_0_100_100 transition-transform duration-0 transform-origin-top-right group-hover:scale-125 group-hover:right-[3px] group-hover:-translate-x-[0px] group-hover:-translate-y-[0px]"></span>
+          <span className="corner bottom-left-corner absolute top-0 right-0 w-[30px] h-[30px] bg-[#5858c3] clip-path-polygon-0_100_100_100_0_0 transition-transform duration-0 transform-origin-bottom-left group-hover:scale-125 group-hover:right-[3px] group-hover:-translate-x-[0px] group-hover:translate-y-[0px]"></span>
+        </button>
+      ) : (
+        <button
+          className="relative bg-[#07069F] text-white py-3 px-8 text-sm font-bold rounded-lg cursor-pointer overflow-hidden transition duration-300 ease-in-out hover:bg-[#07069F] group"
+          onClick={() => handleGetOffer(offer)}
+        >
+          Get Offer
+        </button>
+      )}
+    </div>
+  </div>
+</div>
+
             </div>
           ))}
         </div>
 
         {showPopup && selectedOffer && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 px-4">
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-xl h-[90vh] relative flex flex-col justify-between">
-              <button
-                onClick={handleClosePopup}
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-xl font-bold"
-              >
-                &times;
-              </button>
-              <div className="flex items-center justify-center mb-4">
-                <img
-                  src={`https://m3xtrader.com/coupon/uploads/${selectedOffer.company.comp_logo}`}
-                  alt={selectedOffer.company.com_title}
-                  className="h-12 sm:h-16"
-                />
-              </div>
-              <div className="text-center mb-4">
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">{selectedOffer.offer_title}</h3>
-                <p className="text-lg sm:text-xl font-bold">{selectedOffer.offer_code ? selectedOffer.offer_code : 'No coupon code needed'}</p>
-              </div>
-              <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                <p className="text-gray-700 font-medium">Offer Description:</p>
-                <p className="text-sm sm:text-base text-gray-600">{selectedOffer.offer_description}</p>
-              </div>
-              <div className="text-center text-sm sm:text-base text-gray-600 mb-4">
-                <p>Expiration Date: {new Date(selectedOffer.offer_expiry).toLocaleDateString()}</p>
-              </div>
-              <div className="w-full bg-[#2F3841] p-4 rounded-lg text-white flex flex-col justify-center items-center text-center">
-                <p className="text-sm font-semibold mb-2">Get coupon alerts for {selectedOffer.company.com_title} and never miss another deal!</p>
-                <input
-                  id="userInput"
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 mb-2 w-full"
-                  placeholder="Type something..."
-                />
-                <button
-                  onClick={() => window.open(selectedOffer.redeem_link, '_blank')}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full mt-2"
-                >
-                  {selectedOffer.offer_code ? 'Continue to this offer' : 'Redeem at ' + selectedOffer.company.com_title}
-                </button>
-                <p className="text-xs mt-2">No spam, just savings. Read our Privacy Policy for more info.</p>
-              </div>
-            </div>
-          </div>
-        )}
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div className="bg-white p-6 sm:p-8 flex flex-col justify-center rounded-lg shadow-lg w-full h-[90vh] max-w-3xl relative">
+      <button
+        onClick={handleClosePopup}
+        className="absolute top-2 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold"
+      >
+        &times;
+      </button>
+
+      {/* Updated Image Styling */}
+      <img
+        src={`https://m3xtrader.com/coupon/uploads/${selectedOffer.company.comp_logo}`}
+        alt={selectedOffer.company.com_title}
+        className="h-40 w-40 rounded-full mx-auto mb-4"
+      />
+
+      {/* Updated Title */}
+      <h3 className="text-xl font-semibold mb-2 text-center">
+        {selectedOffer.offer_title}
+      </h3>
+
+      {/* Coupon Code Container */}
+      <div className='px-16 py-2 border-[1px] mb-4 w-auto mx-auto border-gray-800 h-auto flex justify-center items-center'>
+        <p className="text-3xl text-center font-semibold">
+          {selectedOffer.offer_code ? selectedOffer.offer_code : 'No coupon code needed'}
+        </p>
+      </div>
+
+      {/* Copy Code Button */}
+      {selectedOffer.offer_code && (
+        <button
+          onClick={handleCopyCode}
+          className="bg-gray-200 text-gray-700 px-4 py-2 mx-auto rounded-full hover:bg-gray-300 w-auto mb-4"
+        >
+          Copy Code
+        </button>
+      )}
+
+      {/* Copy Message */}
+      {copyMessage && (
+        <p className="text-green-600 text-center mb-2">{copyMessage}</p>
+      )}
+
+      {/* Redeem Offer Button */}
+      <button
+        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-auto mx-auto mb-4"
+        onClick={() => window.open(selectedOffer.offer_affiliateLink, '_blank')}
+      >
+        Use at {selectedOffer.company.com_title}
+      </button>
+
+      {/* Coupon Usage Instructions */}
+      <p className="text-center text-sm text-gray-600 mb-2">
+        Copy the code, then go to {selectedOffer.company.com_title} and paste it during checkout.
+      </p>
+    </div>
+  </div>
+)}
+
       </div>
     </CustomerRootLayout>
   );

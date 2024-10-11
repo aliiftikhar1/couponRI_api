@@ -37,7 +37,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 
 
@@ -116,7 +116,7 @@ const AddBlogs = () => {
     meta_focusKeyword: "",
     web_slug: "",
   });
-  
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -197,7 +197,7 @@ const AddBlogs = () => {
       setLoad(false);
       setLoading(false); // Hide loading overlay
       modelClose();
-      
+
       window.location.reload();
     } catch (error) {
       console.error("Error occurred during submission", error);
@@ -273,9 +273,16 @@ const AddBlogs = () => {
   };
 
   const handleOpen = (blog) => {
-    setEditingBlog(blog);
+    // Split the category string into an array
+    const blogWithArrayCategory = {
+      ...blog,
+      category: blog.category ? blog.category.split(',').map(cat => cat.trim()) : [],
+    };
+
+    setEditingBlog(blogWithArrayCategory);
     setOpen(true);
   };
+
 
   const handleClose = () => {
     setOpen(false);
@@ -369,10 +376,10 @@ const AddBlogs = () => {
           if (!value) {
             return "Unknown";
           }
-      
+
           // Split the comma-separated string into an array
           const categoriesArray = value.split(",").map((cat) => cat.trim());
-      
+
           // Find matching titles in the blogCategories list
           const categoryTitles = categoriesArray
             .map((category) => {
@@ -381,11 +388,11 @@ const AddBlogs = () => {
             })
             .filter((title) => title !== "Unknown") // Optionally, filter out unknown categories
             .join(", "); // Join them back into a string
-      
+
           return categoryTitles || "Unknown";
         },
       },
-      
+
       {
         Header: "Action",
         accessor: "updateButton",
@@ -590,7 +597,7 @@ const AddBlogs = () => {
                       description: newContent,
                     })
                   }
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -764,7 +771,7 @@ const AddBlogs = () => {
                         description: newContent,
                       })
                     }
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -773,7 +780,7 @@ const AddBlogs = () => {
                     <Select
                       name="category"
                       multiple
-                      value={Array.isArray(editingBlog?.category) ? editingBlog.category : []}
+                      value={Array.isArray(editingBlog?.category) ? editingBlog.category : []} // Ensure it's an array
                       onChange={(e) => {
                         setEditingBlog({
                           ...editingBlog,
@@ -798,6 +805,7 @@ const AddBlogs = () => {
                       ))}
                     </Select>
                   </FormControl>
+
                 </Grid>
 
                 <Grid item xs={12}>

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white border-b-2 text-black px-4">
+    <header className="bg-white  py-2 border-b-2 text-black px-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -38,14 +38,17 @@ export default function Header() {
 
         {/* Navigation for Desktop */}
         <nav className="hidden lg:flex text-md space-x-8  font-semibold">
-          <a href="/pages/blog" className="hover:text-blue-700">
+          <a href="/blog" className="hover:text-blue-700">
             Blog
           </a>
-          <a href="/pages/categories" className="hover:text-blue-700">
-            Categories
+          <a href="/blogcategories" className=" hover:text-blue-700">
+            Blog Categories
           </a>
-          <a href="/pages/stores" className="hover:text-blue-700">
+          <a href="/store" className=" hover:text-blue-700">
             Stores
+          </a>
+          <a href="/categories" className=" hover:text-blue-700">
+            Store Categories
           </a>
           <a href="/pages/alloffers" className="hover:text-blue-700">
             Coupons
@@ -81,14 +84,17 @@ export default function Header() {
             />
           )}
            <div className="flex space-x-3 ml-4">
-    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.facebook.com/couponri/" target="_blank" rel="noopener noreferrer">
       <FaFacebookF className="text-black hover:text-blue-700" />
     </a>
-    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://x.com/CouponRi" target="_blank" rel="noopener noreferrer">
       <FaTwitter className="text-black hover:text-blue-700" />
     </a>
-    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.instagram.com/coupon_ri/" target="_blank" rel="noopener noreferrer">
       <FaInstagram className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://youtube.com/@couponri" target="_blank" rel="noopener noreferrer">
+      <FaYoutube className="text-black hover:text-blue-700" />
     </a>
   </div>
         </div>
@@ -115,14 +121,17 @@ export default function Header() {
           </button>
         </div>
         <nav className="p-4 space-y-4">
-          <a href="/pages/blog" className="block hover:text-blue-700">
+          <a href="/blog" className="block hover:text-blue-700">
             Blog
           </a>
-          <a href="/pages/categories" className="block hover:text-blue-700">
-            Categories
+          <a href="/blogcategories" className="block hover:text-blue-700">
+            Blog Categories
           </a>
-          <a href="/pages/stores" className="block hover:text-blue-700">
+          <a href="/store" className="block hover:text-blue-700">
             Stores
+          </a>
+          <a href="/categories" className="block hover:text-blue-700">
+            Store Categories
           </a>
           <a href="/pages/alloffers" className="block hover:text-blue-700">
             Coupons
@@ -132,9 +141,10 @@ export default function Header() {
           </a>
 
           {/* Search Option for Mobile */}
-          <div className="flex items-center pt-4 border-t mt-4">
+          <div className="flex flex-col items-center gap-8 pt-4 border-t mt-4">
+            <div className='flex '>
   <MagnifyingGlassIcon
-    className="h-5 w-5 text-black cursor-pointer hover:text-blue-700"
+    className="h-10 w-10 text-black cursor-pointer hover:text-blue-700"
     onClick={handleSearchToggle}
   />
   {isSearchOpen && (
@@ -147,16 +157,19 @@ export default function Header() {
       onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
     />
   )}
-
-  <div className="flex space-x-3 ml-4">
-    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+</div>
+  <div className="flex space-x-10 ml-4 text-2xl">
+    <a href="https://www.facebook.com/couponri/" target="_blank" rel="noopener noreferrer">
       <FaFacebookF className="text-black hover:text-blue-700" />
     </a>
-    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://youtube.com/@couponri" target="_blank" rel="noopener noreferrer">
       <FaTwitter className="text-black hover:text-blue-700" />
     </a>
-    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.instagram.com/coupon_ri/" target="_blank" rel="noopener noreferrer">
       <FaInstagram className="text-black hover:text-blue-700" />
+    </a>
+    <a href="https://youtube.com/@couponri" target="_blank" rel="noopener noreferrer">
+      <FaYoutube className="text-black hover:text-blue-700" />
     </a>
   </div>
 </div>

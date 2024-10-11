@@ -33,24 +33,24 @@ export default function BlogSlider({ blogs }) {
 
   const handleBlogClick = (blog) => {
     // Navigate to the blog details page
-    router.push(`/pages/blog/${blog.id}`);
+    router.push(`/blog/${blog.web_slug}`);
   };
 
   return (
     <div className="relative flex justify-between items-center w-full px-4">
       {/* <div className="flex absolute z-50 w-full h-full justify-between mb-4 pr-8"> */}
-        <button
-          onClick={handlePrevious}
-          className="text-white p-2 absolute z-40 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10094;</span>
-        </button>
-        <button
-          onClick={handleNext}
-          className="text-white p-2 absolute z-40 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
-        >
-          <span className='text-white font-bold hover:scale-110'>&#10095;</span>
-        </button>
+      <button
+        onClick={handlePrevious}
+        className="text-white p-2 absolute z-40 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
+      >
+        <span className='text-white font-bold hover:scale-110'>&#10094;</span>
+      </button>
+      <button
+        onClick={handleNext}
+        className="text-white p-2 absolute z-40 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
+      >
+        <span className='text-white font-bold hover:scale-110'>&#10095;</span>
+      </button>
       {/* </div> */}
       <div className="relative overflow-hidden rounded-lg">
         <div
@@ -73,19 +73,19 @@ export default function BlogSlider({ blogs }) {
                   />
                 </div>
                 <div className="p-4 flex-grow">
-  <h3 className="text-lg font-semibold mb-2 text-gray-900">
-    {blog.title}
-  </h3>
-  <div
-    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
-    style={{
-      display: '-webkit-box',
-      WebkitLineClamp: 3, // Limit to 3 lines
-      WebkitBoxOrient: 'vertical',
-    }}
-    dangerouslySetInnerHTML={{ __html: blog.description }}
-  />
-</div>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900">
+                    {blog.title}
+                  </h3>
+                  <div
+                    className="text-gray-700 text-sm overflow-hidden text-ellipsis"
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3, // Limit to 3 lines
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                    dangerouslySetInnerHTML={{ __html: blog.description }}
+                  />
+                </div>
 
               </div>
             </div>

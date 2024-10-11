@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { FaArrowRight } from 'react-icons/fa';
-import CustomerRootLayout from '../../../../app/user/layout';
+import CustomerRootLayout from '../../../user/layout';
 
 const CompanyCard = ({ company, topDiscount }) => {
   return (
@@ -24,7 +24,7 @@ const CompanyCard = ({ company, topDiscount }) => {
         <h3 className="text-sm font-semibold text-gray-700 my-3">{company.com_title}</h3>
         <div className='flex'>
           <a
-            href={`/pages/onecompany/${company.id}`}
+            href={`/store/${company.web_slug}`}
             className="bg-[#06089B] text-white  h-10 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200 mt-2"
           >
             View Details
@@ -35,8 +35,8 @@ const CompanyCard = ({ company, topDiscount }) => {
   );
 };
 
-const CategoryDetail = () => {
-  const params = useParams();
+const CategoryDetail = ({params}) => {
+  // const params = useParams();
   const router = useRouter();
   const [companies, setCompanies] = useState([]);
   const [topDiscounts, setTopDiscounts] = useState({});
@@ -44,14 +44,41 @@ const CategoryDetail = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const id = params.id;
+  console.log("Params are: ",id);
+  
 
+  const getidfromslug = async (id) => {
+    try {
+      console.log("id sent to API is:", id);
+      const response = await fetch(`/api/getidfromslug/${id}`);
+      
+      // Ensure the response is successfully fetched
+      if (!response.ok) {
+        throw new Error('Failed to fetch category');
+      }
+      
+      const data = await response.json();  // await the JSON response
+      const newid = data.id;
+      console.log("New Category id is:", newid);
+      
+      return newid; // Return the category id for further use
+    } catch (error) {
+      console.error("Error Fetching category:", error);
+      throw new Error("Error fetching category");
+    }
+  };
+  
   useEffect(() => {
     const fetchCategoriesAndOffers = async () => {
+    console.log("Old id is : ",id);
+      const newid = await getidfromslug(id);
+      console.log("newid is ",newid);
       try {
         const [categoriesResponse, companiesResponse, categoryResponse, offersResponse] = await Promise.all([
           fetch('/api/category'),
-          fetch('/api/onecategorycompanies/' + params.id),
-          fetch(`/api/category/${params.id}`),
+          fetch('/api/onecategorycompanies/' + id),
+          fetch(`/api/category/${newid}`),
           fetch('/api/offers')
         ]);
 
@@ -111,15 +138,15 @@ const CategoryDetail = () => {
 
     fetchCategoriesAndOffers();
   }, [params]);
-  useEffect(() => {
-    if (category && category.web_slug) {
-      // Use history.replaceState to change the URL without a page reload
-      window.history.replaceState(null, '', `/category/${category.web_slug}`);
-    }
-  }, [category]);
+  // useEffect(() => {
+  //   if (category && category.web_slug) {
+  //     // Use history.replaceState to change the URL without a page reload
+  //     window.history.replaceState(null, '', `/category/${category.web_slug}`);
+  //   }
+  // }, [category]);
 
   const handleCategoryClick = (categoryId) => {
-    router.push(`/pages/onecategory/${categoryId}`);
+    router.push(`/category/${categoryId}`);
   };
 
   if (loading) {
@@ -151,7 +178,7 @@ const CategoryDetail = () => {
               <li
                 key={category.id}
                 className="flex items-center justify-between cursor-pointer group p-2 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-md"
-                onClick={() => handleCategoryClick(category.id)}
+                onClick={() => handleCategoryClick(category.web_slug)}
               >
                 <span className="text-black group-hover:scale-105 group-hover:text-white transform transition-transform duration-300">
                   {category.category_name}

@@ -17,6 +17,10 @@ import {
   DialogContent,
   DialogActions,
   Snackbar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Alert,
   Typography,
   TextField,
@@ -33,9 +37,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
-
 
 // Dynamically import the editor since it might use 'self' or 'window'
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -44,6 +47,7 @@ const OffersPPage = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [offers, setOffers] = useState([]);
+  const [filteredOffers, setFilteredOffers] = useState([]); // State for filtered offers
   const [companies, setCompanies] = useState([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [editingOffer, setEditingOffer] = useState(null);
@@ -55,46 +59,10 @@ const OffersPPage = () => {
     open: false,
     id: null,
   });
-
-  const handleCancelDelete = () => {
-    setDeleteConfirmation({ open: false, id: null });
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      const response = await fetch(`/api/offers/${deleteConfirmation.id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setDeleteSuccessSnackbar(true);
-        setTimeout(() => {
-          setDeleteSuccessSnackbar(false);
-        }, 5000);
-
-        const updatedOffers = offers.filter(
-          (offer) => offer.id !== deleteConfirmation.id
-        );
-        setOffers(updatedOffers);
-      } else {
-        console.error("Failed to delete offer");
-      }
-    } catch (error) {
-      console.error("Error deleting offer:", error.message);
-    } finally {
-      setDeleteConfirmation({ open: false, id: null });
-    }
-  };
-
-  const handleDelete = (row) => {
-    if (row && row.id) {
-      setDeleteConfirmation({ open: true, id: row.id });
-    } else {
-      console.error("Invalid Offer for deletion");
-    }
-  };
+  const [selectedCompany, setSelectedCompany] = useState(""); // State for selected company
   const router = useRouter();
   const [userRole, setUserRole] = useState("");
+
   useEffect(() => {
     // Decode JWT token to get user role
     const token = Cookies.get("token");
@@ -117,6 +85,7 @@ const OffersPPage = () => {
     try {
       const response = await axios.get("/api/offers");
       setOffers(response.data);
+      setFilteredOffers(response.data); // Set filtered offers as well
     } catch (error) {
       console.error("Error fetching offers: ", error);
     }
@@ -128,6 +97,61 @@ const OffersPPage = () => {
       setCompanies(response.data);
     } catch (error) {
       console.error("Error fetching companies: ", error);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmation({ open: false, id: null });
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await fetch(`/api/offers/${deleteConfirmation.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setDeleteSuccessSnackbar(true);
+        setTimeout(() => {
+          setDeleteSuccessSnackbar(false);
+        }, 5000);
+
+        const updatedOffers = offers.filter(
+          (offer) => offer.id !== deleteConfirmation.id
+        );
+        setOffers(updatedOffers);
+        setFilteredOffers(updatedOffers); // Update filtered offers
+      } else {
+        console.error("Failed to delete offer");
+      }
+    } catch (error) {
+      console.error("Error deleting offer:", error.message);
+    } finally {
+      setDeleteConfirmation({ open: false, id: null });
+    }
+  };
+
+  const handleDelete = (row) => {
+    if (row && row.id) {
+      setDeleteConfirmation({ open: true, id: row.id });
+    } else {
+      console.error("Invalid Offer for deletion");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (editingOffer) {
+      setEditingOffer((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
   };
 
@@ -145,22 +169,6 @@ const OffersPPage = () => {
     offer_isverify: "Yes", // Default to "Yes"
     offer_details: "",
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    if (editingOffer) {
-      setEditingOffer((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
 
   const handleAddOpen = () => {
     setFormData({
@@ -229,8 +237,8 @@ const OffersPPage = () => {
         ...formData,
         comp_id: parseInt(formData.comp_id),
       };
-      
-      console.log("Submit daata: ",submitData);
+
+      console.log("Submit daata: ", submitData);
 
       await axios.post("/api/offers", submitData);
       toast.success("Record has been added successfully!");
@@ -284,7 +292,7 @@ const OffersPPage = () => {
         comp_id: parseInt(editingOffer.comp_id),
       };
 
-      console.log("Submit daata: ",submitData);
+      console.log("Submit daata: ", submitData);
       await axios.put(`/api/offers/${editingOffer.id}`, submitData);
       toast.success("Record has been updated successfully!");
       setLoading(false);
@@ -374,7 +382,7 @@ const OffersPPage = () => {
   } = useTable(
     {
       columns,
-      data: offers,
+      data: filteredOffers.length > 0 ? filteredOffers : offers, // Use filteredOffers here
     },
     useGlobalFilter,
     useSortBy,
@@ -382,6 +390,20 @@ const OffersPPage = () => {
   );
 
   const { pageIndex, pageSize, globalFilter } = state;
+
+  const handleCompaniesChange = (e) => {
+    const companyId = e.target.value;
+    setSelectedCompany(companyId);
+
+    // If "All Companies" is selected, reset the filtered offers
+    if (companyId === "") {
+      setFilteredOffers(offers);
+    } else {
+      // Filter offers based on selected company
+      const filtered = offers.filter((offer) => offer.comp_id === parseInt(companyId));
+      setFilteredOffers(filtered);
+    }
+  };
 
   return (
     <div>
@@ -404,6 +426,25 @@ const OffersPPage = () => {
           ADD New
         </Button>
       </div>
+
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="company-filter-label">Filter by Companies</InputLabel>
+        <Select
+          labelId="company-filter-label"
+          value={selectedCompany}
+          onChange={handleCompaniesChange}
+          label="Filter by Company"
+        >
+          <MenuItem value="">
+            <em>All Companies</em>
+          </MenuItem>
+          {companies.map((company) => (
+            <MenuItem key={company.id} value={company.id}>
+              {company.com_title}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <TableContainer component={Paper} {...getTableProps()}>
         <Table>
@@ -438,6 +479,13 @@ const OffersPPage = () => {
                 </TableRow>
               );
             })}
+            {filteredOffers.length === 0 && selectedCompany && (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  No offers available for this company.
+                </TableCell>
+              </TableRow>
+            )}
             {page.length === 0 && (
               <TableRow>
                 <TableCell colSpan={columns.length} align="center">
@@ -450,13 +498,8 @@ const OffersPPage = () => {
       </TableContainer>
 
       <TablePagination
-        rowsPerPageOptions={[
-          5,
-          10,
-          25,
-          { label: "All", value: offers.length },
-        ]}
-        count={offers.length}
+        rowsPerPageOptions={[5, 10, 25, { label: "All", value: offers.length }]}
+        count={filteredOffers.length} // Use the length of filtered offers
         rowsPerPage={pageSize}
         page={pageIndex}
         showLastButton={true}
@@ -470,8 +513,8 @@ const OffersPPage = () => {
         open={openAddDialog}
         onClose={handleAddClose}
         fullWidth={true}
-       maxWidth="xl"
-       disableEnforceFocus
+        maxWidth="xl"
+        disableEnforceFocus
       >
         <DialogTitle>Add New Offer</DialogTitle>
         <DialogContent>
@@ -616,8 +659,8 @@ const OffersPPage = () => {
         open={openEditDialog}
         onClose={handleEditClose}
         fullWidth={true}
-       maxWidth="xl"
-       disableEnforceFocus
+        maxWidth="xl"
+        disableEnforceFocus
       >
         <DialogTitle>Edit Offer</DialogTitle>
         <DialogContent>

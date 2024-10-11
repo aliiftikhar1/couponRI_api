@@ -68,8 +68,8 @@ const FAQSection = ({ imageSrc }) => {
         </div>
 
         {/* Right Column: Image */}
-        <div className="flex  justify-center h-auto md:h-full">
-          <div className="w-[400px] h-[400px]">
+        <div className="flex md:flex-row flex-col justify-center h-auto md:h-full">
+          <div className="md:w-[400px] md:h-[400px] w-full h-full">
             <img
               src="/footer/couponri.png" // Replace with the correct path to your image
               alt="Shopping Illustration"
