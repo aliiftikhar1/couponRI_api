@@ -58,7 +58,7 @@ const FeaturedStores = () => {
       <h2 className="text-3xl font-bold text-center mb-8">Featured Stores</h2>
       <div className="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4 sm:px-6 lg:px-8">
         {stores.slice(0, visibleStores).map((store) => (
-          <a href={`/store/${store.id}`} key={store.id}>
+          <a href={`/store/${store.web_slug}`} key={store.id}>
             <div className="p-4 flex items-center justify-center transition-shadow duration-300 ease-in-out">
               <img
                 src={`https://m3xtrader.com/coupon/uploads/${store.comp_logo}`} // Replace with the correct path to the images

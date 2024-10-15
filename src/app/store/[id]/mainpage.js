@@ -1,13 +1,12 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import RightSide from '../../user/components/RightSide';
-import LeftSide from '../../user/components/LeftSide';
-import CouponHeader from '../../user/components/CouponHeader';
-import FaqComponent from '../../user/components/FaqComponent';
-import CustomerRootLayout from '../../user/layout';
-import OffersTable from '../../user/components/CouponTable';
-import SimilarStores from '../../user/components/SImilarStores';
+'use client'
+import React, { useEffect, useState } from "react";
+import RightSide from "../../user/components/RightSide";
+import LeftSide from "../../user/components/LeftSide";
+import CouponHeader from "../../user/components/CouponHeader";
+import FaqComponent from "../../user/components/FaqComponent";
+import CustomerRootLayout from "../../user/layout";
+import OffersTable from "../../user/components/CouponTable";
+import SimilarStores from "../../user/components/SImilarStores";
 
 const CompanyDetail = ({ id }) => {
   const [company, setCompany] = useState(null);
@@ -18,37 +17,49 @@ const CompanyDetail = ({ id }) => {
   const [loadingFaqs, setLoadingFaqs] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect if screen is mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // mobile if screen width is less than 768px
+    };
+
+    handleResize(); // Call on initial render
+    window.addEventListener("resize", handleResize); // Add resize listener
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on unmount
+    };
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch company data
         const companyResponse = await fetch(`/api/onecompany/${id}`);
         if (!companyResponse.ok) {
-          throw new Error('Failed to fetch company data');
+          throw new Error("Failed to fetch company data");
         }
         const companyData = await companyResponse.json();
         setCompany(companyData);
         setLoadingCompany(false);
 
-        // Fetch offers related to this company
         const offersResponse = await fetch(`/api/gettingoffers/${companyData.id}`);
         if (!offersResponse.ok) {
-          throw new Error('Failed to fetch offers data');
+          throw new Error("Failed to fetch offers data");
         }
         const offersData = await offersResponse.json();
         setOffers(offersData);
         setLoadingOffers(false);
 
-        // Fetch FAQs related to this company
         const faqsResponse = await fetch(`/api/gettingfaqs/${companyData.id}`);
         if (!faqsResponse.ok) {
-          throw new Error('Failed to fetch FAQs data');
+          throw new Error("Failed to fetch FAQs data");
         }
         const faqsData = await faqsResponse.json();
         setFaqs(faqsData);
         setLoadingFaqs(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setError(error.message);
         setLoadingCompany(false);
         setLoadingOffers(false);
@@ -75,7 +86,8 @@ const CompanyDetail = ({ id }) => {
 
         {/* Main Content Section */}
         <div className="container mx-auto flex flex-col md:flex-row gap-4 sm:gap-6">
-          {/* Left Side */}
+          {/* Left Side always visible */}
+          {!isMobile && (
           <div className="w-full md:w-1/3 p-4 bg-white shadow-md rounded-lg">
             {loadingCompany || loadingOffers ? (
               <div className="animate-pulse">
@@ -90,22 +102,24 @@ const CompanyDetail = ({ id }) => {
               <LeftSide company={company} offers={offers} />
             )}
           </div>
+          )}
 
-          {/* Right Side */}
-          <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
-            {loadingOffers ? (
-              <div className="animate-pulse">
-                <div className="h-6 bg-gray-300 rounded mb-4 w-1/2"></div>
-                <div className="space-y-2">
-                  {[...Array(3)].map((_, idx) => (
-                    <div key={idx} className="h-4 bg-gray-300 rounded"></div>
-                  ))}
+          {/* Right Side only shown on non-mobile screens */}
+            <div className="w-full md:w-2/3 p-4 bg-white shadow-md rounded-lg">
+              {loadingOffers ? (
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-300 rounded mb-4 w-1/2"></div>
+                  <div className="space-y-2">
+                    {[...Array(3)].map((_, idx) => (
+                      <div key={idx} className="h-4 bg-gray-300 rounded"></div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <RightSide offers={offers} company={company} />
-            )}
-          </div>
+              ) : (
+                <RightSide offers={offers} company={company} />
+              )}
+            </div>
+          
         </div>
 
         {/* Offers Table */}
@@ -141,7 +155,7 @@ const CompanyDetail = ({ id }) => {
               dangerouslySetInnerHTML={{
                 __html:
                   company.comp_details ||
-                  'No additional details available for this company.',
+                  "No additional details available for this company.",
               }}
             ></div>
           )}

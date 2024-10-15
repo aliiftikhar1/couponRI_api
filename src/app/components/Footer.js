@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 
 export default function Footer() {
   const [categories, setCategories] = useState([]);
@@ -140,14 +140,17 @@ export default function Footer() {
 
               <div className="flex space-x-8 mt-6">
                 {/* Social Media Icons using React Icons */}
-                <a href="#" aria-label="Facebook" className="text-gray-700 hover:text-black">
+                <a href="https://www.facebook.com/couponri/" aria-label="Facebook" className="text-gray-700 hover:text-black">
                   <FaFacebookF className="w-6 h-6" />
                 </a>
-                <a href="#" aria-label="Twitter" className="text-gray-700 hover:text-black">
+                <a href="https://x.com/CouponRi" aria-label="Twitter" className="text-gray-700 hover:text-black">
                   <FaTwitter className="w-6 h-6" />
                 </a>
-                <a href="#" aria-label="Instagram" className="text-gray-700 hover:text-black">
+                <a href="https://www.instagram.com/coupon_ri/" aria-label="Instagram" className="text-gray-700 hover:text-black">
                   <FaInstagram className="w-6 h-6" />
+                </a>
+                <a href="https://youtube.com/@couponri" aria-label="Instagram" className="text-gray-700 hover:text-black">
+                  <FaYoutube className="w-6 h-6" />
                 </a>
               </div>
             </div>
