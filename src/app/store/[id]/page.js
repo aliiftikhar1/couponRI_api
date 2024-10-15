@@ -3,8 +3,8 @@ import CompanyDetail from "./mainpage";
 
 
 export async function generateMetadata({ params }) {
-  const baseUrl = 'http://couponri.com';
-  // const baseUrl = 'http://localhost:3000';
+  // const baseUrl = 'http://couponri.com';
+  const baseUrl = 'http://localhost:3000';
   console.log("Meta data for : ", params.id);
   try {
     console.log("Meta data is going to fetch....");
