@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
 
     const blog = await res.json();
     console.log("Meta data is : ", blog);
-    console.log("Meta data is : ", blog.meta_title)
+    console.log("Meta data is : ", blog.meta_title);
     // Return metadata with the fetched blog title and description
     return {
       title: blog.meta_title || 'CouponRI',
