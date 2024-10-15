@@ -16,7 +16,7 @@ export async function generateMetadata({ params }) {
     }
 
     const result = await res.json();
-    const company = result[0];
+    const company = result;
 console.log("Company is : ",company);
     // Return metadata with the fetched blog title and description
     return {
