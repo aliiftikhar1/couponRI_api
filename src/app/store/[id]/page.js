@@ -3,8 +3,8 @@ import CompanyDetail from "./mainpage";
 
 
 export async function generateMetadata({ params }) {
-  // const baseUrl = 'http://couponri.com';
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://couponri.com';
+  // const baseUrl = 'http://localhost:3000';
   console.log("Meta data for : ", params.id);
   try {
     console.log("Meta data is going to fetch....");
@@ -14,9 +14,9 @@ export async function generateMetadata({ params }) {
       console.error(`Error: ${res.status} ${res.statusText}`);
       throw new Error('Failed to fetch blog data');
     }
-
     const result = await res.json();
     const company = result;
+    const company2 = result[0];
 console.log("Company is : ",company);
     // Return metadata with the fetched blog title and description
     return {
